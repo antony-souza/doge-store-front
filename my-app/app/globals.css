@@ -14,3 +14,18 @@
     font-weight: 400;
     font-style: normal;
 }
+
+@keyframes zoom-in {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.animate-zoom-in {
+    animation: zoom-in 0.5s ease-in-out;
+}
