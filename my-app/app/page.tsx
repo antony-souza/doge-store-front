@@ -1,9 +1,9 @@
 "use client"
 
-import { Home } from "./pages/home/page";
+import {Home} from "@/app/pages/home/page";
 
 export default function App() {
   return (
-    <Home />
+   <Home />
   );
 }
