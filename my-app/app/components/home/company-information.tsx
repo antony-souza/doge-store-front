@@ -7,7 +7,7 @@ export function CompanyInformation() {
   const [showMoreInfo, setShowMoreInfo] = useState(false);
 
   return (
-    <div className="relative flex flex-col items-center bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 p-4 shadow-lg">
+    <div className="relative flex flex-col items-center bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 p-10 shadow-lg">
       <div className="flex items-center w-full">
         <div className="w-24 h-24 rounded-full overflow-hidden border-4 mr-4">
           <Image

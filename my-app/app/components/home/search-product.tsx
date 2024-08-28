@@ -7,7 +7,7 @@ export function SearchProduct() {
   const [showSearch, setShowSearch] = useState(false);
 
   return (
-    <div className="w-full mt-4 flex justify-center">
+    <div className="w-full mt-4 flex justify-center pt-2">
       <div className="relative w-3/4">
         <input
           type="text"

@@ -29,3 +29,12 @@
 .animate-zoom-in {
     animation: zoom-in 0.5s ease-in-out;
 }
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.hide-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
