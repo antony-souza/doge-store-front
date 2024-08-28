@@ -6,3 +6,5 @@ export const pathImages = {
     burritos: "https://img.freepik.com/vetores-premium/vector-deliciosos-burritos-de-cafe-da-manha_1027803-11.jpg",
     assados: "https://img.freepik.com/vetores-premium/carne-grelhada-isolada-no-fundo-branco-bife-frito-bife-de-carne-bife-de-porco-ilustracao-em-vetor_118339-5851.jpg",
 }
+
+//teste

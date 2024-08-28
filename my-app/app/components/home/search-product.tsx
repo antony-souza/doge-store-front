@@ -1,5 +1,5 @@
-// my-app/app/components/home/search-product.tsx
 'use client'
+
 import { useState } from 'react';
 
 export function SearchProduct() {
