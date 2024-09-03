@@ -33,7 +33,7 @@ export function FeaturedItemsList() {
     <div className="w-full mt-8 mb-20">
       <h2 className="text-start text-2xl font-bold mb-4 pl-8">Itens em Destaque</h2>
       {isLoading ? (
-        <div className="text-center text-lg animate-pulse">Carregando...</div>
+        <div className="text-center text-lg animate-pulse">Carregando Itens...</div>
       ) : (
         <div className="flex justify-center flex-wrap">
           {groupedItems.map((group, groupIndex) => (

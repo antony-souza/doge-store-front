@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { MoreInformation } from "@/app/components/home/more-informations";
 
 interface CompanyInfo {
-  logo: string;
+  image: string;
   name: string;
   description: string;
   isOpen: boolean;
@@ -12,23 +12,34 @@ interface CompanyInfo {
   backgroundColor: string;
 }
 
-export function CompanyInformation() {
+interface CompanyInformationProps {
+  apiUrl: string;
+}
+
+export function CompanyInformation({ apiUrl }: CompanyInformationProps) {
   const [showMoreInfo, setShowMoreInfo] = useState(false);
   const [companyInfo, setCompanyInfo] = useState<CompanyInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchCompanyInfo() {
-      const response = await fetch('http://localhost:3000/api/company-info');
+    async function fetchCompanyInfo(url: string) {
+      const response = await fetch(url, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
       const data: CompanyInfo = await response.json();
       setCompanyInfo(data);
       setIsLoading(false);
     }
-    fetchCompanyInfo();
-  }, []);
+    fetchCompanyInfo(apiUrl);
+  }, [apiUrl]);
 
   if (isLoading) {
-    return <div className="text-center text-lg animate-pulse">Carregando...</div>;
+    return <div className="text-center text-lg animate-pulse">Carregando Loja...</div>;
   }
 
   return (
@@ -36,7 +47,7 @@ export function CompanyInformation() {
       <div className="flex items-center w-full">
         <div className="w-24 h-24 rounded-full overflow-hidden border-4 mr-4">
           <img
-            src={companyInfo?.logo}
+            src={companyInfo?.image}
             alt="Company Logo"
             width={96}
             height={96}

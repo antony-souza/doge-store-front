@@ -51,7 +51,7 @@ export function CategoryList() {
     <div className="w-full mt-4">
       <h2 className="text-start text-2xl font-bold mb-4 pl-8">Categorias</h2>
       {isLoading ? (
-        <div className="text-center text-lg animate-pulse">Carregando...</div>
+        <div className="text-center text-lg animate-pulse">Carregando Categorias...</div>
       ) : (
         <div
           className="overflow-x-scroll flex hide-scrollbar pr-3 pl-3"
