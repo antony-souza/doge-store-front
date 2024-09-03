@@ -2,27 +2,35 @@
 import Image from 'next/image';
 import React, { useState } from 'react';
 
-const LoginForm: React.FC = () => {
+interface IBody {
+  email: string;
+  password: string;
+}
+
+export function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const apiUrl = String(process.env.API_URL)
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     
-    const response = await fetch('http://localhost:4200/doge_admin', {
+
+    const response = await fetch((`${apiUrl}/auth/doge_admin`), {
         method: 'POST',
         mode: 'cors',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password } as IBody),
     });
+
     const data = await response.json();
 
     const token = localStorage.setItem('token', data.token);
-   
+    
   };
-
+  
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-900">
       <div className="w-full max-w-md p-8 bg-gray-800 rounded-lg shadow-lg">
