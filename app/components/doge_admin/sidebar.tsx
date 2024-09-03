@@ -107,6 +107,33 @@ const Sidebar: React.FC = () => {
               </ul>
             </div>
           </li>
+        {/* Gerador de QR Code */}
+        <li>
+            <div 
+              className="flex items-center justify-between p-4 text-white hover:bg-gray-700 cursor-pointer" 
+              onClick={() => handleToggle('qrcode')}
+            >
+              <div className="flex items-center space-x-2">
+                <span className="material-symbols-outlined">qr_code_2</span>
+                <span>QR Code</span>
+              </div>
+              <span className="material-symbols-outlined transition-transform duration-500 ease-in-out transform">
+                {activeSection === 'qrcode' ? 'expand_more' : 'arrow_drop_down'}
+              </span>
+            </div>
+            <div
+              className={`transition-all duration-500 ease-in-out overflow-hidden ${activeSection === 'qrcode' ? 'max-h-[500px]' : 'max-h-0'}`}
+            >
+              <ul className="pl-4">
+                <li>
+                  <h1 className="flex items-center space-x-2 p-2 text-white hover:bg-gray-600 cursor-pointer">
+                    <span className="material-symbols-outlined">subdirectory_arrow_right</span>
+                    <span>Gerar QR Code</span>
+                  </h1>
+                </li>
+              </ul>
+            </div>
+          </li>
           {/* Logout Button */}
           <li>
             <button 
