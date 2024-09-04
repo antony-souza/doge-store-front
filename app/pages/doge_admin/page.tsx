@@ -1,46 +1,49 @@
 "use client";
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
-interface IBody {
-  email: string;
-  password: string;
-}
 
 export function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const apiUrl = String(process.env.API_URL)
-
+  const router = useRouter();
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    
 
-    const response = await fetch((`${apiUrl}/auth/doge_admin`), {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password } as IBody),
+    const response = await fetch(("http://localhost:4200/auth/login"), {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
     });
+
+    if (!response.ok) {
+      console.error('Erro ao fazer login');
+      return;
+    }
 
     const data = await response.json();
 
-    const token = localStorage.setItem('token', data.token);
-    
+    localStorage.setItem('token', data.token);
+
+    if (data.user.role === 'admin') {
+      router.push('/pages/doge_admin/home');
+    }
   };
-  
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-900">
       <div className="w-full max-w-md p-8 bg-gray-800 rounded-lg shadow-lg">
         <div className="text-center mb-6">
-          <Image 
-            src="/icon.png" 
+          <Image
+            src="/icon.png"
             width={600}
             height={600}
-            alt="DogeAdmin Icon"  
-            className="object-cover mx-auto mb-4" 
+            alt="DogeAdmin Icon"
+            className="object-cover mx-auto mb-4"
           />
           <h1 className="text-2xl font-bold text-white">Doge Admin</h1>
         </div>
@@ -92,7 +95,7 @@ export function LoginForm() {
             Login
           </button>
 
-          <span 
+          <span
             className="block mt-4 text-center text-sm text-indigo-500 hover:text-indigo-400 cursor-pointer">
             Esqueci email / senha
           </span>
