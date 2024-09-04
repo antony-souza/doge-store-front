@@ -28,8 +28,12 @@ export function CreateStore() {
       }
     };
 
-    localStorage.getItem('token');
-
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setFailMessage('Você precisa estar logado para criar uma loja.');
+      setTimeout(() => setFailMessage(''), 10000);
+      return
+    }
     try {
       const response = await fetch("http://localhost:4200/store/create/store", {
         method: 'POST',
