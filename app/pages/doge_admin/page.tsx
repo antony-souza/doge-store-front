@@ -1,17 +1,24 @@
 "use client";
+import { jwtDecode } from 'jwt-decode';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
+interface DecodedToken {
+  id: string;
+  role: string;
+  companyId: string;
+}
 
-export function LoginForm() {
+export default function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const response = await fetch(("http://localhost:4200/auth/login"), {
+    const response = await fetch("http://localhost:4200/auth/login", {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -29,8 +36,18 @@ export function LoginForm() {
 
     localStorage.setItem('token', data.token);
 
-    if (data.user.role === 'admin') {
-      router.push('/pages/doge_admin/home');
+    try {
+      const decoded: DecodedToken = jwtDecode(data.token);
+
+      if (decoded.role === 'admin') {
+        router.push('/pages/doge_admin/home');
+      } else {
+        console.error('Você não tem permissão para acessar essa página');
+      }
+      console.log('Token decodificado:', decoded);
+
+    } catch (error) {
+      console.error('Erro ao decodificar o token:', error);
     }
   };
 
@@ -103,6 +120,4 @@ export function LoginForm() {
       </div>
     </div>
   );
-};
-
-export default LoginForm;
+}

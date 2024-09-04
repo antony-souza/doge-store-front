@@ -28,6 +28,8 @@ export function CreateStore() {
       }
     };
 
+    localStorage.getItem('token');
+
     try {
       const response = await fetch("http://localhost:4200/store/create/store", {
         method: 'POST',
@@ -38,9 +40,9 @@ export function CreateStore() {
         body: JSON.stringify(storeData)
       });
 
-      if (response.status === 400) {
+      if (response.status === 409) {
         const data = await response.json();
-        setFailMessage(data || 'Produto já existe! Edite o produto na opção "Editar Produto"');
+        setFailMessage(data || 'Loja já existe!');
         setTimeout(() => setFailMessage(''), 10000);
         return;
       }
@@ -52,10 +54,19 @@ export function CreateStore() {
       const data = await response.json();
       console.log('Success:', data);
 
+      setStoreName('');
+      setConfigName('');
+      setPhone('');
+      setAddress('');
+      setDescription('');
+      setIsOpen(true);
+      setImageUrl('');
+      setBackgroundColor('#FFFFFF');
+
       setSuccessMessage('Loja criada com sucesso!');
       setTimeout(() => setSuccessMessage(''), 10000);
     } catch (error) {
-      setFailMessage('Erro ao criar o produto. Por favor, tente novamente.');
+      setFailMessage('Erro ao criar a loja. Por favor, tente novamente.');
       setTimeout(() => setFailMessage(''), 10000);
       console.error('Erro de rede:', error);
     }
@@ -145,7 +156,7 @@ export function CreateStore() {
             type="color"
             value={backgroundColor}
             onChange={(e) => setBackgroundColor(e.target.value)}
-            className="w-full h-12 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full h-12 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
           />
         </div>
         <div className="col-span-2">

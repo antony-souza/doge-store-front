@@ -21,9 +21,8 @@ const Sidebar: React.FC = () => {
   };
 
   const handleLogout = () => {
-    // Lógica de logout
-    // e então redirecionar para a página de login
-    router.push('/pages/doge_admin'); //usar um obj de rotas
+    localStorage.removeItem('token')
+    router.push('/pages/doge_admin');
   };
 
   return (
