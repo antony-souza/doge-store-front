@@ -13,11 +13,9 @@ export default function HomePage() {
         <p className="text-lg text-gray-400 mb-6">
           O melhor serviço para dar vida ao seu negócio! Rápido, confiável e com aquele toque de fofura que só a Doge tem.
         </p>
-
-        {/* Imagem com o logo ou uma imagem temática */}
         <div className="relative w-48 h-48 md:w-64 md:h-64 mx-auto mb-6">
           <Image
-            src="/icon.png" // Certifique-se de ter essa imagem em sua pasta public
+            src="/icon.png" 
             alt="Doge Delivery"
             layout="fill"
             objectFit="cover"
@@ -26,7 +24,6 @@ export default function HomePage() {
           />
         </div>
 
-        {/* Informações de Contato */}
         <div className="text-center text-gray-300 mb-8">
           <h2 className="text-2xl font-semibold text-white mb-2">Contatos</h2>
           <p className="text-lg">Telefone: (74) 9 8815-2367</p>
@@ -34,7 +31,6 @@ export default function HomePage() {
           <p className="text-lg">Endereço: Centro, 20, Juazeiro - BA</p>
         </div>
 
-        {/* Botão de ação */}
         <Link 
           href={'https://wa.me/5574988152367'}
           className="mt-12 px-8 py-3 bg-yellow-600 text-white rounded-lg text-lg shadow-lg hover:bg-yellow-500 "
