@@ -69,17 +69,16 @@ export function CompanyInformation({ storeName }: Store) {
   return (
     <div className={`relative flex flex-col items-center p-10 shadow-lg`} style={{ backgroundColor: companyInfo.background_color }}>
       <div className="flex flex-col md:flex-row items-center w-full">
-        <div className="w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden border-4 mb-4 md:mb-0 md:mr-4">
-          <Image
-            src={companyInfo.image_url}
-            alt="Company Logo"
-            layout="responsive" // Faz a imagem se ajustar ao contêiner
-            width={192} // Largura proporcional
-            height={192} // Altura proporcional
-            className="object-cover"
-            priority // Opcional
-          />
-        </div>
+      <div className="relative w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden border-4 mb-4 md:mb-0 md:mr-4">
+  <Image
+    src={companyInfo.image_url}
+    alt="Company Logo"
+    layout="fill" // Preenche todo o contêiner
+    objectFit="cover" // Garante que a imagem cubra o espaço sem distorção
+    className="object-cover"
+    priority
+  />
+</div>
         <div className="flex-1 text-center md:text-left">
           <h1 className="text-3xl font-bold text-white tracking-wide">{storeName}</h1>
           <p className={`text-lg ${companyInfo.is_open ? 'text-green-300' : 'text-red-300'} tracking-wide`}>
