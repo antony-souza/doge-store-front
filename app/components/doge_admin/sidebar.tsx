@@ -4,8 +4,9 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import CreateStore from './create.store';
+import { SearchStore } from './search.store';
 
-type ComponentsStore = 'create_store' | 'qrcode' | 'payments';
+type ComponentsStore = 'create_store' |'search_store'| 'qrcode' | 'payments';
 
 const Sidebar: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>();
@@ -40,8 +41,8 @@ const Sidebar: React.FC = () => {
           <ul>
             {/* Store */}
             <li>
-              <div 
-                className="flex items-center justify-between p-4 text-white hover:bg-gray-700 cursor-pointer" 
+              <div
+                className="flex items-center justify-between p-4 text-white hover:bg-gray-700 cursor-pointer"
                 onClick={() => handleToggle('store')}
               >
                 <div className="flex items-center space-x-2">
@@ -57,7 +58,7 @@ const Sidebar: React.FC = () => {
               >
                 <ul className="pl-4">
                   <li>
-                    <h1 
+                    <h1
                       onClick={() => componentsClick('create_store')}
                       className="flex items-center space-x-2 p-2 text-white hover:bg-gray-600 cursor-pointer">
                       <span className="material-symbols-outlined">subdirectory_arrow_right</span>
@@ -65,9 +66,11 @@ const Sidebar: React.FC = () => {
                     </h1>
                   </li>
                   <li>
-                    <h1 className="flex items-center space-x-2 p-2 text-white hover:bg-gray-600 cursor-pointer">
+                    <h1 
+                    onClick={() => componentsClick('search_store')}
+                    className="flex items-center space-x-2 p-2 text-white hover:bg-gray-600 cursor-pointer">
                       <span className="material-symbols-outlined">subdirectory_arrow_right</span>
-                      <span>Criar Categorias</span>
+                      <span>Buscar Lojas</span>
                     </h1>
                   </li>
                   <li>
@@ -79,37 +82,37 @@ const Sidebar: React.FC = () => {
                 </ul>
               </div>
             </li>
-             {/* Gerador de QR Code */}
+            {/* Gerador de QR Code */}
             <li>
-                <div 
-                  className="flex items-center justify-between p-4 text-white hover:bg-gray-700 cursor-pointer" 
-                  onClick={() => handleToggle('qrcode')}
-                >
-                  <div className="flex items-center space-x-2">
-                    <span className="material-symbols-outlined">qr_code_2</span>
-                    <span>QR Code</span>
-                  </div>
-                  <span className="material-symbols-outlined transition-transform duration-500 ease-in-out transform">
-                    {activeSection === 'qrcode' ? 'expand_more' : 'arrow_drop_down'}
-                  </span>
+              <div
+                className="flex items-center justify-between p-4 text-white hover:bg-gray-700 cursor-pointer"
+                onClick={() => handleToggle('qrcode')}
+              >
+                <div className="flex items-center space-x-2">
+                  <span className="material-symbols-outlined">qr_code_2</span>
+                  <span>QR Code</span>
                 </div>
-                <div
-                  className={`transition-all duration-500 ease-in-out overflow-hidden ${activeSection === 'qrcode' ? 'max-h-[500px]' : 'max-h-0'}`}
-                >
-                  <ul className="pl-4">
-                    <li>
-                      <h1 className="flex items-center space-x-2 p-2 text-white hover:bg-gray-600 cursor-pointer">
-                        <span className="material-symbols-outlined">subdirectory_arrow_right</span>
-                        <span>Gerar QR Code</span>
-                      </h1>
-                    </li>
-                  </ul>
-                </div>
-              </li>
+                <span className="material-symbols-outlined transition-transform duration-500 ease-in-out transform">
+                  {activeSection === 'qrcode' ? 'expand_more' : 'arrow_drop_down'}
+                </span>
+              </div>
+              <div
+                className={`transition-all duration-500 ease-in-out overflow-hidden ${activeSection === 'qrcode' ? 'max-h-[500px]' : 'max-h-0'}`}
+              >
+                <ul className="pl-4">
+                  <li>
+                    <h1 className="flex items-center space-x-2 p-2 text-white hover:bg-gray-600 cursor-pointer">
+                      <span className="material-symbols-outlined">subdirectory_arrow_right</span>
+                      <span>Gerar QR Code</span>
+                    </h1>
+                  </li>
+                </ul>
+              </div>
+            </li>
             {/* Payments */}
             <li>
-              <div 
-                className="flex items-center justify-between p-4 text-white hover:bg-gray-700 cursor-pointer" 
+              <div
+                className="flex items-center justify-between p-4 text-white hover:bg-gray-700 cursor-pointer"
                 onClick={() => handleToggle('charts')}
               >
                 <div className="flex items-center space-x-2">
@@ -147,8 +150,8 @@ const Sidebar: React.FC = () => {
             </li>
             {/* Logout Button */}
             <li>
-              <button 
-                onClick={handleLogout} 
+              <button
+                onClick={handleLogout}
                 className="flex p-items-center justify-between p-4 text-white hover:bg-gray-700 w-full text-left"
               >
                 <div className="flex items-center space-x-2">
@@ -163,6 +166,7 @@ const Sidebar: React.FC = () => {
       {/* Content Area */}
       <div className="flex-1 ml-72 flex items-center justify-center">
         {selectComponentStore === 'create_store' && <CreateStore />}
+        {selectComponentStore === 'search_store' && <SearchStore />}
       </div>
     </div>
   );

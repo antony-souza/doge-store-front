@@ -1,7 +1,7 @@
-// app/[name]/page.tsx
 import { CompanyInformation } from '@/app/components/home/company-information';
 import { notFound } from 'next/navigation';
 import { SearchProduct } from '../components/home/search-product';
+import { CategoryList } from '../components/home/category-list';
 
 interface PageParams {
   name: string;
@@ -19,6 +19,7 @@ export default function StorePage({ params }: { params: PageParams }) {
     <>
       <CompanyInformation storeName={name} />
       <SearchProduct storeName={name}/>
+      <CategoryList storeName={name}/>
     </>
   );
 }

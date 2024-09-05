@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 
 interface SearchProductProps {
-  storeName: string;  // Recebe storeName como prop
+  storeName: string;  
 }
 
 export function SearchProduct({ storeName }: SearchProductProps) {

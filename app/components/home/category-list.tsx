@@ -3,12 +3,16 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
+interface QueryStore {
+  storeName: string;
+}
+
 interface Category {
-  image: string;
+  image_url: string[];
   name: string;
 }
 
-export function CategoryList() {
+export function CategoryList({ storeName }: QueryStore) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
@@ -17,13 +21,20 @@ export function CategoryList() {
 
   useEffect(() => {
     async function fetchCategories() {
-      const response = await fetch('http://localhost:3000/api/categories');
-      const data: Category[] = await response.json();
-      setCategories(data);
-      setIsLoading(false);
+      if (!storeName) return; // Não buscar até que o nome da loja esteja presente
+
+      try {
+        const response = await fetch(`http://localhost:4200/public/categories?storeName=${storeName}`);
+        const data: Category[] = await response.json();
+        setCategories(data);
+      } catch (error) {
+        console.error('Erro ao buscar categorias:', error);
+      } finally {
+        setIsLoading(false);
+      }
     }
     fetchCategories();
-  }, []);
+  }, [storeName]); // storeName vira uma dependência 
 
   const handleMouseDown = (e: any) => {
     setIsDragging(true);
@@ -43,13 +54,13 @@ export function CategoryList() {
     if (!isDragging) return;
     e.preventDefault();
     const x = e.pageX - e.currentTarget.offsetLeft;
-    const walk = (x - startX) * 3; // Velocidade de rolagem
+    const walk = (x - startX) * 1; // Velocidade de rolagem
     e.currentTarget.scrollLeft = scrollLeft - walk;
   };
 
   return (
     <div className="w-full mt-4">
-      <h2 className="text-start text-2xl font-bold mb-4 pl-8">Categorias</h2>
+      <h2 className="text-start text-2xl font-bold mb-4 pl-8">Categorias:</h2>
       {isLoading ? (
         <div className="text-center text-lg animate-pulse">Carregando Categorias...</div>
       ) : (
@@ -63,7 +74,10 @@ export function CategoryList() {
           {categories.map((category, index) => (
             <div key={index} className="flex flex-col items-center mx-2">
               <div className="w-24 h-24 rounded-full overflow-hidden border-4">
-                <img src={category.image} alt={category.name} className="object-cover w-full h-full" />
+                <Image
+                  src={category.image_url[0]} alt={category.name}
+                  width={96} height={96}
+                  className="object-cover w-full h-full" />
               </div>
               <p className="text-center mt-2">{category.name}</p>
             </div>

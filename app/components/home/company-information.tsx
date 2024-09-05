@@ -32,7 +32,7 @@ export function CompanyInformation({ storeName }: QueryStore) {
   useEffect(() => {
     async function fetchCompanyInfo() {
       try {
-        const response = await fetch(`http://localhost:4200/store/find?name=${encodeURIComponent(storeName)}`, {
+        const response = await fetch(`http://localhost:4200/public/store?name=${encodeURIComponent(storeName)}`, {
           method: 'GET',
           mode: 'cors',
           headers: {
