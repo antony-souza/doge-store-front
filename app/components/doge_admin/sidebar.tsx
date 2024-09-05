@@ -22,7 +22,7 @@ const Sidebar: React.FC = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token')
-    router.push('/pages/doge_admin');
+    router.push('/doge_admin');
   };
 
   return (

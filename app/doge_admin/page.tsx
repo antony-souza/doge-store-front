@@ -1,4 +1,5 @@
 "use client";
+
 import { jwtDecode } from 'jwt-decode';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -6,11 +7,13 @@ import React, { useState } from 'react';
 
 interface DecodedToken {
   id: string;
+  name: string;
   role: string;
-  companyId: string;
 }
 
 export default function LoginForm() {
+  const [successMessage, setSuccessMessage] = useState('');
+  const [failMessage, setFailMessage] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
@@ -18,36 +21,47 @@ export default function LoginForm() {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const response = await fetch("http://localhost:4200/auth/login", {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    if (!response.ok) {
-      console.error('Erro ao fazer login');
-      return;
-    }
-
-    const data = await response.json();
-
-    localStorage.setItem('token', data.token);
-
     try {
-      const decoded: DecodedToken = jwtDecode(data.token);
+      const response = await fetch("http://localhost:4200/auth/login", {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-      if (decoded.role === 'admin') {
-        router.push('/pages/doge_admin/home');
-      } else {
-        console.error('Você não tem permissão para acessar essa página');
+      if (!response.ok) {
+        setFailMessage('Erro ao fazer login. Verifique suas credenciais.');
+        setTimeout(() => setFailMessage(''), 3000);
+
+        return;
       }
-      console.log('Token decodificado:', decoded);
 
+      const data = await response.json();
+
+      localStorage.setItem('token', data.token);
+
+      try {
+        const decoded: DecodedToken = jwtDecode(data.token);
+
+        if (decoded.role === 'admin') {
+          setSuccessMessage('Login bem-sucedido! Redirecionando...');
+          setTimeout(() => setFailMessage(''), 3000);
+          setTimeout(() => {
+            router.push('/doge_admin/home');
+          }, 3000); // Redireciona após 3 segundos
+        } else {
+          setFailMessage('Você não tem permissão para acessar essa página.');
+          setTimeout(() => setFailMessage(''), 3000);
+        }
+      } catch (error) {
+        setFailMessage('Erro ao decodificar o token.');
+        setTimeout(() => setFailMessage(''), 3000);
+      }
     } catch (error) {
-      console.error('Erro ao decodificar o token:', error);
+      setFailMessage('Erro ao conectar com o servidor.');
+      setTimeout(() => setFailMessage(''), 3000);
     }
   };
 
@@ -118,6 +132,17 @@ export default function LoginForm() {
           </span>
         </form>
       </div>
+      {successMessage && (
+        <div className="fixed top-4 right-4 bg-green-600 text-white py-2 px-4 rounded shadow-lg z-50">
+          {successMessage}
+        </div>
+      )}
+
+      {failMessage && (
+        <div className="fixed top-4 right-4 bg-red-600 text-white py-2 px-4 rounded shadow-lg z-50">
+          {failMessage}
+        </div>
+      )}
     </div>
   );
 }

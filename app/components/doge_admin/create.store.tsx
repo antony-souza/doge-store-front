@@ -14,7 +14,7 @@ export function CreateStore() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     const storeData = {
       name: storeName,
       store_config: {
@@ -27,37 +27,35 @@ export function CreateStore() {
         background_color: backgroundColor
       }
     };
-
+  
     const token = localStorage.getItem('token');
     if (!token) {
       setFailMessage('Você precisa estar logado para criar uma loja.');
       setTimeout(() => setFailMessage(''), 10000);
-      return
+      return;
     }
+  
     try {
       const response = await fetch("http://localhost:4200/store/create/store", {
         method: 'POST',
         mode: 'cors',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(storeData)
       });
-
-      if (response.status === 409) {
-        const data = await response.json();
-        setFailMessage(data || 'Loja já existe!');
+  
+      if (!response.ok) {
+        const errorMessage = response.status === 409 ? await response.text() : 'Erro de rede';
+        setFailMessage(errorMessage || 'Erro ao criar a loja!');
         setTimeout(() => setFailMessage(''), 10000);
         return;
       }
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
+  
       const data = await response.json();
       console.log('Success:', data);
-
+  
       setStoreName('');
       setConfigName('');
       setPhone('');
@@ -66,7 +64,7 @@ export function CreateStore() {
       setIsOpen(true);
       setImageUrl('');
       setBackgroundColor('#FFFFFF');
-
+  
       setSuccessMessage('Loja criada com sucesso!');
       setTimeout(() => setSuccessMessage(''), 10000);
     } catch (error) {

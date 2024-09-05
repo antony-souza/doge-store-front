@@ -1,9 +1,14 @@
-"use client"
+"use client";
 
-import {Home} from "@/app/pages/home/page";
+import React from 'react';
+import { CompanyInformation } from '@/app/components/home/company-information';
 
-export default function App() {
+export default function StorePage({ params }: { params: { name: string } }) {
+  const { name } = params;
+
   return (
-   <Home />
+    <>
+      <CompanyInformation storeName={name} />
+    </>
   );
 }

@@ -14,7 +14,7 @@ export default function HomePage() {
     if (!storedToken) {
       setToken(false); // Se não há token, define como false
       setTimeout(() => {
-        router.push('/pages/doge_admin');
+        router.push('/doge_admin');
       }, 7000); // Redireciona após 7 segundos
     }
   }, [router]);
