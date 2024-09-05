@@ -4,6 +4,10 @@ import { useState, useEffect } from "react";
 import { MoreInformation } from "@/app/components/home/more-informations";
 import Image from "next/image";
 
+interface Store {
+  name: string; // Aqui está o nome real da loja vindo do backend
+}
+
 interface StoreInfo {
   id: string;
   name: string;
@@ -15,13 +19,14 @@ interface StoreInfo {
   background_color: string;
 }
 
-interface Store {
-  storeName: string;
+interface QueryStore {
+  storeName: string; // Nome da loja enviado via parâmetros
 }
 
-export function CompanyInformation({ storeName }: Store) {
+export function CompanyInformation({ storeName }: QueryStore) {
   const [showMoreInfo, setShowMoreInfo] = useState(false);
-  const [companyInfo, setCompanyInfo] = useState<StoreInfo | null>(null);
+  const [companyInfo, setCompanyInfo] = useState<StoreInfo | undefined>(undefined);
+  const [store, setStore] = useState<Store | undefined>(undefined); // Armazena o objeto store completo
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -41,15 +46,16 @@ export function CompanyInformation({ storeName }: Store) {
         }
 
         const data = await response.json();
-        const store = data[0];
+        const store = data[0]; // Pega a primeira loja do resultado
         if (store && store.store_config.length > 0) {
-          setCompanyInfo(store.store_config[0]); // Acessa o primeiro item em store_config
+          setStore(store); // Armazena o store completo(id,name)
+          setCompanyInfo(store.store_config[0]); // Armazena a configuração da loja
         } else {
-          setCompanyInfo(null);
+          setCompanyInfo(undefined);
         }
       } catch (error) {
         console.error('Error fetching company information:', error);
-        setCompanyInfo(null); // Em caso de erro, defina companyInfo como null
+        setCompanyInfo(undefined);
       } finally {
         setIsLoading(false);
       }
@@ -59,34 +65,36 @@ export function CompanyInformation({ storeName }: Store) {
   }, [storeName]);
 
   if (isLoading) {
-    return <div className="text-center text-lg animate-pulse">Carregando Loja...</div>;
+    return <div className="min-h-screen bg-slate-800 flex items-center justify-center text-white">
+      <h1 className="text-7xl animate-pulse">Carregando Loja...</h1>
+    </div>;
   }
 
-  if (!companyInfo) {
-    return <div className="text-center text-lg text-red-600">Loja não encontrada.</div>;
+  if (companyInfo === undefined) {
+    return <div className="min-h-screen bg-slate-800 flex items-center justify-center text-rose-500">
+      <h1 className="text-7xl animate-bounce">Loja não encontrada!</h1>
+    </div>;
   }
 
   return (
-    <div className={`relative flex flex-col items-center p-10 shadow-lg`} style={{ backgroundColor: companyInfo.background_color }}>
+    <div className={`relative flex flex-col items-center p-7 shadow-2xl bg-stone-100`} 
+         style={{ backgroundColor: companyInfo.background_color }}>
       <div className="flex flex-col md:flex-row items-center w-full">
-      <div className="relative w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden border-4 mb-4 md:mb-0 md:mr-4">
-  <Image
-    src={companyInfo.image_url}
-    alt="Company Logo"
-    layout="fill" // Preenche todo o contêiner
-    objectFit="cover" // Garante que a imagem cubra o espaço sem distorção
-    className="object-cover"
-    priority
-  />
-</div>
+        <div className="relative w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden border-4 mb-4 md:mb-0 md:mr-4">
+          <Image
+            src={companyInfo.image_url}
+            alt="Company Logo"
+            layout="fill" // Preenche todo o contêiner
+            objectFit="cover" // Garante que a imagem cubra o espaço sem distorção
+            className="object-cover"
+            priority
+          />
+        </div>
         <div className="flex-1 text-center md:text-left">
-          <h1 className="text-3xl font-bold text-white tracking-wide">{storeName}</h1>
+          <h1 className="text-3xl font-bold text-white tracking-wide">{store?.name || 'Nome Não Encontrado'}</h1>
           <p className={`text-lg ${companyInfo.is_open ? 'text-green-300' : 'text-red-300'} tracking-wide`}>
             {companyInfo.is_open ? 'Aberto' : 'Fechado'}
           </p>
-          <div className='flex text-white tracking-wide items-center justify-center md:justify-start'>
-            <p className="text-lg">{companyInfo.address}</p>
-          </div>
           <p className="text-lg text-white mt-2">{companyInfo.description}</p>
           <button
             className="mt-2 px-2 py-1 bg-gray-300 text-white rounded text-sm hover:bg-green-500 tracking-wide"
