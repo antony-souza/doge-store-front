@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export function CreateStore() {
+export default function CreateStore() {
   const [successMessage, setSuccessMessage] = useState('');
   const [failMessage, setFailMessage] = useState('');
   const [storeName, setStoreName] = useState('');
@@ -14,7 +14,7 @@ export function CreateStore() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     const storeData = {
       name: storeName,
       store_config: {
@@ -27,14 +27,14 @@ export function CreateStore() {
         background_color: backgroundColor
       }
     };
-  
+
     const token = localStorage.getItem('token');
     if (!token) {
       setFailMessage('Você precisa estar logado para criar uma loja.');
       setTimeout(() => setFailMessage(''), 10000);
       return;
     }
-  
+
     try {
       const response = await fetch("http://localhost:4200/store/create/store", {
         method: 'POST',
@@ -45,17 +45,17 @@ export function CreateStore() {
         },
         body: JSON.stringify(storeData)
       });
-  
+
       if (!response.ok) {
         const errorMessage = response.status === 409 ? await response.text() : 'Erro de rede';
         setFailMessage(errorMessage || 'Erro ao criar a loja!');
         setTimeout(() => setFailMessage(''), 10000);
         return;
       }
-  
+
       const data = await response.json();
       console.log('Success:', data);
-  
+
       setStoreName('');
       setConfigName('');
       setPhone('');
@@ -64,7 +64,7 @@ export function CreateStore() {
       setIsOpen(true);
       setImageUrl('');
       setBackgroundColor('#FFFFFF');
-  
+
       setSuccessMessage('Loja criada com sucesso!');
       setTimeout(() => setSuccessMessage(''), 10000);
     } catch (error) {
@@ -75,6 +75,7 @@ export function CreateStore() {
   };
 
   return (
+
     <div className="max-w-6xl mx-auto p-6 bg-gray-800 rounded-lg shadow-lg">
       <div className='flex items-center gap-2 mb-3'>
         <span className="material-symbols-outlined text-3xl font-semibold text-gray-100">
@@ -184,5 +185,3 @@ export function CreateStore() {
     </div>
   );
 }
-
-export default CreateStore;

@@ -4,8 +4,9 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import CreateStore from './create.store';
-import { SearchStore } from './search.store';
 import CreateCategories from './create.category.store';
+import CreateProduct from './create.product.store';
+import CreateFeaturedProducts from './create.fetured.products';
 
 type ComponentsStore = 'create_store' | 'create_categories' | 'create_products' | 'create_featured_products' | 'qrcode' | 'payments';
 
@@ -175,9 +176,11 @@ const Sidebar: React.FC = () => {
         </nav>
       </div>
       {/* Content Area */}
-      <div className="flex-1 ml-52 flex items-center justify-center pb-20 pt-10">
+      <div className="flex-1 ml-32 flex items-center justify-center pb-20 pt-10">
     {selectComponentStore === 'create_store' && <CreateStore />}
     {selectComponentStore === 'create_categories' && <CreateCategories />}
+    {selectComponentStore === 'create_products' && <CreateProduct />}
+    {selectComponentStore === 'create_featured_products' && <CreateFeaturedProducts />}
   </div>
     </div>
   );

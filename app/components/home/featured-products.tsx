@@ -3,6 +3,14 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
+// Função para formatar números como moeda brasileira
+const formatCurrency = (value: number) => {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  }).format(value);
+};
+
 interface Product {
   id: string;
   name: string;
@@ -33,7 +41,7 @@ export function FeaturedProducts({ storeName }: QueryStore) {
         }
         const data = await response.json();
         
-        setFeaturedProducts(data); // O backend já retorna no formato adequado
+        setFeaturedProducts(data); // Atualiza o estado com os dados recebidos
       } catch (error) {
         console.error('Error fetching featured items:', error);
       } finally {
@@ -46,7 +54,7 @@ export function FeaturedProducts({ storeName }: QueryStore) {
 
   // Agrupa todos os produtos em um único array. Map cria um array de outros array. Flat transforma em um único array.
   // O flatMap faz isso em um único passo.
-  const groupedItems = featuredProducts.flatMap((featured) => featured.product); 
+  const groupedItems = featuredProducts.flatMap((featured) => featured.product);
 
   return (
     <div className="w-full mt-8 mb-20">
@@ -54,10 +62,10 @@ export function FeaturedProducts({ storeName }: QueryStore) {
       {isLoading ? (
         <div className="text-center text-lg animate-pulse">Carregando Itens...</div>
       ) : (
-        <div className="overflow-x-auto whitespace-nowrap">
+        <div className="overflow-x-auto whitespace-nowrap pr-10 pl-7">
           <div className="inline-flex space-x-4">
-            {groupedItems.map((item, array) => (
-              <div key={array} className="inline-block w-48 p-4 border rounded-lg shadow-lg">
+            {groupedItems.map((item) => (
+              <div key={item.id} className="inline-block w-48 p-4 border rounded-lg shadow-lg">
                 <div className="flex justify-center items-center mb-2 w-24 h-24 relative overflow-hidden bg-gray-100">
                   <Image 
                     src={item.image_url[0]} 
@@ -69,7 +77,7 @@ export function FeaturedProducts({ storeName }: QueryStore) {
                 </div>
                 <div className="border-t border-gray-300 my-2"></div>
                 <h3 className="text-lg font-semibold break-words">{item.name}</h3>
-                <p className="text-md text-green-400">R$ {item.price}</p>
+                <p className="text-md text-green-400">{formatCurrency(item.price)}</p>
                 <p className="text-sm text-gray-600 break-words whitespace-normal">{item.description}</p>
               </div>
             ))}
