@@ -11,7 +11,7 @@ interface PageParams {
 export default function StorePage({ params }: { params: PageParams }) {
   const { name } = params;
 
-  // Verifica se o nome está presente
+ 
   if (!name) {
     notFound(); // Exibe uma página 404 se o parâmetro não estiver presente
   }

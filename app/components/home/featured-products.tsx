@@ -26,7 +26,8 @@ export function FeaturedProducts({ storeName }: QueryStore) {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch(`http://localhost:4200/public/featured-products?storeName=${storeName}`);
+        const encodedStoreName = encodeURIComponent(storeName);
+        const response = await fetch(`http://localhost:4200/public/featured-products?storeName=${encodedStoreName}`);
         if (!response.ok) {
           throw new Error('Failed to fetch featured items');
         }
@@ -55,8 +56,8 @@ export function FeaturedProducts({ storeName }: QueryStore) {
       ) : (
         <div className="overflow-x-auto whitespace-nowrap">
           <div className="inline-flex space-x-4">
-            {groupedItems.map((item) => (
-              <div key={item.id} className="inline-block w-48 p-4 border rounded-lg shadow-lg">
+            {groupedItems.map((item, array) => (
+              <div key={array} className="inline-block w-48 p-4 border rounded-lg shadow-lg">
                 <div className="flex justify-center items-center mb-2 w-24 h-24 relative overflow-hidden bg-gray-100">
                   <Image 
                     src={item.image_url[0]} 

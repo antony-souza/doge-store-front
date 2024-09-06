@@ -24,7 +24,8 @@ export function CategoryList({ storeName }: QueryStore) {
       if (!storeName) return; // Não buscar até que o nome da loja esteja presente
 
       try {
-        const response = await fetch(`http://localhost:4200/public/categories?storeName=${storeName}`);
+        const encodedStoreName = encodeURIComponent(storeName);
+        const response = await fetch(`http://localhost:4200/public/categories?storeName=${encodedStoreName}`);
         const data: Category[] = await response.json();
         setCategories(data);
       } catch (error) {

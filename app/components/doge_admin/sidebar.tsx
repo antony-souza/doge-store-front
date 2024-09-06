@@ -5,8 +5,9 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import CreateStore from './create.store';
 import { SearchStore } from './search.store';
+import CreateCategories from './create.category.store';
 
-type ComponentsStore = 'create_store' |'search_store'| 'qrcode' | 'payments';
+type ComponentsStore = 'create_store' | 'create_categories' | 'create_products' | 'create_featured_products' | 'qrcode' | 'payments';
 
 const Sidebar: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>();
@@ -62,21 +63,31 @@ const Sidebar: React.FC = () => {
                       onClick={() => componentsClick('create_store')}
                       className="flex items-center space-x-2 p-2 text-white hover:bg-gray-600 cursor-pointer">
                       <span className="material-symbols-outlined">subdirectory_arrow_right</span>
-                      <span>Registrar Loja</span>
+                      <span>Criar Loja</span>
                     </h1>
                   </li>
                   <li>
-                    <h1 
-                    onClick={() => componentsClick('search_store')}
-                    className="flex items-center space-x-2 p-2 text-white hover:bg-gray-600 cursor-pointer">
+                    <h1
+                      onClick={() => componentsClick('create_categories')}
+                      className="flex items-center space-x-2 p-2 text-white hover:bg-gray-600 cursor-pointer">
                       <span className="material-symbols-outlined">subdirectory_arrow_right</span>
-                      <span>Buscar Lojas</span>
+                      <span>Criar/Relacionar Categorias</span>
                     </h1>
                   </li>
                   <li>
-                    <h1 className="flex items-center space-x-2 p-2 text-white hover:bg-gray-600 cursor-pointer">
+                    <h1
+                      onClick={() => componentsClick('create_products')}
+                      className="flex items-center space-x-2 p-2 text-white hover:bg-gray-600 cursor-pointer">
                       <span className="material-symbols-outlined">subdirectory_arrow_right</span>
-                      <span>Criar Produtos</span>
+                      <span>Criar/Relacionar Produtos</span>
+                    </h1>
+                  </li>
+                  <li>
+                    <h1
+                      onClick={() => componentsClick('create_featured_products')}
+                      className="flex items-center space-x-2 p-2 text-white hover:bg-gray-600 cursor-pointer">
+                      <span className="material-symbols-outlined">subdirectory_arrow_right</span>
+                      <span>Produtos Destaques</span>
                     </h1>
                   </li>
                 </ul>
@@ -164,10 +175,10 @@ const Sidebar: React.FC = () => {
         </nav>
       </div>
       {/* Content Area */}
-      <div className="flex-1 ml-72 flex items-center justify-center">
-        {selectComponentStore === 'create_store' && <CreateStore />}
-        {selectComponentStore === 'search_store' && <SearchStore />}
-      </div>
+      <div className="flex-1 ml-52 flex items-center justify-center pb-20 pt-10">
+    {selectComponentStore === 'create_store' && <CreateStore />}
+    {selectComponentStore === 'create_categories' && <CreateCategories />}
+  </div>
     </div>
   );
 };
