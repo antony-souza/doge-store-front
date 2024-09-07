@@ -7,15 +7,27 @@ import CreateStore from './create.store';
 import CreateCategories from './create.category.store';
 import CreateProduct from './create.product.store';
 import CreateFeaturedProducts from './create.fetured.products';
+import CreateUser from './user/create_user';
 
-type ComponentsStore = 'create_store' | 'create_categories' | 'create_products' | 'create_featured_products' | 'qrcode' | 'payments';
+
+type Store =
+  | 'create_store'
+  | 'create_categories'
+  | 'create_products'
+  | 'create_featured_products'
+
+type User =
+  | 'create_user'
+  | 'search_user'
+
+type Section = Store | User;
 
 const Sidebar: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>();
-  const [selectComponentStore, setSelectComponentStore] = useState<ComponentsStore>();
+  const [selectComponentStore, setSelectComponentStore] = useState<Section>();
   const router = useRouter();
 
-  const componentsClick = (section: ComponentsStore) => {
+  const componentsClick = (section: Section) => {
     setSelectComponentStore(section);
   };
 
@@ -41,6 +53,51 @@ const Sidebar: React.FC = () => {
         </div>
         <nav className="mt-6">
           <ul>
+            {/* Create_User */}
+            <li>
+              <div
+                className="flex items-center justify-between p-4 text-white hover:bg-gray-700 cursor-pointer"
+                onClick={() => handleToggle('create_user')}
+              >
+                <div className="flex items-center space-x-2">
+                  <span className="material-symbols-outlined">group</span>
+                  <span>Usuários</span>
+                </div>
+                <span className="material-symbols-outlined transition-transform duration-500 ease-in-out transform">
+                  {activeSection === 'create_user' ? 'expand_more' : 'arrow_drop_down'}
+                </span>
+              </div>
+              <div
+                className={`transition-all duration-500 ease-in-out overflow-hidden ${activeSection === 'create_user' ? 'max-h-[500px]' : 'max-h-0'}`}
+              >
+                <ul className="pl-4">
+                  <li>
+                    <h1
+                      onClick={() => componentsClick('create_user')}
+                      className="flex items-center space-x-2 p-2 text-white hover:bg-gray-600 cursor-pointer">
+                      <span className="material-symbols-outlined">subdirectory_arrow_right</span>
+                      <span>Novo Usuário</span>
+                    </h1>
+                  </li>
+                  <li>
+                    <h1
+                      onClick={() => componentsClick('create_user')}
+                      className="flex items-center space-x-2 p-2 text-white hover:bg-gray-600 cursor-pointer">
+                      <span className="material-symbols-outlined">subdirectory_arrow_right</span>
+                      <span>Editar Usuário</span>
+                    </h1>
+                  </li>
+                  <li>
+                    <h1
+                      onClick={() => componentsClick('search_user')}
+                      className="flex items-center space-x-2 p-2 text-white hover:bg-gray-600 cursor-pointer">
+                      <span className="material-symbols-outlined">subdirectory_arrow_right</span>
+                      <span>Buscar Usuário</span>
+                    </h1>
+                  </li>
+                </ul>
+              </div>
+            </li>
             {/* Store */}
             <li>
               <div
@@ -177,11 +234,13 @@ const Sidebar: React.FC = () => {
       </div>
       {/* Content Area */}
       <div className="flex-1 ml-32 flex items-center justify-center pb-20 pt-10">
-    {selectComponentStore === 'create_store' && <CreateStore />}
-    {selectComponentStore === 'create_categories' && <CreateCategories />}
-    {selectComponentStore === 'create_products' && <CreateProduct />}
-    {selectComponentStore === 'create_featured_products' && <CreateFeaturedProducts />}
-  </div>
+        {selectComponentStore === 'create_store' && <CreateStore />}
+        {selectComponentStore === 'create_categories' && <CreateCategories />}
+        {selectComponentStore === 'create_products' && <CreateProduct />}
+        {selectComponentStore === 'create_featured_products' && <CreateFeaturedProducts />}
+        {selectComponentStore === 'create_user' && <CreateUser />}
+
+      </div>
     </div>
   );
 };

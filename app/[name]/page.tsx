@@ -11,7 +11,7 @@ interface PageParams {
 export default function StorePage({ params }: { params: PageParams }) {
   const { name } = params;
 
- 
+
   if (!name) {
     notFound(); // Exibe uma página 404 se o parâmetro não estiver presente
   }
@@ -19,9 +19,9 @@ export default function StorePage({ params }: { params: PageParams }) {
   return (
     <>
       <CompanyInformation storeName={name} />
-      <SearchProduct storeName={name}/>
-      <CategoryList storeName={name}/>
-      <FeaturedProducts storeName={name}/>
+      <SearchProduct storeName={name} />
+      <CategoryList storeName={name} />
+      <FeaturedProducts storeName={name} />
     </>
   );
 }
