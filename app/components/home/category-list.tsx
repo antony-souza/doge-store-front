@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
@@ -8,8 +8,9 @@ interface QueryStore {
 }
 
 interface Category {
-  image_url: string[];
+  id: string;
   name: string;
+  image_url: string[];
 }
 
 export function CategoryList({ storeName }: QueryStore) {
@@ -25,9 +26,13 @@ export function CategoryList({ storeName }: QueryStore) {
 
       try {
         const encodedStoreName = encodeURIComponent(storeName);
-        const response = await fetch(`http://localhost:4200/public/categories?storeName=${encodedStoreName}`);
-        const data: Category[] = await response.json();
-        setCategories(data);
+        const response = await fetch(`http://localhost:4200/public/search_store?storeName=${encodedStoreName}`);
+        const data = await response.json();
+
+        // Acessando categorias dentro do array da loja
+        const storeData = data[0]; // A estrutura é um array de lojas, pegar a primeira loja(item 0 :))
+        const categories = storeData.category || []; // Acessando a lista de categorias
+        setCategories(categories);
       } catch (error) {
         console.error('Erro ao buscar categorias:', error);
       } finally {
@@ -35,9 +40,9 @@ export function CategoryList({ storeName }: QueryStore) {
       }
     }
     fetchCategories();
-  }, [storeName]); // storeName vira uma dependência 
+  }, [storeName]); // storeName como dependência 
 
-  const handleMouseDown = (e: any) => {
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     setIsDragging(true);
     setStartX(e.pageX - e.currentTarget.offsetLeft);
     setScrollLeft(e.currentTarget.scrollLeft);
@@ -51,7 +56,7 @@ export function CategoryList({ storeName }: QueryStore) {
     setIsDragging(false);
   };
 
-  const handleMouseMove = (e: any) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!isDragging) return;
     e.preventDefault();
     const x = e.pageX - e.currentTarget.offsetLeft;
@@ -72,13 +77,16 @@ export function CategoryList({ storeName }: QueryStore) {
           onMouseUp={handleMouseUp}
           onMouseMove={handleMouseMove}
         >
-          {categories.map((category, index) => (
-            <div key={index} className="flex flex-col items-center mx-2">
+          {categories.map((category) => (
+            <div key={category.id} className="flex flex-col items-center mx-2">
               <div className="w-24 h-24 rounded-full overflow-hidden border-4">
                 <Image
-                  src={category.image_url[0]} alt={category.name}
-                  width={96} height={96}
-                  className="object-cover w-full h-full" />
+                  src={category.image_url[0]} 
+                  alt={category.name}
+                  width={96}
+                  height={96}
+                  className="object-cover w-full h-full"
+                />
               </div>
               <p className="text-center mt-2">{category.name}</p>
             </div>

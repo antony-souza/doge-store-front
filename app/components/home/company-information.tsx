@@ -34,7 +34,7 @@ export function CompanyInformation({ storeName }: QueryStore) {
     async function fetchCompanyInfo() {
       try {
         const encodedStoreName = encodeURIComponent(storeName);
-        const response = await fetch(`http://localhost:4200/public/store?name=${encodedStoreName}`, {
+        const response = await fetch(`http://localhost:4200/public/search_store?storeName=${encodedStoreName}`, {
           method: 'GET',
           mode: 'cors',
           headers: {

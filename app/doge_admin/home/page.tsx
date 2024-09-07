@@ -3,19 +3,39 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+
 import Sidebar from '@/app/components/doge_admin/sidebar';
+import { jwtDecode } from 'jwt-decode';
+
+interface DecodedToken {
+  expirationTime: number; // 
+}
 
 export default function HomePage() {
-  const [token, setToken] = useState<boolean>(true); // Inicialmente assume que há token
+  const [token, setToken] = useState<boolean>(true); 
   const router = useRouter();
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
-    if (!storedToken) {
-      setToken(false); // Se não há token, define como false
+    
+    // Função para verificar se o token expirou
+    const isTokenExpired = (token: string): boolean => {
+      try {
+        const decoded: DecodedToken = jwtDecode(token);
+        const currentTime = Date.now() / 1000; 
+        return decoded.expirationTime < currentTime; 
+      } catch (error) {
+        console.error('Erro ao decodificar o token:', error);
+        return true; // Se houver algum erro ao decodificar, assume que está expirado
+      }
+    };
+
+    if (!storedToken || isTokenExpired(storedToken)) {
+      localStorage.removeItem('token'); 
+      setToken(false); 
       setTimeout(() => {
-        router.push('/doge_admin');
-      }, 7000); // Redireciona após 7 segundos
+        router.push('/doge_admin')
+      }, 7000);
     }
   }, [router]);
 
