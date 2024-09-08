@@ -43,6 +43,7 @@ export function CompanyInformation({ storeName }: QueryStore) {
           },
         });
 
+
         if (!response.ok) {
           throw new Error('Failed to fetch store information');
         }
