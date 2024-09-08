@@ -85,7 +85,7 @@ export default function CreateStore() {
       </div>
       <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div>
-          <label className="block text-gray-300 font-medium mb-2">Nome da Loja</label>
+          <label className="block text-gray-300 font-medium mb-2">Nome da Loja*</label>
           <input
             type="text"
             value={storeName}
@@ -95,7 +95,7 @@ export default function CreateStore() {
           />
         </div>
         <div>
-          <label className="block text-gray-300 font-medium mb-2">Nome da Configuração</label>
+          <label className="block text-gray-300 font-medium mb-2">Nome da Configuração*</label>
           <input
             type="text"
             value={configName}
@@ -105,9 +105,9 @@ export default function CreateStore() {
           />
         </div>
         <div>
-          <label className="block text-gray-300 font-medium mb-2">Telefone</label>
+          <label className="block text-gray-300 font-medium mb-2">Telefone*</label>
           <input
-            type="text"
+            type="number"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             className="w-full p-3 bg-gray-800 text-gray-100 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -115,7 +115,7 @@ export default function CreateStore() {
           />
         </div>
         <div>
-          <label className="block text-gray-300 font-medium mb-2">Endereço</label>
+          <label className="block text-gray-300 font-medium mb-2">Endereço*</label>
           <input
             type="text"
             value={address}
@@ -133,7 +133,7 @@ export default function CreateStore() {
             rows={4}
           />
         </div>
-        <div>
+        {/* <div>
           <label className="block text-gray-300 font-medium mb-2">Está Aberto?</label>
           <select
             value={isOpen ? 'true' : 'false'}
@@ -143,7 +143,7 @@ export default function CreateStore() {
             <option value="true">Sim</option>
             <option value="false">Não</option>
           </select>
-        </div>
+        </div> */}
         <div>
           <label className="block text-gray-300 font-medium mb-2">URL da Imagem</label>
           <input
