@@ -11,7 +11,6 @@ interface ICategoriesAndBody {
     categories: ICategory[];
 }
 
-//Ta dando certo assim, então fala baixo negue
 export default function CreateCategories() {
     const [successMessage, setSuccessMessage] = useState('');
     const [failMessage, setFailMessage] = useState('');

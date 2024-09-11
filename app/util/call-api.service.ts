@@ -1,13 +1,13 @@
-export default class CallAPIService{
-    async genericRequest(url: string, method: "GET" | "POST" | "PUT" | "DELETE" , withAuth: boolean){
+export default class CallAPIService {
+    async genericRequest(url: string, method: "GET" | "POST" | "PUT" | "DELETE", body?: any, withAuth: boolean = false) {
         const header: any = {
             'Content-Type': 'application/json',
         }
 
-        if(withAuth){
+        if (withAuth) {
             const token = localStorage.getItem("token");
-            
-            if(!token){
+
+            if (!token) {
                 return;
             }
 
@@ -16,11 +16,14 @@ export default class CallAPIService{
 
         const response = await fetch(url, {
             method: method,
-            headers: header
+            headers: header,
+            body: JSON.stringify(body)
         });
 
-        if(response.status === 401){
+        if (response.status === 401) {
             //TODO implementar o Redirect;
+    
+            
         }
 
         return await response.json();

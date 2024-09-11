@@ -23,4 +23,6 @@ export default class ClientService{
 
         return await callAPIService.genericRequest(url, "GET", true);
     }
+
+    
 }
