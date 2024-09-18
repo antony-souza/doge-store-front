@@ -57,6 +57,7 @@ export default function LoginForm() {
         }
       } catch (error) {
         setFailMessage('Erro ao decodificar o token.');
+        
         setTimeout(() => setFailMessage(''), 3000);
       }
     } catch (error) {

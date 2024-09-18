@@ -17,7 +17,9 @@ export default function Auth() {
     const userService = new UserService();
 
     try {
-      const auth = await userService.Auth(email, password);
+
+      const authResponse = await userService.Auth(email, password);
+      
       setErrorMessage('');
       setSuccessMessage('Autenticação bem-sucedida! Redirecionando...');
 
