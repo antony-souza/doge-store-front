@@ -1,14 +1,15 @@
-import { CompanyInformation } from '@/app/components/home/company-information';
+
 import { notFound } from 'next/navigation';
 import { SearchProduct } from '../components/home/search-product';
 import { CategoryList } from '../components/home/category-list';
 import { FeaturedProducts } from '../components/home/featured-products';
+import CompanyInformation from '../components/home/company-information';
 
-interface PageParams {
+export interface IParams {
   name: string;
 }
 
-export default function StorePage({ params }: { params: PageParams }) {
+export default function StorePage({ params }: { params: IParams }) {
   const { name } = params;
 
 
@@ -18,10 +19,10 @@ export default function StorePage({ params }: { params: PageParams }) {
 
   return (
     <>
-      <CompanyInformation storeName={name} />
-      <SearchProduct storeName={name} />
-      <CategoryList storeName={name} />
-      <FeaturedProducts storeName={name} />
+      <CompanyInformation name={name} />
+      <SearchProduct name={name} />
+      <CategoryList name={name} />
+      <FeaturedProducts name={name} />
     </>
   );
 }

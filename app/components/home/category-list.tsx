@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { IParams } from '@/app/[name]/page';
 
 interface QueryStore {
   storeName: string;
@@ -13,7 +14,7 @@ interface Category {
   image_url: string[];
 }
 
-export function CategoryList({ storeName }: QueryStore) {
+export function CategoryList({ name }: IParams) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
@@ -22,11 +23,11 @@ export function CategoryList({ storeName }: QueryStore) {
 
   useEffect(() => {
     async function fetchCategories() {
-      if (!storeName) return; // Não buscar até que o nome da loja esteja presente
+      if (!name) return; // Não buscar até que o nome da loja esteja presente
 
       try {
-        const encodedStoreName = encodeURIComponent(storeName);
-        const response = await fetch(`http://localhost:4200/public/search_store?storeName=${encodedStoreName}`);
+        const encodedStoreName = encodeURIComponent(name);
+        const response = await fetch(`http://localhost:4200/public/search_store?name=${encodedStoreName}`);
         const data = await response.json();
 
         // Acessando categorias dentro do array da loja
@@ -40,7 +41,7 @@ export function CategoryList({ storeName }: QueryStore) {
       }
     }
     fetchCategories();
-  }, [storeName]); // storeName como dependência 
+  }, [name]); // storeName como dependência 
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     setIsDragging(true);

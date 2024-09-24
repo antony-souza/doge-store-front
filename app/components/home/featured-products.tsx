@@ -1,5 +1,6 @@
 'use client';
 
+import { IParams } from '@/app/[name]/page';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
@@ -24,19 +25,15 @@ interface FeaturedProduct {
   product: Product[];
 }
 
-interface QueryStore {
-  storeName: string;
-}
-
-export function FeaturedProducts({ storeName }: QueryStore) {
+export function FeaturedProducts({ name }: IParams) {
   const [featuredProducts, setFeaturedProducts] = useState<FeaturedProduct[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const encodedStoreName = encodeURIComponent(storeName);
-        const response = await fetch(`http://localhost:4200/public/search_store?storeName=${encodedStoreName}`);
+        const encodedStoreName = encodeURIComponent(name);
+        const response = await fetch(`http://localhost:4200/public/search_store?name=${encodedStoreName}`);
         if (!response.ok) {
           throw new Error('Failed to fetch featured items');
         }
@@ -51,7 +48,7 @@ export function FeaturedProducts({ storeName }: QueryStore) {
     }
 
     fetchData();
-  }, [storeName]);
+  }, [name]);
 
   // Agrupa todos os produtos em um único array. Map cria um array de outros array. Flat transforma em um único array.
   const groupedItems = featuredProducts.flatMap((featured) => featured.product);

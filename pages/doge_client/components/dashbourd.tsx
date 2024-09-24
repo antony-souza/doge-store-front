@@ -15,19 +15,18 @@ const Dashboard: React.FC = () => {
             <aside
                 className={`fixed top-16 left-0 h-[calc(100vh-4rem)] bg-white text-slate-950 p-4 shadow-lg transition-width duration-300 ease-in-out ${isSidebarOpen ? 'w-64' : 'w-20'}`}
             >
-                <div className="flex items-center mb-6 pl-2">
+                <div className="flex items-center mb-2 pl-2">
                     {/* Toggle Sidebar Button */}
                     <button
                         onClick={toggleSidebar}
                         className="flex items-center text-slate-950 hover:text-purple-800 transition-colors"
                     >
                         <span className="material-symbols-outlined text-2xl">dashboard</span>
-                        <h2 className={`text-2xl font-bold text-slate-950 ml-4 transition-opacity duration-300 ${isSidebarOpen ? 'opacity-100' : 'opacity-0'}`}>
+                        <h2 className={`pr-1 text-2xl font-bold text-slate-950 ml-4 transition-opacity duration-300 ${isSidebarOpen ? 'opacity-100' : 'opacity-0'}`}>
                             Dashboard
                         </h2>
                     </button>
                 </div>
-
                 {/* Linha abaixo do título Dashboard */}
                 <hr className="border-t border-gray-300 mb-4" />
 

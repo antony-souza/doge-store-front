@@ -1,13 +1,14 @@
 'use client'
 
+import { IStore } from "@/app/[name]/services/store.public.service";
 import { useState, useEffect } from "react";
 
+
 interface MoreInfo {
-  title: string;
-  description: string;
+  store: IStore;
 }
 
-export function MoreInformation() {
+export function MoreInformation({ store }: MoreInfo) {
   const [moreInfo, setMoreInfo] = useState<MoreInfo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -29,8 +30,8 @@ export function MoreInformation() {
     <div>
       {moreInfo.map((info, index) => (
         <div key={index} className="mb-4">
-          <h3 className="text-xl font-bold">{info.title}</h3>
-          <p className="text-md">{info.description}</p>
+          <h3 className="text-xl font-bold">{info.store.address}</h3>
+          <p className="text-md">{info.store.description}</p>
         </div>
       ))}
     </div>

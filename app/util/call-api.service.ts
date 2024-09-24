@@ -1,29 +1,28 @@
 export default class CallAPIService {
-    async genericRequest(url: string, method: "GET" | "POST" | "PUT" | "DELETE", body?: any, withAuth: boolean = false) {
-        const header: any = {
+    async genericRequest(url: string, method: "GET" | "POST" | "PUT" | "DELETE", withAuth: boolean, body?: any) {
+        const headers: any = {
             'Content-Type': 'application/json',
-        }
+        };
 
         if (withAuth) {
             const token = localStorage.getItem("token");
-
-            if (!token) {
-                return;
+            if (token) {
+                headers["Authorization"] = `Bearer ${token}`;
             }
-
-            header["Authorization"] = `Bearer ${token}`;
         }
 
-        const response = await fetch(url, {
+        const requestConfig: RequestInit = {
             method: method,
-            headers: header,
-            body: JSON.stringify(body)
-        });
+            mode: "cors",
+            headers: headers,
+            // Só adiciona o body se for diferente de GET e o body existir
+            ...(method !== "GET" && body ? { body: JSON.stringify(body) } : {}),
+        };
+
+        const response = await fetch(url, requestConfig);
 
         if (response.status === 401) {
-            //TODO implementar o Redirect;
-    
-            
+            // TODO: implementar o redirecionamento
         }
 
         return await response.json();

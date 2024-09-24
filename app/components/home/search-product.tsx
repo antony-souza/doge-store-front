@@ -1,12 +1,9 @@
 'use client'
 
+import { IParams } from '@/app/[name]/page';
 import { useState, useEffect } from 'react';
 
-interface SearchProductProps {
-  storeName: string;  
-}
-
-export function SearchProduct({ storeName }: SearchProductProps) {
+export function SearchProduct({ name }: IParams) {
   const [searchProduct, setSearchProduct] = useState('');
   const [showSearch, setShowSearch] = useState(false);
   const [products, setProducts] = useState<any[]>([]); // Ajuste o tipo conforme necessário
@@ -19,7 +16,7 @@ export function SearchProduct({ storeName }: SearchProductProps) {
       setIsLoading(true);
 
       try {
-        const response = await fetch(`http://localhost:4200/store/${storeName}/products?search=${searchProduct}`, {
+        const response = await fetch(`http://localhost:4200/store/${name}/products?search=${searchProduct}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -41,7 +38,7 @@ export function SearchProduct({ storeName }: SearchProductProps) {
     }
 
     fetchProducts();
-  }, [searchProduct, storeName]);
+  }, [searchProduct, name]);
 
   return (
     <div className="w-full mt-4 flex justify-center pt-2">
