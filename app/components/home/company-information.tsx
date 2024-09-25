@@ -2,14 +2,13 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { IParams } from "@/app/[name]/page";
 import PublicStoreService, { IStore } from "@/app/[name]/services/store.public.service";
 import { Button } from "@/components/ui/button";
 import { MoreInformation } from "./more-informations";
 
 
 
-export default function CompanyInformation({ name }: IParams) {
+export default function CompanyInformation(name: string) {
   const [stores, setStores] = useState<IStore[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showMoreInfo, setShowMoreInfo] = useState(false); 
