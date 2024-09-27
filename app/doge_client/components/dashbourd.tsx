@@ -1,37 +1,38 @@
 'use client'
 import Link from 'next/link';
 import React, { useState } from 'react';
+import { routes } from '../router';
 
-interface IMenuList{
-    path: string,
-    icon: string,
-    name: string
+interface IMenuList {
+    path: string;
+    icon: string;
+    name: string;
 }
 
-interface IDashboardProps{
-    isSidebarOpenProps?: boolean
+interface IDashboardProps {
+    isSidebarOpenProps?: boolean;
 }
 
 const Dashboard: React.FC<IDashboardProps> = ({ isSidebarOpenProps }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(isSidebarOpenProps ?? true);
     const [menuList, setMenuList] = useState<IMenuList[]>([
         {
-            path: "/doge_client/home/store",
+            path: routes.STORE,
             icon: "store",
             name: "Loja"
         },
         {
-            path: "",
+            path: routes.CATEGORIES,
             name: "Categorias",
             icon: "category"   
         },
         {
-            path: "/doge_client/product",
+            path: routes.PRODUCTS,
             name: "Produtos",
             icon: "inventory"   
         },
         {
-            path: "",
+            path: routes.HIGHLIGHTS,
             name: "Destaques",
             icon: "star"   
         },
@@ -42,12 +43,26 @@ const Dashboard: React.FC<IDashboardProps> = ({ isSidebarOpenProps }) => {
     };
 
     const renderItemMenu = (menu: IMenuList, index: number) => {
+        const isDisabled = !menu.path; 
+
         return (
-            <div key={index} className='mt-2' onClick={toggleSidebar}>
-               {/* TODO Quando não tiver path setado deixar o hover desabilitado */}
-                <Link href={menu.path} className="flex items-center text-lg hover:text-purple-400 transition-colors">
-                    <span className="material-symbols-outlined mr-3 text-xl">{menu.icon}</span>
-                    <span className={`transition-opacity duration-300 ${isSidebarOpen ? 'opacity-100' : 'opacity-0'}`}>{menu.name}</span>
+            <div 
+                key={index} 
+                className={`mt-2 ${isDisabled ? 'cursor-not-allowed' : ''}`}
+                onClick={toggleSidebar}
+            >
+                <Link 
+                    href={isDisabled ? "#" : menu.path}
+                    className={`flex items-center text-lg transition-colors ${isDisabled ? 'text-gray-400 cursor-not-allowed' : 'hover:text-purple-400'}`}
+                >
+                    <span 
+                        className={`material-symbols-outlined mr-3 text-xl ${isDisabled ? 'text-gray-400' : 'text-black'}`}
+                    >
+                        {isDisabled ? 'lock' : menu.icon} 
+                    </span>
+                    <span className={`transition-opacity duration-300 ${isSidebarOpen ? 'opacity-100' : 'opacity-0'}`}>
+                        {menu.name}
+                    </span>
                 </Link>
             </div>
         )
@@ -78,7 +93,7 @@ const Dashboard: React.FC<IDashboardProps> = ({ isSidebarOpenProps }) => {
                     <ul className='pl-2'>
                         {
                             menuList.map((menu, index) => {
-                                return renderItemMenu(menu, index)
+                                return renderItemMenu(menu, index);
                             })
                         }
                     </ul>

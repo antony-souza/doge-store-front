@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import Dashboard from "../../components/dashbourd";
-import HeaderClient from "../../components/header";
+import Dashboard from "../components/dashbourd";
+import HeaderClient from "../components/header";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
-import UserService from "../../services/user.service";
-import EditStore from "../../components/editStore";
+import UserService from "../services/user.service";
+import EditStore from "../components/editStore";
 
 export interface Store {
     id: number;

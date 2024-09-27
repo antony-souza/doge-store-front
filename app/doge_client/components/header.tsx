@@ -14,7 +14,7 @@ import {
 const HeaderClient: React.FC = () => {
     const [user, setUser] = useState<IUserLocalStorage>();
     const { push } = useRouter();
-
+    
     useEffect(() => {
         const userService = new UserService();
 
@@ -36,7 +36,7 @@ const HeaderClient: React.FC = () => {
     const exitSystem = () => {
         const userService = new UserService();
         userService.removeUserStorage();
-        push("/doge_client/auth")
+        push("/doge_client")
     }
 
     return (
