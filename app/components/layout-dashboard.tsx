@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
-import HeaderClient from "./header";
-import Dashboard from "./dashbourd";
+import HeaderClient from "../doge_client/components/header";
+import Dashboard from "../doge_client/components/dashbourd";
 
 interface ILayoutDashboardProps{
     children: ReactNode,
@@ -9,7 +9,7 @@ interface ILayoutDashboardProps{
     }
 }
 
-const LayoutDashboard: React.FC<ILayoutDashboardProps> = ({ children, dashboardConfig }) => {
+export const LayoutDashboard: React.FC<ILayoutDashboardProps> = ({ children, dashboardConfig }) => {
     return (
         <>
             <HeaderClient />
@@ -18,5 +18,3 @@ const LayoutDashboard: React.FC<ILayoutDashboardProps> = ({ children, dashboardC
         </>
     )
 }
-
-export default LayoutDashboard;
