@@ -3,4 +3,5 @@ export const routes = {
     CATEGORIES: "",
     PRODUCTS: "/doge_client/product",
     HIGHLIGHTS: "",
+    LOGIN: "/doge_client",
 };

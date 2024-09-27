@@ -6,22 +6,12 @@ import Dashboard from "../components/dashbourd";
 import HeaderClient from "../components/header";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
-import UserService from "../services/user.service";
 import EditStore from "../components/editStore";
-
-export interface Store {
-    id: number;
-    name: string;
-    phone: string;
-    address: string;
-    image_url: string;
-    is_open: boolean;
-    description: string;
-    background_color: string;
-}
+import { IStore } from "@/app/util/interfaces-global.service";
+import UserService from "../services/user.service";
 
 export default function RenderStorePage() {
-    const [store, setStore] = useState<Store | null>(null);
+    const [store, setStore] = useState<IStore | null>(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     useEffect(() => {

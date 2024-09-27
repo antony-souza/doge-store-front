@@ -1,4 +1,5 @@
 import CallAPIService from "@/app/util/call-api.service";
+import { IStore } from "@/app/util/interfaces-global.service";
 import { jwtDecode } from "jwt-decode";
 
 export interface IAuth {
@@ -6,13 +7,13 @@ export interface IAuth {
     password: string;
 }
 
-export interface IAuthResponse{
+export interface IAuthResponse {
     token: string,
     message: string,
     user: IUserLocalStorage
 }
 
-export interface IUserLocalStorage{
+export interface IUserLocalStorage {
     id: string,
     name: string,
     imageUrl: string
@@ -46,14 +47,14 @@ export default class UserService {
 
         localStorage.setItem('token', response.token);
         localStorage.setItem(this.USER_LOCAL_STORAGE_KEY, JSON.stringify(response.user));
-        
+
         return response
     }
 
-    async getStore(){
+    async getStore() {
         const token = localStorage.getItem('token');
 
-        if(!token){
+        if (!token) {
             throw new Error('Token não encontrado');
         }
 
@@ -62,6 +63,7 @@ export default class UserService {
         const store_id = decodedToken.store_id;
 
         const url = `${this.API_URL}/store/store-client/${store_id}`;
+        console.log(`Chamada para a URL: ${url}`);
 
         const callAPIService = new CallAPIService();
 
@@ -73,14 +75,14 @@ export default class UserService {
     getUserStorage(): IUserLocalStorage | undefined {
         const userStorage = localStorage.getItem(this.USER_LOCAL_STORAGE_KEY);
 
-        if(!userStorage){
+        if (!userStorage) {
             return undefined;
         }
 
         return JSON.parse(userStorage)
     }
 
-    removeUserStorage(){
+    removeUserStorage() {
         localStorage.clear();
     }
 }
