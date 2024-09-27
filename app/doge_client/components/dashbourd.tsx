@@ -2,12 +2,52 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 
+interface IMenuList{
+    path: string,
+    icon: string,
+    name: string
+}
+
 const Dashboard: React.FC = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [menuList, setMenuList] = useState<IMenuList[]>([
+        {
+            path: "/doge_client/home/store",
+            icon: "store",
+            name: "Loja"
+        },
+        {
+            path: "",
+            name: "Categorias",
+            icon: "category"   
+        },
+        {
+            path: "",
+            name: "Produtos",
+            icon: "inventory"   
+        },
+        {
+            path: "",
+            name: "Destaques",
+            icon: "star"   
+        },
+    ]);
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
     };
+
+    const renderItemMenu = (menu: IMenuList, index: number) => {
+        return (
+            <div key={index} className='mt-2' onClick={toggleSidebar}>
+               {/* TODO Quando não tiver path setado deixar o hover desabilitado */}
+                <Link href={menu.path} className="flex items-center text-lg hover:text-purple-400 transition-colors">
+                    <span className="material-symbols-outlined mr-3 text-xl">{menu.icon}</span>
+                    <span className={`transition-opacity duration-300 ${isSidebarOpen ? 'opacity-100' : 'opacity-0'}`}>{menu.name}</span>
+                </Link>
+            </div>
+        )
+    }
 
     return (
         <div className="relative flex pt-5">
@@ -32,30 +72,11 @@ const Dashboard: React.FC = () => {
 
                 <nav>
                     <ul className='pl-2'>
-                        <li className="mb-4">
-                            <Link href="/doge_client/home/store" className="flex items-center text-lg hover:text-purple-400 transition-colors">
-                                <span className="material-symbols-outlined mr-3 text-xl">store</span>
-                                <span className={`transition-opacity duration-300 ${isSidebarOpen ? 'opacity-100' : 'opacity-0'}`}>Loja</span>
-                            </Link>
-                        </li>
-                        <li className="mb-4">
-                            <a href="#" className="flex items-center text-lg hover:text-purple-400 transition-colors">
-                                <span className="material-symbols-outlined mr-3 text-xl">category</span>
-                                <span className={`transition-opacity duration-300 ${isSidebarOpen ? 'opacity-100' : 'opacity-0'}`}>Categorias</span>
-                            </a>
-                        </li>
-                        <li className="mb-4">
-                            <a href="#" className="flex items-center text-lg hover:text-purple-400 transition-colors">
-                                <span className="material-symbols-outlined mr-3 text-xl">inventory</span>
-                                <span className={`transition-opacity duration-300 ${isSidebarOpen ? 'opacity-100' : 'opacity-0'}`}>Produtos</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" className="flex items-center text-lg hover:text-purple-400 transition-colors">
-                                <span className="material-symbols-outlined mr-3 text-xl">star</span>
-                                <span className={`transition-opacity duration-300 ${isSidebarOpen ? 'opacity-100' : 'opacity-0'}`}>Destaques</span>
-                            </a>
-                        </li>
+                        {
+                            menuList.map((menu, index) => {
+                                return renderItemMenu(menu, index)
+                            })
+                        }
                     </ul>
                 </nav>
             </aside>
