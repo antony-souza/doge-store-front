@@ -17,6 +17,14 @@ const HeaderClient: React.FC = () => {
         }
     }, [])
 
+    const setProfileUrl = (imageUrl?: string) => {
+        if(!imageUrl){
+            return "https://i.imgur.com/LGT9cVS.png";
+        }
+
+        return imageUrl;
+    }
+
     return (
         <div className="flex justify-center  text-slate-950">
             <header className='w-full h-16  bg-white flex items-center justify-between p-4 rounded-b border border-gray-300 shadow-md'>
@@ -28,10 +36,10 @@ const HeaderClient: React.FC = () => {
                    
                     <Avatar>
                         {
-                            user && user.imageUrl ?  
-                                <AvatarImage src={user.imageUrl} alt='Profile User' /> 
+                            user ?  
+                                <AvatarImage src={setProfileUrl(user.imageUrl)} alt='Profile User' /> 
                                 :  
-                                <AvatarImage src='https://i.imgur.com/LGT9cVS.png' alt='Profile User' /> 
+                                undefined
                         }
                        
                     </Avatar>
