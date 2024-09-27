@@ -79,4 +79,8 @@ export default class UserService {
 
         return JSON.parse(userStorage)
     }
+
+    removeUserStorage(){
+        localStorage.clear();
+    }
 }
