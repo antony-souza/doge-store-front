@@ -6,6 +6,18 @@ export interface IAuth {
     password: string;
 }
 
+export interface IAuthResponse{
+    token: string,
+    message: string,
+    user: IUserLocalStorage
+}
+
+export interface IUserLocalStorage{
+    id: string,
+    name: string,
+    imageUrl: string
+}
+
 export interface DecodedToken {
     id: string;
     role: string;
@@ -15,8 +27,9 @@ export interface DecodedToken {
 
 export default class UserService {
     private readonly API_URL = "http://localhost:4200";
+    private readonly USER_LOCAL_STORAGE_KEY = "user";
 
-    async Auth(email: string, password: string): Promise<IAuth> {
+    async auth(email: string, password: string): Promise<IAuthResponse> {
         const url = `${this.API_URL}/auth/login`;
         const body = {
             email,
@@ -24,7 +37,7 @@ export default class UserService {
         }
         const callAPIService = new CallAPIService();
 
-        const response = await callAPIService.genericRequest(url, "POST", false, body);
+        const response = await callAPIService.genericRequest(url, "POST", false, body) as IAuthResponse;
 
         if (!response.token) {
             throw new Error('Token não recebido meu nobre!');
@@ -32,6 +45,7 @@ export default class UserService {
         }
 
         localStorage.setItem('token', response.token);
+        localStorage.setItem(this.USER_LOCAL_STORAGE_KEY, JSON.stringify(response.user));
         
         return response
     }
@@ -54,5 +68,15 @@ export default class UserService {
         const response = await callAPIService.genericRequest(url, "GET", true);
 
         return response;
+    }
+
+    getUserStorage(): IUserLocalStorage | undefined {
+        const userStorage = localStorage.getItem(this.USER_LOCAL_STORAGE_KEY);
+
+        if(!userStorage){
+            return undefined;
+        }
+
+        return JSON.parse(userStorage)
     }
 }

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { IParams } from '@/app/[name]/page';
+import { IParams } from '@/app/[name]/services/store.public.service';
 
 interface QueryStore {
   storeName: string;

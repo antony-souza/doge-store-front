@@ -17,16 +17,10 @@ export default function Auth() {
     const userService = new UserService();
 
     try {
-
-      const authResponse = await userService.Auth(email, password);
+      await userService.auth(email, password);
       
       setErrorMessage('');
-      setSuccessMessage('Autenticação bem-sucedida! Redirecionando...');
-
-      setTimeout(() => {
-        router.push('/doge_client/home');
-      }, 2000);
-
+      router.push('/doge_client/home');
     } catch (error) {
       console.error(error);
       setSuccessMessage('');
