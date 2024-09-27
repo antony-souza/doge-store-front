@@ -8,8 +8,12 @@ interface IMenuList{
     name: string
 }
 
-const Dashboard: React.FC = () => {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+interface IDashboardProps{
+    isSidebarOpenProps?: boolean
+}
+
+const Dashboard: React.FC<IDashboardProps> = ({ isSidebarOpenProps }) => {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(isSidebarOpenProps ?? true);
     const [menuList, setMenuList] = useState<IMenuList[]>([
         {
             path: "/doge_client/home/store",
@@ -22,7 +26,7 @@ const Dashboard: React.FC = () => {
             icon: "category"   
         },
         {
-            path: "",
+            path: "/doge_client/product",
             name: "Produtos",
             icon: "inventory"   
         },
