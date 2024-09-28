@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import PublicStoreService, { IStore } from "@/app/[name]/services/store.public.service";
+import PublicStoreService from "@/app/[name]/services/store.public.service";
 import { Button } from "@/components/ui/button";
 import { MoreInformation } from "./more-informations";
+import { IStore } from "@/app/util/interfaces-global.service";
 
 
 

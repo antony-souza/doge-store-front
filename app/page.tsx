@@ -1,11 +1,19 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function HomePage() {
   //Vai vir tudo da API, só para teste
+  const router = useRouter();
+
+  //TODO remover na versao final
+  useEffect(() => {
+    router.push('/doge_client');
+  }, [])
+
   return (
     <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4">
       <div className="bg-slate-800 shadow-2xl rounded-lg p-6 text-center max-w-4xl w-full">
