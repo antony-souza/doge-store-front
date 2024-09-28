@@ -2,11 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import Dashboard from "../components/dashbourd";
-import HeaderClient from "../components/header";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
-import EditStore from "../components/editStore";
 import { IStore } from "@/app/util/interfaces-global.service";
 import UserService from "../services/user.service";
 import { LayoutDashboard } from "@/app/components/layout-dashboard";
@@ -15,7 +12,6 @@ import { TitlePage } from "@/app/components/title-page";
 
 export default function RenderStorePage() {
     const [store, setStore] = useState<IStore | null>(null);
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchStore = async () => {
@@ -30,14 +26,6 @@ export default function RenderStorePage() {
 
         fetchStore();
     }, []);
-
-    const handleEditStore = () => {
-        setIsEditModalOpen(true);
-    };
-
-    const closeEditModal = () => {
-        setIsEditModalOpen(false);
-    };
 
     return (
         <>
@@ -93,9 +81,6 @@ export default function RenderStorePage() {
                     </Table>
                 </LayoutPage>
             </LayoutDashboard>
-
-            {/* Renderiza o componente EditStore se isEditModalOpen for true */}
-            {isEditModalOpen && <EditStore store={store} onClose={closeEditModal} />}
         </>
     );
 }

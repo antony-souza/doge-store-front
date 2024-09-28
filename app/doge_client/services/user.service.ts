@@ -1,5 +1,5 @@
 import CallAPIService from "@/app/util/call-api.service";
-import { IStore } from "@/app/util/interfaces-global.service";
+import { IStore, IUpdateStore } from "@/app/util/interfaces-global.service";
 import { jwtDecode } from "jwt-decode";
 
 export interface IAuth {
@@ -95,6 +95,27 @@ export default class UserService {
         localStorage.clear();
     }
 
+    async updateStore(body: FormData) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            throw new Error('Token não encontrado');
+        }
+
+        const decodedToken = jwtDecode<DecodedToken>(token);
+        const store_id = decodedToken.store_id;
+
+        const url = `${this.API_URL}/store/update/store/${store_id}`;
+        console.log(`Chamada para a URL: ${url}`);
+
+        const callAPIService = new CallAPIService();
+
+        const response = await callAPIService.genericRequest(url, "PUT", true,body) as IUpdateStore;
+        console.log(response);
+
+        return response;
+    }
+
     async getAllProducts() {
         const token = localStorage.getItem('token');
 
@@ -115,4 +136,5 @@ export default class UserService {
         
         return response;
     }
+   
 }
