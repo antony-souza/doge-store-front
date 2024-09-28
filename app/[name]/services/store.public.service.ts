@@ -10,26 +10,6 @@ export interface ICategory {
     image_url: string;
 }
 
-export interface IProduct {
-    id: number;
-    name: string;
-    image_url: string;
-    price: string;
-}
-
-export interface IStore {
-    id: string;
-    name: string;
-    phone: string;
-    address: string;
-    is_open: boolean;
-    image_url: string;
-    description: string;
-    background_color: string;
-    categories: ICategory[];
-    featuredProducts: IProduct[];
-}
-
 
 export default class PublicStoreService {
     private readonly API_URL = "http://localhost:4200";

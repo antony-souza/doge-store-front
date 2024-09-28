@@ -19,12 +19,25 @@ export interface IUserLocalStorage {
     imageUrl: string
 }
 
+export interface ICategory {
+    id: string,
+    name: string,
+}
+
+export interface IProduct {
+    id: string,
+    name: string,
+    price: number,
+    description: string,
+    category: ICategory,
+    image_url: string,
+}
+
 export interface DecodedToken {
     id: string;
     role: string;
     store_id: string;
 }
-
 
 export default class UserService {
     private readonly API_URL = "http://localhost:4200";
@@ -32,23 +45,21 @@ export default class UserService {
 
     async auth(email: string, password: string): Promise<IAuthResponse> {
         const url = `${this.API_URL}/auth/login`;
-        const body = {
-            email,
-            password,
-        }
+        const body = { email, password };
         const callAPIService = new CallAPIService();
 
         const response = await callAPIService.genericRequest(url, "POST", false, body) as IAuthResponse;
 
         if (!response.token) {
             throw new Error('Token não recebido meu nobre!');
-
         }
+        const decodedToken = jwtDecode<DecodedToken>(response.token);
 
         localStorage.setItem('token', response.token);
+        localStorage.setItem('role', decodedToken.role);  // Salva a role no localStorage
         localStorage.setItem(this.USER_LOCAL_STORAGE_KEY, JSON.stringify(response.user));
 
-        return response
+        return response;
     }
 
     async getStore() {
@@ -59,15 +70,13 @@ export default class UserService {
         }
 
         const decodedToken = jwtDecode<DecodedToken>(token);
-
         const store_id = decodedToken.store_id;
 
         const url = `${this.API_URL}/store/store-client/${store_id}`;
         console.log(`Chamada para a URL: ${url}`);
 
         const callAPIService = new CallAPIService();
-
-        const response = await callAPIService.genericRequest(url, "GET", true);
+        const response = await callAPIService.genericRequest(url, "GET", true) as IStore;
 
         return response;
     }
@@ -79,10 +88,31 @@ export default class UserService {
             return undefined;
         }
 
-        return JSON.parse(userStorage)
+        return JSON.parse(userStorage);
     }
 
     removeUserStorage() {
         localStorage.clear();
+    }
+
+    async getAllProducts() {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            throw new Error('Token não encontrado');
+        }
+
+        const decodedToken = jwtDecode<DecodedToken>(token);
+        const store_id = decodedToken.store_id;
+
+        const url = `${this.API_URL}/product/search/${store_id}`;
+        console.log(`Chamada para a URL: ${url}`);
+
+        const callAPIService = new CallAPIService();
+
+        const response = await callAPIService.genericRequest(url, "GET", true) as IProduct[];
+        console.log(response);
+        
+        return response;
     }
 }

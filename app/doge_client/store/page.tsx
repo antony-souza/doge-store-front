@@ -9,6 +9,9 @@ import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import EditStore from "../components/editStore";
 import { IStore } from "@/app/util/interfaces-global.service";
 import UserService from "../services/user.service";
+import { LayoutDashboard } from "@/app/components/layout-dashboard";
+import { LayoutPage } from "@/app/components/layout-page";
+import { TitlePage } from "@/app/components/title-page";
 
 export default function RenderStorePage() {
     const [store, setStore] = useState<IStore | null>(null);
@@ -19,36 +22,41 @@ export default function RenderStorePage() {
             try {
                 const userService = new UserService();
                 const response = await userService.getStore();
-                setStore(response); 
+                setStore(response);
             } catch (error) {
                 console.error("Erro ao buscar a loja:", error);
             }
         };
 
         fetchStore();
-    }, []); // Executa apenas uma vez ao montar o componente
+    }, []);
 
     const handleEditStore = () => {
-        setIsEditModalOpen(true); 
+        setIsEditModalOpen(true);
     };
 
     const closeEditModal = () => {
-        setIsEditModalOpen(false); 
+        setIsEditModalOpen(false);
     };
 
     return (
         <>
-            <HeaderClient />
-            <div className="flex justify-center items-start px-4 py-8 bg-gray-100">
-                <div className="w-full max-w-6xl bg-white shadow-2xl border border-gray-200 rounded-lg overflow-x-auto p-6">
-                    <div className="flex justify-between pb-2">
-                        <h1 className="text-2xl font-semibold">{`Informações`}</h1>
-                        <Button className="flex gap-2" onClick={handleEditStore}>
-                            <span className="material-symbols-outlined">draw</span>
-                            Editar Loja
-                        </Button>
-                    </div>
+            <LayoutDashboard dashboardConfig={{ isSidebarOpenProps: false }}>
+                <LayoutPage>
+                    <div className="flex justify-between align-middle">
+                        <>
+                            <TitlePage name="Loja" />
+                        </>
 
+                        <>
+                            <Button className="flex gap-3">
+                                <span className="material-symbols-outlined">
+                                    draw
+                                </span>
+                                Editar Loja
+                            </Button>
+                        </>
+                    </div>
                     <Table className="min-w-full">
                         <TableHeader>
                             <TableRow>
@@ -83,9 +91,8 @@ export default function RenderStorePage() {
                             )}
                         </TableBody>
                     </Table>
-                </div>
-            </div>
-            <Dashboard />
+                </LayoutPage>
+            </LayoutDashboard>
 
             {/* Renderiza o componente EditStore se isEditModalOpen for true */}
             {isEditModalOpen && <EditStore store={store} onClose={closeEditModal} />}

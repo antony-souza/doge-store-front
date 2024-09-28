@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import PublicStoreService, { IParams, IStore } from "./services/store.public.service";
+import PublicStoreService, { IParams } from "./services/store.public.service";
 import { MoreInformation } from "../components/home/more-informations";
+import { IStore } from "../util/interfaces-global.service";
 
 export default function PublicStore({ params }: { params: IParams }) {
   const { name } = params;
