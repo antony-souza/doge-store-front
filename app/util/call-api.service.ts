@@ -1,4 +1,7 @@
+import { useRouter } from "next/navigation";
+
 export default class CallAPIService {
+    private readonly router = useRouter();
     async genericRequest(url: string, method: "GET" | "POST" | "PUT" | "DELETE", withAuth: boolean, body?: any) {
         const headers: any = {
             'Content-Type': 'application/json',
@@ -22,7 +25,7 @@ export default class CallAPIService {
         const response = await fetch(url, requestConfig);
 
         if (response.status === 401) {
-            // TODO: implementar o redirecionamento
+
         }
 
         return await response.json();

@@ -1,14 +1,14 @@
+"use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import UserService from "../services/user.service";
 import Image from "next/image";
 import Button from "@/app/components/buttons/btn";
+import { toast } from 'react-toastify';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
   const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -19,12 +19,11 @@ export default function Auth() {
     try {
       await userService.auth(email, password);
       
-      setErrorMessage('');
+      toast.success('Login bem-sucedido!');
       router.push('/doge_client/home');
     } catch (error) {
       console.error(error);
-      setSuccessMessage('');
-      setErrorMessage('Falha na autenticação');
+      toast.error('Falha na autenticação');
     }
   };
 
@@ -87,10 +86,6 @@ export default function Auth() {
             </div>
 
             <Button type="submit">Entrar</Button>
-
-            {errorMessage && <p className="text-red-500 pt-4 text-center">{errorMessage}</p>}
-            {successMessage && <p className="text-green-500 pt-4 text-center">{successMessage}</p>}
-
             <span
               className="block mt-4 text-center text-sm text-indigo-500 hover:text-indigo-400 cursor-pointer">
               Esqueci email / senha
