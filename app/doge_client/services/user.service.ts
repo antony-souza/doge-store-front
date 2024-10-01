@@ -40,7 +40,7 @@ export interface DecodedToken {
 }
 
 export default class UserService {
-    private readonly API_URL = "http://localhost:4200";
+    private readonly API_URL = "https://antony-souza.online";
     private readonly USER_LOCAL_STORAGE_KEY = "user";
 
     async auth(email: string, password: string): Promise<IAuthResponse> {
@@ -56,7 +56,7 @@ export default class UserService {
         const decodedToken = jwtDecode<DecodedToken>(response.token);
 
         localStorage.setItem('token', response.token);
-        localStorage.setItem('role', decodedToken.role);  // Salva a role no localStorage
+        localStorage.setItem('role', decodedToken.role);
         localStorage.setItem(this.USER_LOCAL_STORAGE_KEY, JSON.stringify(response.user));
 
         return response;
@@ -110,7 +110,7 @@ export default class UserService {
 
         const callAPIService = new CallAPIService();
 
-        const response = await callAPIService.genericRequest(url, "PUT", true,body) as IUpdateStore;
+        const response = await callAPIService.genericRequest(url, "PUT", true, body) as IUpdateStore[];
         console.log(response);
 
         return response;

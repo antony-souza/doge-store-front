@@ -12,7 +12,7 @@ export interface ICategory {
 
 
 export default class PublicStoreService {
-    private readonly API_URL = "http://localhost:4200";
+    private readonly API_URL = "https://antony-souza.online";
 
     async getPublicStore(name: string) {
 

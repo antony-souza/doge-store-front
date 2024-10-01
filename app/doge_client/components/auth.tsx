@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import UserService from "../services/user.service";
 import Image from "next/image";
 import Button from "@/app/components/buttons/btn";
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
@@ -18,12 +18,16 @@ export default function Auth() {
 
     try {
       await userService.auth(email, password);
-      
-      toast.success('Login bem-sucedido!');
+
+      toast.success('Login bem-sucedido!', {
+        progressClassName: 'bg-green-500',
+      });
       router.push('/doge_client/home');
     } catch (error) {
       console.error(error);
-      toast.error('Falha na autenticação');
+      toast.error('Falha na autenticação', {
+        progressClassName: 'bg-red-500',
+      });
     }
   };
 
@@ -93,6 +97,15 @@ export default function Auth() {
           </form>
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        pauseOnHover
+        draggable
+      />
     </>
   );
 }
