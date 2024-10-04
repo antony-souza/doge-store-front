@@ -9,7 +9,7 @@ import UserService from "../services/user.service";
 import { LayoutDashboard } from "@/app/components/layout-dashboard";
 import { LayoutPage } from "@/app/components/layout-page";
 import { TitlePage } from "@/app/components/title-page";
-import { FormLayout } from "@/app/util/form";
+import { FormUpdateStore } from "./form-store-update";
 
 export default function RenderStorePage() {
     const [store, setStore] = useState<IStore | null>(null);
@@ -48,7 +48,7 @@ export default function RenderStorePage() {
                     </div>
 
                     {isEditing ? (
-                        <FormLayout /> 
+                        <FormUpdateStore /> 
                     ) : (
                         <Table className="min-w-full">
                             <TableHeader>
@@ -78,7 +78,32 @@ export default function RenderStorePage() {
                                         <TableCell className="text-green-500">
                                             {store.is_open ? "Aberto" : "Fechado"}
                                         </TableCell>
-                                        <TableCell>{store.background_color}</TableCell>
+                                        <TableCell>
+                                            <div style={{ position: 'relative', width: '100px', height: '30px' }}>
+                                                <div
+                                                    style={{
+                                                        backgroundColor: store.background_color,
+                                                        width: '100%',
+                                                        height: '100%',
+                                                        borderRadius: '4px',
+                                                        display: 'flex', 
+                                                        alignItems: 'center', 
+                                                        justifyContent: 'center', 
+                                                    }}
+                                                >
+                                                    <span
+                                                        style={{
+                                                            color: '#fff', 
+                                                            fontWeight: 'bold',
+                                                            fontSize: '12px', 
+                                                            textAlign: 'center',
+                                                        }}
+                                                    >
+                                                        {store.background_color}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </TableCell>
                                         <TableCell>{store.phone}</TableCell>
                                         <TableCell>{store.address}</TableCell>
                                         <TableCell>{store.description}</TableCell>

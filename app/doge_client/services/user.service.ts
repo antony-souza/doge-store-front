@@ -39,16 +39,15 @@ export interface DecodedToken {
     store_id: string;
 }
 
-export default class UserService {
-    private readonly API_URL = "https://antony-souza.online";
+export default class UserService extends CallAPIService {
     private readonly USER_LOCAL_STORAGE_KEY = "user";
 
     async auth(email: string, password: string): Promise<IAuthResponse> {
-        const url = `${this.API_URL}/auth/login`;
+        const endpoint = '/auth/login';
         const body = { email, password };
         const callAPIService = new CallAPIService();
 
-        const response = await callAPIService.genericRequest(url, "POST", false, body) as IAuthResponse;
+        const response = await callAPIService.genericRequest(endpoint, "POST", false, body) as IAuthResponse;
 
         if (!response.token) {
             throw new Error('Token não recebido meu nobre!');
@@ -62,24 +61,42 @@ export default class UserService {
         return response;
     }
 
-    async getStore() {
+    async getStore(): Promise<IStore> {
+        const storedStore = localStorage.getItem('store');
+        const storedTimestamp = localStorage.getItem('store_timestamp');
+        const currentTime = new Date().getTime();
+        const expirationTime = 5 * 60 * 1000; // Expiração de 5 minutos (em milissegundos)
+    
+        // Verifica se os dados da loja no localStorage ainda são válidos
+        if (storedStore && storedTimestamp && (currentTime - parseInt(storedTimestamp)) < expirationTime) {
+            console.log('Loja carregada do localStorage');
+            return JSON.parse(storedStore);
+        }
+    
+        // Caso os dados tenham expirado ou não estejam armazenados, faz uma nova requisição
         const token = localStorage.getItem('token');
-
         if (!token) {
             throw new Error('Token não encontrado');
         }
-
+    
         const decodedToken = jwtDecode<DecodedToken>(token);
         const store_id = decodedToken.store_id;
-
-        const url = `${this.API_URL}/store/store-client/${store_id}`;
-        console.log(`Chamada para a URL: ${url}`);
-
+        localStorage.setItem('store_id', store_id);
+    
+        const endpoint = `/store/store-client/${store_id}`;
+        console.log(`Chamada para a URL: ${endpoint}`);
+    
         const callAPIService = new CallAPIService();
-        const response = await callAPIService.genericRequest(url, "GET", true) as IStore;
-
+        const response = await callAPIService.genericRequest(endpoint, "GET", true) as IStore;
+    
+        // Armazena os dados da loja e o timestamp no localStorage
+        localStorage.setItem('store', JSON.stringify(response));
+        localStorage.setItem('store_timestamp', currentTime.toString());
+    
         return response;
     }
+    
+    
 
     getUserStorage(): IUserLocalStorage | undefined {
         const userStorage = localStorage.getItem(this.USER_LOCAL_STORAGE_KEY);
@@ -105,36 +122,43 @@ export default class UserService {
         const decodedToken = jwtDecode<DecodedToken>(token);
         const store_id = decodedToken.store_id;
 
-        const url = `${this.API_URL}/store/update/store/${store_id}`;
-        console.log(`Chamada para a URL: ${url}`);
+        const endpoint = `/store/update/${store_id}`;
+        console.log(`Chamada para a URL: ${endpoint}`);
 
         const callAPIService = new CallAPIService();
 
-        const response = await callAPIService.genericRequest(url, "PUT", true, body) as IUpdateStore[];
-        console.log(response);
+        const response = await callAPIService.genericRequest(endpoint, "PUT", true, body) as IUpdateStore[];
 
         return response;
     }
 
-    async getAllProducts() {
+    async getAllProducts(): Promise<IProduct[]> {
+      
+        const storedProducts = localStorage.getItem('products');
+    
+        if (storedProducts) {
+            return JSON.parse(storedProducts);
+        }
+    
         const token = localStorage.getItem('token');
-
+    
         if (!token) {
             throw new Error('Token não encontrado');
         }
-
+    
         const decodedToken = jwtDecode<DecodedToken>(token);
         const store_id = decodedToken.store_id;
-
-        const url = `${this.API_URL}/product/search/${store_id}`;
-        console.log(`Chamada para a URL: ${url}`);
-
+    
+        const endpoint = `/product/search/${store_id}`;
+        console.log(`Chamada para a URL: ${endpoint}`);
+    
         const callAPIService = new CallAPIService();
-
-        const response = await callAPIService.genericRequest(url, "GET", true) as IProduct[];
-        console.log(response);
-        
+        const response = await callAPIService.genericRequest(endpoint, "GET", true) as IProduct[];
+    
+        localStorage.setItem('products', JSON.stringify(response));
+    
         return response;
     }
+    
    
 }

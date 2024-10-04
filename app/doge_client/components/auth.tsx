@@ -1,14 +1,14 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import UserService from "../services/user.service";
 import Image from "next/image";
 import Button from "@/app/components/buttons/btn";
-import { toast, ToastContainer } from 'react-toastify';
 
 export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -19,17 +19,27 @@ export default function Auth() {
     try {
       await userService.auth(email, password);
 
-      toast.success('Login bem-sucedido!', {
-        progressClassName: 'bg-green-500',
-      });
-      router.push('/doge_client/home');
+      if (!userService.auth) {
+        setErrorMessage('Falha na autenticação, tente novamente!');
+      }
+
+      router.replace('/doge_client/home');
     } catch (error) {
+      setErrorMessage('Falha na autenticação, tente novamente!');
       console.error(error);
-      toast.error('Falha na autenticação', {
-        progressClassName: 'bg-red-500',
-      });
     }
   };
+
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage('');
+      }, 5000);
+
+
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
 
   return (
     <>
@@ -49,6 +59,7 @@ export default function Auth() {
           </div>
 
           <form onSubmit={handleSubmit}>
+            {errorMessage && <p className="text-red-500 text-center">{errorMessage}</p>}
             <div className="relative mb-4">
               <label htmlFor="email" className="block text-sm font-medium text-gray-300">
                 E-mail
@@ -88,7 +99,6 @@ export default function Auth() {
                 />
               </div>
             </div>
-
             <Button type="submit">Entrar</Button>
             <span
               className="block mt-4 text-center text-sm text-indigo-500 hover:text-indigo-400 cursor-pointer">
@@ -97,15 +107,6 @@ export default function Auth() {
           </form>
         </div>
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={true}
-        closeOnClick
-        pauseOnHover
-        draggable
-      />
     </>
   );
 }

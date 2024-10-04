@@ -1,10 +1,9 @@
 import { toast } from "react-toastify";
-import UserService from "../doge_client/services/user.service";
+import UserService from "../services/user.service";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog } from "@radix-ui/react-dialog";
 
-export const FormLayout = () => {
+export const FormUpdateStore = () => {
     const [form, setForm] = useState<FormData[]>([]);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
