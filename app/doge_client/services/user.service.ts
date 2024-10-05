@@ -65,13 +65,15 @@ export default class UserService extends CallAPIService {
         const storedStore = localStorage.getItem('store');
         const storedTimestamp = localStorage.getItem('store_timestamp');
         const currentTime = new Date().getTime();
-        const expirationTime = 1 * 1000;
+        const expirationTime = 5 * 60 * 1000; // 5 minutos
 
         // Verifica se os dados da loja estão armazenados e se ainda estão válidos
         if (storedStore && storedTimestamp && (currentTime - parseInt(storedTimestamp)) < expirationTime) {
+            console.log("Dados da loja carregados do localStorage.");
             return JSON.parse(storedStore);
         }
 
+        // Obtém o token e decodifica para extrair o store_id
         const token = localStorage.getItem('token');
         if (!token) {
             throw new Error('Token não encontrado');
@@ -87,11 +89,20 @@ export default class UserService extends CallAPIService {
         const callAPIService = new CallAPIService();
         const response = await callAPIService.genericRequest(endpoint, "GET", true) as IStore;
 
-        localStorage.setItem('store', JSON.stringify(response));
-        localStorage.setItem('store_timestamp', currentTime.toString());
+        // Verifica se os dados retornados pela API são diferentes dos armazenados no localStorage
+        try {
+            if (!storedStore || JSON.stringify(response) !== storedStore) {
+                console.log("Dados atualizados, salvando no localStorage.");
 
+                localStorage.setItem('store', JSON.stringify(response));
+                localStorage.setItem('store_timestamp', currentTime.toString());
+            }
+        } catch (err) {
+            console.error(err);
+        }
         return response;
     }
+
 
 
 
@@ -157,5 +168,26 @@ export default class UserService extends CallAPIService {
         return response;
     }
 
+    //TODO - Implementar a chamada para a API de atualização de produtos
+    async updateProduct(body: FormData) {
+        const token = localStorage.getItem('token');
+        const id = localStorage.getItem('products');
+
+        if (!token) {
+            throw new Error('Token não encontrado');
+        }
+
+        const decodedToken = jwtDecode<DecodedToken>(token);
+        const store_id = decodedToken.store_id;
+
+       const endpoint = `/product/update/${id}`;
+        console.log(`Chamada para a URL: ${endpoint}`);
+
+        const callAPIService = new CallAPIService();
+
+        const response = await callAPIService.genericRequest(endpoint, "PUT", true, body) as IUpdateStore[];
+
+        return response;
+    }
 
 }
