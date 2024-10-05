@@ -47,7 +47,6 @@ export default class CallAPIService {
             console.error("Não autorizado. Verifique as credenciais.");
         }
 
-        // Tratamento de erro se a resposta não for bem-sucedida
         if (!response.ok) {
             const errorResponse = await response.json();
             throw new Error(errorResponse.message || 'Erro na requisição');
