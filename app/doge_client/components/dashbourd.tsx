@@ -29,7 +29,7 @@ const Dashboard: React.FC<IDashboardProps> = ({ isSidebarOpenProps }) => {
         {
             path: routes.PRODUCTS,
             name: "Produtos",
-            icon: "inventory"   
+            icon: "add_shopping_cart"   
         },
         {
             path: routes.HIGHLIGHTS,
