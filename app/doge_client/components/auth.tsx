@@ -1,5 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
+import { Toaster } from "@/components/ui/toaster";
+import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import UserService from "../services/user.service";
 import Image from "next/image";
@@ -8,7 +10,6 @@ import Button from "@/app/components/buttons/btn";
 export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -20,26 +21,23 @@ export default function Auth() {
       await userService.auth(email, password);
 
       if (!userService.auth) {
-        setErrorMessage('Falha na autenticação, tente novamente!');
+        toast({
+          title: "Falha na autenticação",
+          description: "Não foi possível autenticar o usuário. Se o problema persistir, entre em contato com o suporte.",
+          variant: "destructive",
+      });
       }
 
       router.replace('/doge_client/home');
     } catch (error) {
-      setErrorMessage('Falha na autenticação, tente novamente!');
+      toast({
+        title: "Falha na autenticação",
+        description: "Não foi possível autenticar o usuário, email ou senha incorreto. Se o problema persistir, entre em contato com o suporte.",
+        variant: "destructive",
+    });
       console.error(error);
     }
   };
-
-  useEffect(() => {
-    if (errorMessage) {
-      const timer = setTimeout(() => {
-        setErrorMessage('');
-      }, 5000);
-
-
-      return () => clearTimeout(timer);
-    }
-  }, [errorMessage]);
 
   return (
     <>
@@ -59,7 +57,6 @@ export default function Auth() {
           </div>
 
           <form onSubmit={handleSubmit}>
-            {errorMessage && <p className="text-red-500 text-center">{errorMessage}</p>}
             <div className="relative mb-4">
               <label htmlFor="email" className="block text-sm font-medium text-gray-300">
                 E-mail
@@ -107,6 +104,7 @@ export default function Auth() {
           </form>
         </div>
       </div>
+      <Toaster />
     </>
   );
 }

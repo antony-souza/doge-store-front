@@ -33,10 +33,20 @@ export interface IProduct {
     image_url: string,
 }
 
+export interface IUpdateProduct {
+    id?: string,
+    name?: string,
+    price?: number,
+    description?: string,
+    category?: ICategory,
+    image_url?: string,
+}
+
 export interface DecodedToken {
     id: string;
     role: string;
     store_id: string;
+    product: IUpdateProduct;
 }
 
 export default class UserService extends CallAPIService {
@@ -169,23 +179,18 @@ export default class UserService extends CallAPIService {
     }
 
     //TODO - Implementar a chamada para a API de atualização de produtos
-    async updateProduct(body: FormData) {
+    async updateProduct(body: FormData, id: string) {
         const token = localStorage.getItem('token');
-        const id = localStorage.getItem('products');
 
         if (!token) {
             throw new Error('Token não encontrado');
         }
-
-        const decodedToken = jwtDecode<DecodedToken>(token);
-        const store_id = decodedToken.store_id;
-
        const endpoint = `/product/update/${id}`;
         console.log(`Chamada para a URL: ${endpoint}`);
 
         const callAPIService = new CallAPIService();
 
-        const response = await callAPIService.genericRequest(endpoint, "PUT", true, body) as IUpdateStore[];
+        const response = await callAPIService.genericRequest(endpoint, "PUT", true, body) as IUpdateProduct[];
 
         return response;
     }

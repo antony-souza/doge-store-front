@@ -5,13 +5,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
  
-export default function HomePage() {
-  //Vai vir tudo da API, só para teste
+export default function RedirectPage() {
+ 
   const router = useRouter();
 
   //TODO remover na versao final
   useEffect(() => {
-    router.push('/doge_client');
+    router.replace('/doge_client');
   }, [])
 
   return (

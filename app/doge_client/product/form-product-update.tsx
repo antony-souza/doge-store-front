@@ -1,13 +1,28 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
-import UserService from "../services/user.service";
+import UserService, { IUpdateProduct } from "../services/user.service";
 import { Button } from "@/components/ui/button";
 
-//Implementar o a seleção de id do produto
 export const FormUpdateProduct = () => {
     const formRef = useRef<HTMLFormElement | null>(null);
+    const [selectedProduct, setSelectedProductId] = useState<string | null>(null);
     const [selectedField, setSelectedField] = useState<string | null>(null);
+    const [products, setProducts] = useState<IUpdateProduct[]>([]);
+    const [price, setPrice] = useState<number | undefined>(undefined);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const productService = new UserService();
+                const response = await productService.getAllProducts();
+                setProducts(response);
+            } catch (error) {
+                console.error("Erro ao buscar os produtos:", error);
+            }
+        };
+        fetchProducts();
+    }, []);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -15,10 +30,10 @@ export const FormUpdateProduct = () => {
         const productService = new UserService();
         const form = event.currentTarget;
         const formData = new FormData(form);
-
         const filteredFormData = new FormData();
         let hasData = false;
 
+        // Adiciona os campos ao FormData, excluindo os vazios
         formData.forEach((value, key) => {
             if (value) {
                 filteredFormData.append(key, value);
@@ -35,8 +50,17 @@ export const FormUpdateProduct = () => {
             return;
         }
 
+        if (!selectedProduct) {
+            toast({
+                title: "Erro",
+                description: "Selecione um produto para atualizar.",
+                variant: "destructive",
+            });
+            return;
+        }
+
         try {
-            await productService.updateProduct(filteredFormData);
+            await productService.updateProduct(filteredFormData, selectedProduct);
 
             toast({
                 title: "Sucesso",
@@ -46,6 +70,8 @@ export const FormUpdateProduct = () => {
             if (formRef.current) {
                 formRef.current.reset();
             }
+            setSelectedProductId(null);
+            setSelectedField(null);
         } catch (error) {
             console.error(error);
             toast({
@@ -61,6 +87,26 @@ export const FormUpdateProduct = () => {
             <Toaster />
             <form onSubmit={handleSubmit} ref={formRef} className="space-y-4 mt-5">
                 <div>
+                    <label className="block text-sm font-medium">Escolha o produto para editar</label>
+                    <select
+                        className="mt-1 block w-full p-2 border rounded-md"
+                        value={selectedProduct || ""}
+                        onChange={(e) => setSelectedProductId(e.target.value)}
+                    >
+                        <option value="" disabled>Selecione um produto</option>
+                        {products.length > 0 ? (
+                            products.map((product, index) => (
+                                <option key={index} value={product.id}>
+                                    {product.name}
+                                </option>
+                            ))
+                        ) : (
+                            <option value="">Nenhum produto disponível</option>
+                        )}
+                    </select>
+                </div>
+
+                <div>
                     <label className="block text-sm font-medium">Escolha o campo para editar</label>
                     <select
                         className="mt-1 block w-full p-2 border rounded-md"
@@ -71,7 +117,6 @@ export const FormUpdateProduct = () => {
                         <option value="image_url">Foto do Produto</option>
                         <option value="name">Nome do Produto</option>
                         <option value="price">Preço</option>
-                        <option value="quantity">Quantidade</option>
                         <option value="description">Descrição</option>
                     </select>
                 </div>
@@ -105,21 +150,12 @@ export const FormUpdateProduct = () => {
                         <label className="block text-sm font-medium">Preço</label>
                         <input
                             type="number"
+                            step="any"
+                            value={price}
                             name="price"
                             className="mt-1 block w-full p-2 border rounded-md"
-                            placeholder="Preço do produto"
-                        />
-                    </div>
-                )}
-
-                {selectedField === "quantity" && (
-                    <div>
-                        <label className="block text-sm font-medium">Quantidade</label>
-                        <input
-                            type="number"
-                            name="quantity"
-                            className="mt-1 block w-full p-2 border rounded-md"
-                            placeholder="Quantidade em estoque"
+                            placeholder="R$ 0,00"
+                            onChange={(e) => setPrice(Number(e.target.value))}
                         />
                     </div>
                 )}
