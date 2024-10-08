@@ -217,6 +217,23 @@ export default class UserService extends CallAPIService {
         return response;
     }
 
+    async deleteProduct(id: string) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            throw new Error('Token não encontrado');
+        }
+
+        const endpoint = `/product/delete/${id}`;
+        console.log(`Chamada para a URL: ${endpoint}`);
+
+        const callAPIService = new CallAPIService();
+
+        const response = await callAPIService.genericRequest(endpoint, "DELETE", true) as IUpdateProduct[];
+
+        return response;
+    }
+
     async getAllCategories(){
         const token = localStorage.getItem('token');
 

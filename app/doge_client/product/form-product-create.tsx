@@ -29,7 +29,6 @@ export const FormCreateProduct = () => {
         const form = event.currentTarget;
         const formData = new FormData(form);
 
-        // Recupera o store_id do localStorage
         const storeId = localStorage.getItem('store_id');
         
         // Adiciona o store_id ao FormData
