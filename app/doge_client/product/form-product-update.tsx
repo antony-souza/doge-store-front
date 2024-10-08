@@ -9,7 +9,7 @@ export const FormUpdateProduct = () => {
     const [selectedProduct, setSelectedProductId] = useState<string | null>(null);
     const [selectedField, setSelectedField] = useState<string | null>(null);
     const [products, setProducts] = useState<IUpdateProduct[]>([]);
-    const [price, setPrice] = useState<number | undefined>(undefined);
+    const [price, setPrice] = useState<number | null>(null);
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -31,19 +31,19 @@ export const FormUpdateProduct = () => {
         const form = event.currentTarget;
         const formData = new FormData(form);
         const filteredFormData = new FormData();
-        let hasData = false;
+        let data = false;
 
         // Adiciona os campos ao FormData, excluindo os vazios
         formData.forEach((value, key) => {
             if (value) {
                 filteredFormData.append(key, value);
-                hasData = true;
+                data = true;
             }
         });
 
-        if (!hasData) {
+        if (!data) {
             toast({
-                title: "Erro",
+                title: "Erro - Campos Vazios",
                 description: "Nenhum campo foi preenchido. Por favor, preencha pelo menos um campo.",
                 variant: "destructive",
             });
@@ -151,7 +151,7 @@ export const FormUpdateProduct = () => {
                         <input
                             type="number"
                             step="any"
-                            value={price}
+                            value={price || ""}
                             name="price"
                             className="mt-1 block w-full p-2 border rounded-md"
                             placeholder="R$ 0,00"
