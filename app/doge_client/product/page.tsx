@@ -10,13 +10,18 @@ import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import UserService, { IProduct } from "../services/user.service";
 import { FormUpdateProduct } from "./form-product-update";
 import { formatPrice } from "@/app/util/formt-price";
+import { FormCreateProduct } from "./form-product-create";
 
 export default function ProductPage() {
     const [products, setProducts] = useState<IProduct[]>([]);
-    const [isEditing, setIsEditing] = useState(false); // Estado para controlar a edição
+    const [isEditing, setIsEditing] = useState(false);
+    const [isCreate, setIsCreate] = useState(false);
 
     const handleEditClick = () => {
-        setIsEditing(!isEditing); // Alternar o estado de edição
+        setIsEditing(!isEditing);
+    };
+    const handleCreateClick = () => {
+        setIsCreate(!isCreate);
     };
 
     useEffect(() => {
@@ -44,16 +49,18 @@ export default function ProductPage() {
                             </span>
                             {isEditing ? 'Voltar' : 'Editar Produto'}
                         </Button>
-                        <Button className="flex gap-3">
-                            <span className="material-symbols-outlined">add</span>
-                            Novo Produto
+                        <Button className="flex gap-3" onClick={handleCreateClick}>
+                            <span className="material-symbols-outlined">
+                                {isCreate ? 'arrow_back' : 'add'}
+                            </span>
+                            {isCreate ? 'Voltar' : 'Novo Produto'}
                         </Button>
                     </div>
                 </div>
 
-                {isEditing ? (
-                    <FormUpdateProduct /> // Renderize o formulário de edição
-                ) : (
+                {(isEditing) ? (
+                    <FormUpdateProduct />
+                ) : isCreate ? <FormCreateProduct /> : (
                     <Table className="min-w-full mt-4">
                         <TableHeader>
                             <TableRow>

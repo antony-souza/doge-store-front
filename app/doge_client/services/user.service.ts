@@ -22,6 +22,7 @@ export interface IUserLocalStorage {
 export interface ICategory {
     id: string,
     name: string,
+    image_url: string,
 }
 
 export interface IProduct {
@@ -30,6 +31,8 @@ export interface IProduct {
     price: number,
     description: string,
     category: ICategory,
+    store_id: string,
+    category_id: string,
     image_url: string,
 }
 
@@ -178,7 +181,26 @@ export default class UserService extends CallAPIService {
         return response;
     }
 
-    //TODO - Implementar a chamada para a API de atualização de produtos
+    async createProduct(body: FormData) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            throw new Error('Token não encontrado');
+        }
+
+        const decodedToken = jwtDecode<DecodedToken>(token);
+        const store_id = decodedToken.store_id;
+
+        const endpoint = `/product/create/${store_id}`;
+        console.log(`Chamada para a URL: ${endpoint}`);
+
+        const callAPIService = new CallAPIService();
+
+        const response = await callAPIService.genericRequest(endpoint, "POST", true, body) as IProduct[];
+
+        return response;
+    }
+
     async updateProduct(body: FormData, id: string) {
         const token = localStorage.getItem('token');
 
@@ -191,6 +213,23 @@ export default class UserService extends CallAPIService {
         const callAPIService = new CallAPIService();
 
         const response = await callAPIService.genericRequest(endpoint, "PUT", true, body) as IUpdateProduct[];
+
+        return response;
+    }
+
+    async getAllCategories(){
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            throw new Error('Token não encontrado');
+        }
+
+        const store_id = localStorage.getItem('store_id');
+        const endpoint = `/category/search/${store_id}`;
+        console.log(`Chamada para a URL: ${endpoint}`);
+
+        const callAPIService = new CallAPIService();
+        const response = await callAPIService.genericRequest(endpoint, "GET", true) as ICategory[];
 
         return response;
     }
