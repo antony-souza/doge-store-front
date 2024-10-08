@@ -16,7 +16,7 @@ export const FormCreateProduct = () => {
                 const response = await productService.getAllCategories();
                 setCategories(response);
             } catch (error) {
-                console.error("Erro ao buscar os produtos:", error);
+                console.error("Erro ao buscar as categorias:", error);
             }
         };
         fetchProducts();
@@ -25,13 +25,25 @@ export const FormCreateProduct = () => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        const productService = new UserService();
         const form = event.currentTarget;
         const formData = new FormData(form);
 
+        // Validação de campos obrigatórios
+        const name = formData.get("name")?.toString().trim();
+        const category = formData.get("category_id");
+        const priceValue = formData.get("price");
+
+        if (!name || !category || !priceValue) {
+            toast({
+                title: "Erro ao criar produto",
+                description: "Todos os campos obrigatórios devem ser preenchidos.",
+                variant: "destructive",
+            });
+            return;
+        }
+
         const storeId = localStorage.getItem('store_id');
         
-        // Adiciona o store_id ao FormData
         if (storeId) {
             formData.append("store_id", storeId);
         } else {
@@ -43,7 +55,7 @@ export const FormCreateProduct = () => {
         }
 
         try {
-            // Enviar o formData para o serviço
+            const productService = new UserService();
             const response = await productService.createProduct(formData);
 
             if (response) {

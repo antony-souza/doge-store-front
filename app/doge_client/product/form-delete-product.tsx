@@ -76,7 +76,7 @@ export const FormDeleteProduct = () => {
                         value={selectedProduct}
                         onChange={(e) => setSelectedProduct(e.target.value)}
                     >
-                        <option value="" disabled>Selecione um produto</option>
+                        <option value="" disabled>Selecione um produto para excluir</option>
                         {delProduct.length > 0 ? (
                             delProduct.map((product) => (
                                 <option key={product.id} value={product.id}>
