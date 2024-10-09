@@ -30,20 +30,23 @@ export const FormUpdateCategory = () => {
         const form = event.currentTarget;
         const formData = new FormData(form);
         const filteredFormData = new FormData();
-        let data = false;
-
+        
         // Adiciona os campos ao FormData, excluindo os vazios
         formData.forEach((value, key) => {
             if (value) {
                 filteredFormData.append(key, value);
-                data = true;
+
             }
         });
 
-        if (!data) {
+        const name = formData.get("name")?.toString().trim();
+        const image = formData.get("image_url");
+
+
+        if (!name || !image) {
             toast({
-                title: "Erro - Campos Vazios",
-                description: "Nenhum campo foi preenchido. Por favor, preencha pelo menos um campo.",
+                title: "Erro ao criar categoria",
+                description: "Todos os campos obrigatórios devem ser preenchidos.",
                 variant: "destructive",
             });
             return;
