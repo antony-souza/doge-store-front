@@ -30,7 +30,7 @@ export const FormUpdateCategory = () => {
         const form = event.currentTarget;
         const formData = new FormData(form);
         const filteredFormData = new FormData();
-        
+
         // Adiciona os campos ao FormData, excluindo os vazios
         formData.forEach((value, key) => {
             if (value) {

@@ -298,4 +298,21 @@ export default class UserService extends CallAPIService {
         return response;
     }
 
+    async deleteCategory(id: string) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            throw new Error('Token não encontrado');
+        }
+
+        const endpoint = `/category/delete/${id}`;
+        console.log(`Chamada para a URL: ${endpoint}`);
+
+        const callAPIService = new CallAPIService();
+
+        const response = await callAPIService.genericRequest(endpoint, "DELETE", true) as ICategory[];
+
+        return response;
+    }
+
 }
