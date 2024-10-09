@@ -281,4 +281,21 @@ export default class UserService extends CallAPIService {
         return response;
     }
 
+    async updateCategory(body: FormData, id: string) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            throw new Error('Token não encontrado');
+        }
+
+        const endpoint = `/category/update/${id}`;
+        console.log(`Chamada para a URL: ${endpoint}`);
+
+        const callAPIService = new CallAPIService();
+
+        const response = await callAPIService.genericRequest(endpoint, "PUT", true, body) as ICategory[];
+
+        return response;
+    }
+
 }

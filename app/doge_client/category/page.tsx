@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useEffect, useState } from "react";
 import UserService, { ICategory } from "../services/user.service";
 import { FormCreateCategory } from "./form-create-category";
+import { FormUpdateCategory } from "./form-update-category";
 
 export default function CategoryPage() {
     const [category, setCategory] = useState<ICategory[]>([]);
@@ -67,37 +68,37 @@ export default function CategoryPage() {
                     </div>
 
                     {(isCreate) ? <FormCreateCategory />
-                        :
-                        <Table className="min-w-full mt-4">
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead className="w-[100px]">Foto</TableHead>
-                                    <TableHead className="w-[auto]">Nome</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {category.length > 0 ? (
-                                    category.map(category => (
-                                        <TableRow key={category.id}>
-                                            <TableCell className="font-medium">
-                                                <Avatar>
-                                                    <AvatarImage
-                                                        className="rounded-full w-auto h-12 border-2"
-                                                        src={category.image_url || ""}
-                                                        alt={category.name || "Imagem do produto"}
-                                                    />
-                                                </Avatar>
-                                            </TableCell>
-                                            <TableCell>{category.name || "-"}</TableCell>
-                                        </TableRow>
-                                    ))
-                                ) : (
+                        : isEditing ? <FormUpdateCategory /> :
+                            <Table className="min-w-full mt-4">
+                                <TableHeader>
                                     <TableRow>
-                                        <TableCell colSpan={6} className="text-center">Nenhuma categoria foi encontrada</TableCell>
+                                        <TableHead className="w-[100px]">Foto</TableHead>
+                                        <TableHead className="w-[auto]">Nome</TableHead>
                                     </TableRow>
-                                )}
-                            </TableBody>
-                        </Table>
+                                </TableHeader>
+                                <TableBody>
+                                    {category.length > 0 ? (
+                                        category.map(category => (
+                                            <TableRow key={category.id}>
+                                                <TableCell className="font-medium">
+                                                    <Avatar>
+                                                        <AvatarImage
+                                                            className="rounded-full w-auto h-12 border-2"
+                                                            src={category.image_url || ""}
+                                                            alt={category.name || "Imagem do produto"}
+                                                        />
+                                                    </Avatar>
+                                                </TableCell>
+                                                <TableCell>{category.name || "-"}</TableCell>
+                                            </TableRow>
+                                        ))
+                                    ) : (
+                                        <TableRow>
+                                            <TableCell colSpan={6} className="text-center">Nenhuma categoria foi encontrada</TableCell>
+                                        </TableRow>
+                                    )}
+                                </TableBody>
+                            </Table>
                     }
                 </LayoutPage>
             </LayoutDashboard>
