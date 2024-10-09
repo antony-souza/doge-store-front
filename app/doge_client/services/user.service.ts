@@ -236,6 +236,16 @@ export default class UserService extends CallAPIService {
 
     async getAllCategories(){
         const token = localStorage.getItem('token');
+        const storeCategory = localStorage.getItem('category');
+        const storedTimestamp = localStorage.getItem('categoryTimestamp');
+        const currentTime = new Date().getTime();
+        const expirationTime = 5 * 60 * 1000; // 5 minutos
+    
+        // Verifica se os dados no localStorage ainda estão válidos
+        if (storeCategory && storedTimestamp && (currentTime - parseInt(storedTimestamp)) < expirationTime) {
+            console.log("Dados da loja carregados do localStorage.");
+            return JSON.parse(storeCategory);
+        }
 
         if (!token) {
             throw new Error('Token não encontrado');
@@ -247,6 +257,26 @@ export default class UserService extends CallAPIService {
 
         const callAPIService = new CallAPIService();
         const response = await callAPIService.genericRequest(endpoint, "GET", true) as ICategory[];
+        
+        localStorage.setItem('category', JSON.stringify(response));
+        localStorage.setItem('categoryTimestamp', currentTime.toString());
+
+        return response;
+    }
+
+    async createCategory(body: FormData) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            throw new Error('Token não encontrado');
+        }
+
+        const endpoint = `/category/create`;
+        console.log(`Chamada para a URL: ${endpoint}`);
+
+        const callAPIService = new CallAPIService();
+
+        const response = await callAPIService.genericRequest(endpoint, "POST", true, body) as ICategory[];
 
         return response;
     }
