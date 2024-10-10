@@ -44,7 +44,7 @@ export const FormUpdateProfile = () => {
             });
             return;
         }
-        
+
         try {
             await userService.updateProfile(filteredFormData);
 
@@ -81,8 +81,9 @@ export const FormUpdateProfile = () => {
                         onChange={(e) => setSelectedField(e.target.value)}
                     >
                         <option value="" disabled>Selecione um campo</option>
-                        <option value="image_url">Foto do Perfil</option>
-                        <option value="name">Nome do Perfil</option>
+                        <option value="image_url">Foto</option>
+                        <option value="name">Nome</option>
+                        <option value="email">Email</option>
                         <option value="password">Senha</option>
                     </select>
                 </div>
@@ -101,12 +102,24 @@ export const FormUpdateProfile = () => {
 
                 {selectedField === "name" && (
                     <div>
-                        <label className="block text-sm font-medium">Nome do Perfil</label>
+                        <label className="block text-sm font-medium">Nome de Usuário</label>
                         <input
                             type="text"
                             name="name"
                             className="mt-1 block w-full p-2 border rounded-md"
                             placeholder="Nome do perfil"
+                        />
+                    </div>
+                )}
+
+                {selectedField === "email" && (
+                    <div>
+                        <label className="block text-sm font-medium">Email de Usuário</label>
+                        <input
+                            type="email"
+                            name="email"
+                            className="mt-1 block w-full p-2 border rounded-md"
+                            placeholder="Email do perfil"
                         />
                     </div>
                 )}
