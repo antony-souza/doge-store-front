@@ -17,7 +17,6 @@ export interface IUserLocalStorage {
     id: string,
     name: string,
     imageUrl: string
-    role: string,
 }
 
 export interface ICategory {
@@ -268,7 +267,7 @@ export default class UserService extends CallAPIService {
 
         // Verifica se os dados no localStorage ainda estão válidos
         if (storeCategory && storedTimestamp && (currentTime - parseInt(storedTimestamp)) < expirationTime) {
-            console.log("Dados da loja carregados do localStorage.");
+            console.log("Dados da loja carregadoss do localStorage.");
             return JSON.parse(storeCategory);
         }
 

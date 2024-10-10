@@ -73,7 +73,7 @@ const HeaderClient: React.FC = () => {
                             {/* Nome do usuário */}
                             {user && <span className="text-gray-700 font-medium">{user.name || 'Sem nome'}</span>}
 
-                            <Avatar>
+                            <Avatar className="border-2 border-gray-700">
                                 {/* Imagem do perfil */}
                                 {user && (
                                     <AvatarImage src={setProfileUrl(user.imageUrl)} alt="Profile User" />
