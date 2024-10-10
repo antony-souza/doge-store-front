@@ -71,7 +71,7 @@ const HeaderClient: React.FC = () => {
                     <DropdownMenuTrigger asChild>
                         <div className="flex items-center space-x-3 cursor-pointer">
                             {/* Nome do usuário */}
-                            {user && <span className="text-gray-700 font-medium">{user.name}</span>}
+                            {user && <span className="text-gray-700 font-medium">{user.name || 'Sem nome'}</span>}
 
                             <Avatar>
                                 {/* Imagem do perfil */}
@@ -84,7 +84,7 @@ const HeaderClient: React.FC = () => {
 
                     <DropdownMenuContent className="w-56">
                         <DropdownMenuItem className="cursor-pointer" onClick={handleEditClick}>
-                            <span>Editar Credências</span>
+                            <span>Editar Perfil</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem className="cursor-pointer" onClick={exitSystem}>
                             <span>Sair</span>

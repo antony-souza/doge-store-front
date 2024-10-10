@@ -17,6 +17,7 @@ export interface IUserLocalStorage {
     id: string,
     name: string,
     imageUrl: string
+    role: string,
 }
 
 export interface ICategory {
