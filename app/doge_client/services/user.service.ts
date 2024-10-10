@@ -86,7 +86,6 @@ export default class UserService extends CallAPIService {
             return JSON.parse(storedStore);
         }
 
-        // Obtém o token e decodifica para extrair o store_id
         const token = localStorage.getItem('token');
         if (!token) {
             throw new Error('Token não encontrado');
@@ -116,9 +115,6 @@ export default class UserService extends CallAPIService {
         return response;
     }
 
-
-
-
     getUserStorage(): IUserLocalStorage | undefined {
         const userStorage = localStorage.getItem(this.USER_LOCAL_STORAGE_KEY);
 
@@ -131,6 +127,34 @@ export default class UserService extends CallAPIService {
 
     removeUserStorage() {
         localStorage.clear();
+    }
+
+    async updateProfile(body: FormData) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            throw new Error('Token não encontrado');
+        }
+
+        const getUser = localStorage.getItem('user')
+
+        if(!getUser){
+            throw new Error('Usuário não encontrado')
+        }
+
+        const user  = JSON.parse(getUser);
+        const userId = user.id;
+
+        const endpoint = `/user/update/${userId}`;
+        console.log(`Chamada para a URL: ${endpoint}`);
+
+        const callAPIService = new CallAPIService();
+
+        const response = await callAPIService.genericRequest(endpoint, "PUT", true, body) as IUserLocalStorage;
+
+        localStorage.setItem(this.USER_LOCAL_STORAGE_KEY, JSON.stringify(response));
+
+        return response;
     }
 
     async updateStore(body: FormData) {
@@ -207,7 +231,7 @@ export default class UserService extends CallAPIService {
         if (!token) {
             throw new Error('Token não encontrado');
         }
-       const endpoint = `/product/update/${id}`;
+        const endpoint = `/product/update/${id}`;
         console.log(`Chamada para a URL: ${endpoint}`);
 
         const callAPIService = new CallAPIService();
@@ -234,13 +258,13 @@ export default class UserService extends CallAPIService {
         return response;
     }
 
-    async getAllCategories(){
+    async getAllCategories() {
         const token = localStorage.getItem('token');
         const storeCategory = localStorage.getItem('category');
         const storedTimestamp = localStorage.getItem('categoryTimestamp');
         const currentTime = new Date().getTime();
         const expirationTime = 5 * 60 * 1000; // 5 minutos
-    
+
         // Verifica se os dados no localStorage ainda estão válidos
         if (storeCategory && storedTimestamp && (currentTime - parseInt(storedTimestamp)) < expirationTime) {
             console.log("Dados da loja carregados do localStorage.");
@@ -257,7 +281,7 @@ export default class UserService extends CallAPIService {
 
         const callAPIService = new CallAPIService();
         const response = await callAPIService.genericRequest(endpoint, "GET", true) as ICategory[];
-        
+
         localStorage.setItem('category', JSON.stringify(response));
         localStorage.setItem('categoryTimestamp', currentTime.toString());
 

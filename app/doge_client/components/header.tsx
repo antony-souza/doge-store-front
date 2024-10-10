@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import UserService, { IUserLocalStorage } from "../services/user.service";
 import { IStore } from "@/app/util/interfaces-global.service";
+import { routes } from "@/router";
 
 const HeaderClient: React.FC = () => {
     const [user, setUser] = useState<IUserLocalStorage>();
@@ -52,6 +53,10 @@ const HeaderClient: React.FC = () => {
         push("/doge_client");
     };
 
+    const handleEditClick = () => {
+       push(routes.PROFILE)
+    };
+
     return (
         <div className="flex justify-center text-slate-950">
             <header className="w-full h-16 bg-white flex items-center justify-between p-4 rounded-b border border-gray-300 shadow-md">
@@ -78,6 +83,9 @@ const HeaderClient: React.FC = () => {
                     </DropdownMenuTrigger>
 
                     <DropdownMenuContent className="w-56">
+                        <DropdownMenuItem className="cursor-pointer" onClick={handleEditClick}>
+                            <span>Editar Credências</span>
+                        </DropdownMenuItem>
                         <DropdownMenuItem className="cursor-pointer" onClick={exitSystem}>
                             <span>Sair</span>
                         </DropdownMenuItem>
