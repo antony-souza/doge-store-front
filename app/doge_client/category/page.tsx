@@ -47,7 +47,7 @@ export default function CategoryPage() {
                     <div className="flex justify-between align-middle">
                         <TitlePage name={isEditing ? 'Categorias - Editando' : isCreate ? 'Categorias - Criando' : isDelete ? 'Categorias - Excluindo' : 'Categorias'} />
                         <div className="flex gap-2">
-                            <Button className="flex gap-3" onClick={handleDeleteClick}>
+                            <Button variant={"destructive"} className="flex gap-3" onClick={handleDeleteClick}>
                                 <span className="material-symbols-outlined">
                                     {isDelete ? 'arrow_back' : 'delete'}
                                 </span>

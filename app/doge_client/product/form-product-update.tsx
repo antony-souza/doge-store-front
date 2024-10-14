@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
-import UserService, { IUpdateProduct } from "../services/user.service";
+import UserService, { ICategory, IUpdateProduct } from "../services/user.service";
 import { Button } from "@/components/ui/button";
 
 export const FormUpdateProduct = () => {
@@ -9,7 +9,27 @@ export const FormUpdateProduct = () => {
     const [selectedProduct, setSelectedProductId] = useState<string | null>(null);
     const [selectedField, setSelectedField] = useState<string | null>(null);
     const [products, setProducts] = useState<IUpdateProduct[]>([]);
+    const [categories, setCategories] = useState<ICategory[]>([]);
     const [price, setPrice] = useState<number | null>(null);
+
+    useEffect(() => {
+        const fetchCategory = async () => {
+            try {
+                const categoryService = new UserService();
+                const response = await categoryService.getAllCategories();
+                setCategories(response);
+            } catch (error) {
+                toast({
+                    title: "Erro",
+                    description: "Houve um problema ao buscar as categorias.",
+                    variant: "destructive",
+                })
+                console.error("Erro ao buscar as categorias:", error);
+            }
+        };
+        fetchCategory();
+    }, []);
+
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -116,6 +136,7 @@ export const FormUpdateProduct = () => {
                         <option value="name">Nome do Produto</option>
                         <option value="price">Preço</option>
                         <option value="description">Descrição</option>
+                        <option value="category">Categoria</option>
                         <option value="featured_products">Destaque</option>
                     </select>
                 </div>
@@ -168,6 +189,27 @@ export const FormUpdateProduct = () => {
                             placeholder="Descrição do produto"
                         />
                     </div>
+                )}
+
+                {selectedField === "category" && (
+                    <div className="pt-3">
+                    <label className="block text-sm font-medium">Escolha a categoria</label>
+                    <select
+                        name="category_id"
+                        className="mt-1 block w-full p-2 border rounded-md"
+                    >
+                        <option value="" disabled>Selecione uma categoria</option>
+                        {categories.length > 0 ? (
+                            categories.map((category, index) => (
+                                <option key={index} value={category.id}>
+                                    {category.name}
+                                </option>
+                            ))
+                        ) : (
+                            <option value="">Nenhuma categoria disponível</option>
+                        )}
+                    </select>
+                </div>
                 )}
 
                 {selectedField === "featured_products" && (

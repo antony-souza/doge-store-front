@@ -1,3 +1,5 @@
+import { routes } from "@/router";
+
 type API_URL = "LOCALHOST" | "AWS";
 
 export default class CallAPIService {
@@ -17,7 +19,7 @@ export default class CallAPIService {
 
     async genericRequest(endpoint: string, method: "GET" | "POST" | "PUT" | "DELETE", withAuth: boolean, body?: any) {
         const url = `${this.baseURL}${endpoint}`;
-        
+
         const headers: any = {};
 
         // Define como application/json apenas se o body não for FormData
@@ -43,8 +45,8 @@ export default class CallAPIService {
         const response = await fetch(url, requestConfig);
 
         if (response.status === 401) {
-            // Lógica para status 401
-            console.error("Não autorizado. Verifique as credenciais.");
+            localStorage.clear();
+            window.location.href = routes.LOGIN;
         }
 
         if (!response.ok) {

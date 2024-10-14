@@ -32,7 +32,7 @@ const Dashboard: React.FC<IDashboardProps> = ({ isSidebarOpenProps }) => {
             icon: "category"   
         },
         {
-            path: routes.HIGHLIGHTS,
+            path: routes.FEATURED_PRODUCTS,
             name: "Destaques",
             icon: "star"   
         },

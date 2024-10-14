@@ -140,11 +140,11 @@ export default class UserService extends CallAPIService {
 
         const getUser = localStorage.getItem('user')
 
-        if(!getUser){
+        if (!getUser) {
             throw new Error('Usuário não encontrado')
         }
 
-        const user  = JSON.parse(getUser);
+        const user = JSON.parse(getUser);
         const userId = user.id;
 
         const endpoint = `/user/update/${userId}`;
@@ -256,6 +256,24 @@ export default class UserService extends CallAPIService {
         const callAPIService = new CallAPIService();
 
         const response = await callAPIService.genericRequest(endpoint, "DELETE", true) as IUpdateProduct[];
+
+        return response;
+    }
+
+    async getAllFeaturedProducts() {
+        const token = localStorage.getItem('token');
+        
+        if(!token){
+            throw new Error('Token não encontrado');
+        }
+
+        const store_id = localStorage.getItem('store_id');
+        const endpoint = `/product/featured/${store_id}`;
+
+        console.log(`Chamada para a URL: ${endpoint}`);
+
+        const callAPIService = new CallAPIService();
+        const response = await callAPIService.genericRequest(endpoint, "GET", true) as IProduct[];
 
         return response;
     }
