@@ -70,8 +70,6 @@ export const FormUpdateProduct = () => {
             if (formRef.current) {
                 formRef.current.reset();
             }
-            setSelectedProductId(null);
-            setSelectedField(null);
         } catch (error) {
             console.error(error);
             toast({
@@ -118,6 +116,7 @@ export const FormUpdateProduct = () => {
                         <option value="name">Nome do Produto</option>
                         <option value="price">Preço</option>
                         <option value="description">Descrição</option>
+                        <option value="featured_products">Destaque</option>
                     </select>
                 </div>
 
@@ -168,6 +167,21 @@ export const FormUpdateProduct = () => {
                             className="mt-1 block w-full p-2 border rounded-md"
                             placeholder="Descrição do produto"
                         />
+                    </div>
+                )}
+
+                {selectedField === "featured_products" && (
+                    <div>
+                        <label className="block text-sm font-medium">O produto está em destaque?</label>
+                        <select
+                            name="featured_products"
+                            className="mt-1 block w-full p-2 border rounded-md"
+                            defaultValue=''
+                        >
+                            <option value="" disabled>Selecione uma opção</option>
+                            <option value="true">Sim</option>
+                            <option value="false">Não</option>
+                        </select>
                     </div>
                 )}
 

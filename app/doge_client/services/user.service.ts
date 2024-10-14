@@ -34,6 +34,7 @@ export interface IProduct {
     store_id: string,
     category_id: string,
     image_url: string,
+    featured_products: boolean,
 }
 
 export interface IUpdateProduct {
@@ -43,6 +44,7 @@ export interface IUpdateProduct {
     description?: string,
     category?: ICategory,
     image_url?: string,
+    featured_products?: boolean,
 }
 
 export interface DecodedToken {

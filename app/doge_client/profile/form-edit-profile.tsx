@@ -51,6 +51,7 @@ export const FormUpdateProfile = () => {
             toast({
                 title: "Sucesso",
                 description: "O perfil foi atualizado com sucesso!",
+                variant: "default",
             });
 
             if (formRef.current) {
