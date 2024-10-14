@@ -5,7 +5,7 @@ export default function RenderHomePage() {
     return (
         <>
             <HeaderClient />
-            <Dashboard />
+            <Dashboard/>
         </>
     )
 }

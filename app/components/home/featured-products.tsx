@@ -1,6 +1,6 @@
 'use client';
 
-import { IParams } from '@/app/[name]/page';
+import { IParams } from '@/app/[name]/services/store.public.service';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 

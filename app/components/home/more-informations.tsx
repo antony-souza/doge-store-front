@@ -1,6 +1,6 @@
 'use client'
 
-import { IStore } from "@/app/[name]/services/store.public.service";
+import { IStore } from "@/app/util/interfaces-global.service";
 import { useState, useEffect } from "react";
 
 
