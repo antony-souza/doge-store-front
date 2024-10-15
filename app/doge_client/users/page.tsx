@@ -7,9 +7,27 @@ import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import AdminService, { IUsers } from "../services/admin.service";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { FormCreateUser } from "./form-create-users";
+import { FormUpdateUsers } from "./form-update-users";
+import { FormDeleteUsers } from "./form-delete-users";
 
 export default function RenderUserPage() {
     const [users, setUsers] = useState<IUsers[]>([]);
+    const [isEditing, setIsEditing] = useState(false);
+    const [isCreate, setIsCreate] = useState(false);
+    const [isDelete, setIsDelete] = useState(false);
+
+    const handleEditClick = () => {
+        setIsEditing(!isEditing);
+    };
+
+    const handleCreateClick = () => {
+        setIsCreate(!isCreate);
+    };
+
+    const handleDeleteClick = () => {
+        setIsDelete(!isDelete);
+    };
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -28,65 +46,70 @@ export default function RenderUserPage() {
         <LayoutDashboard dashboardConfig={{ isSidebarOpenProps: false }}>
             <LayoutPage>
                 <div className="flex justify-between align-middle">
-                    <TitlePage name={'Usuários'} />
+                    <TitlePage name={isEditing ? 'Usuários - Editando' : isCreate ? 'Usuários - Criando' : isDelete ? 'Usuários - Excluindo' : 'Usuários'} />
                     <div className="flex gap-2">
-                        <Button variant={'destructive'} className="flex gap-2">
+                        <Button variant={'destructive'} className="flex gap-2" onClick={handleDeleteClick}>
                             <span className="material-symbols-outlined">
-                                delete
+                                {isDelete ? 'arrow_back' : 'delete'}
                             </span>
-                            Excluir
+                            {isDelete ? 'Voltar' : 'Excluir'}
                         </Button>
-                        <Button className="flex gap-2">
+                        <Button className="flex gap-2" onClick={handleEditClick}>
                             <span className="material-symbols-outlined">
-                                edit
+                                {isEditing ? 'arrow_back' : 'edit'}
                             </span>
-                            Editar
+                            {isEditing ? 'Voltar' : 'Editar'}
                         </Button>
-                        <Button className="flex gap-2">
+                        <Button className="flex gap-2" onClick={handleCreateClick}>
                             <span className="material-symbols-outlined">
-                                add
+                                {isCreate ? 'arrow_back' : 'add'}
                             </span>
-                            Adicionar
+                            {isCreate ? 'Voltar' : 'Criar'}
                         </Button>
                     </div>
                 </div>
-                <Table className="min-w-full mt-4">
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead className="w-[auto]">Foto</TableHead>
-                            <TableHead className="w-[auto]">Nome</TableHead>
-                            <TableHead className="w-[auto]">Email</TableHead>
-                            <TableHead className="w-[auto]">Loja</TableHead>
-                            <TableHead className="w-[auto]">Acesso</TableHead>
+                {isEditing ? (
+                    <FormUpdateUsers />
+                ) : isCreate ? <FormCreateUser />
+                    : isDelete ? <FormDeleteUsers /> : (
+                        <Table className="min-w-full mt-4">
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead className="w-[auto]">Foto</TableHead>
+                                    <TableHead className="w-[auto]">Nome</TableHead>
+                                    <TableHead className="w-[auto]">Email</TableHead>
+                                    <TableHead className="w-[auto]">Loja</TableHead>
+                                    <TableHead className="w-[auto]">Acesso</TableHead>
 
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {users.length > 0 ? (
-                            users.map(users => (
-                                <TableRow key={users.id}>
-                                    <TableCell className="font-medium">
-                                        <Avatar>
-                                            <AvatarImage
-                                                className="rounded-full w-auto h-12 border-2"
-                                                src={users.image_url || ""}
-                                                alt={users.name || "Imagem do produto"}
-                                            />
-                                        </Avatar>
-                                    </TableCell>
-                                    <TableCell>{users.name || "-"}</TableCell>
-                                    <TableCell>{users.email || "-"}</TableCell>
-                                    <TableCell>{users.store.name || "-"}</TableCell>
-                                    <TableCell>{users.role || "-"}</TableCell>
                                 </TableRow>
-                            ))
-                        ) : (
-                            <TableRow>
-                                <TableCell colSpan={6} className="text-center">Nenhum usuário foi encontrado</TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
+                            </TableHeader>
+                            <TableBody>
+                                {users.length > 0 ? (
+                                    users.map(users => (
+                                        <TableRow key={users.id}>
+                                            <TableCell className="font-medium">
+                                                <Avatar>
+                                                    <AvatarImage
+                                                        className="rounded-full w-12 h-12 object-cover border-2"
+                                                        src={users.image_url || ""}
+                                                        alt={users.name || "Imagem do usuário"}
+                                                    />
+                                                </Avatar>
+                                            </TableCell>
+                                            <TableCell>{users.name || "-"}</TableCell>
+                                            <TableCell>{users.email || "-"}</TableCell>
+                                            <TableCell>{users.store?.name || "-"}</TableCell>
+                                            <TableCell>{users.role || "-"}</TableCell>
+                                        </TableRow>
+                                    ))
+                                ) : (
+                                    <TableRow>
+                                        <TableCell colSpan={6} className="text-center">Nenhum usuário foi encontrado</TableCell>
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                        </Table>
+                    )}
             </LayoutPage>
         </LayoutDashboard>
     )

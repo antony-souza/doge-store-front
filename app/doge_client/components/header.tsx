@@ -63,7 +63,7 @@ const HeaderClient: React.FC = () => {
                 <div className="flex items-center">
                     {/* Nome da loja com fallback */}
                     <h1 className="text-xl font-bold text-gray-700">
-                        {store?.name || ""}
+                        {store?.name || "DogeStore"}
                     </h1>
                 </div>
 

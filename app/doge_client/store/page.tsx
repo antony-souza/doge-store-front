@@ -13,7 +13,7 @@ import { FormUpdateStore } from "./form-store-update";
 
 export default function RenderStorePage() {
     const [store, setStore] = useState<IStore | null>(null);
-    const [isEditing, setIsEditing] = useState(false); 
+    const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
         const fetchStore = async () => {
@@ -48,7 +48,7 @@ export default function RenderStorePage() {
                     </div>
 
                     {isEditing ? (
-                        <FormUpdateStore /> 
+                        <FormUpdateStore />
                     ) : (
                         <Table className="min-w-full">
                             <TableHeader>
@@ -63,7 +63,7 @@ export default function RenderStorePage() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {store && (
+                                {store ? (
                                     <TableRow key={store.id}>
                                         <TableCell className="font-medium">
                                             <Avatar>
@@ -86,16 +86,16 @@ export default function RenderStorePage() {
                                                         width: '100%',
                                                         height: '100%',
                                                         borderRadius: '4px',
-                                                        display: 'flex', 
-                                                        alignItems: 'center', 
-                                                        justifyContent: 'center', 
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
                                                     }}
                                                 >
                                                     <span
                                                         style={{
-                                                            color: '#fff', 
+                                                            color: '#fff',
                                                             fontWeight: 'bold',
-                                                            fontSize: '12px', 
+                                                            fontSize: '12px',
                                                             textAlign: 'center',
                                                         }}
                                                     >
@@ -108,8 +108,13 @@ export default function RenderStorePage() {
                                         <TableCell>{store.address}</TableCell>
                                         <TableCell>{store.description}</TableCell>
                                     </TableRow>
+                                ) : (
+                                    <TableRow>
+                                        <TableCell colSpan={6} className="text-center">Nenhuma loja encontrada</TableCell>
+                                    </TableRow>
                                 )}
                             </TableBody>
+
                         </Table>
                     )}
                 </LayoutPage>
