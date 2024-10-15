@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { routes } from '../../../router';
 
 interface IMenuList {
@@ -16,6 +16,7 @@ interface IDashboardProps {
 const Dashboard: React.FC<IDashboardProps> = ({ isSidebarOpenProps }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(isSidebarOpenProps ?? true);
     const [menuList, setMenuList] = useState<IMenuList[]>([
+        
         {
             path: routes.STORE,
             icon: "store",
@@ -24,41 +25,74 @@ const Dashboard: React.FC<IDashboardProps> = ({ isSidebarOpenProps }) => {
         {
             path: routes.PRODUCTS,
             name: "Produtos",
-            icon: "add_shopping_cart"   
+            icon: "add_shopping_cart"
         },
         {
             path: routes.CATEGORIES,
             name: "Categorias",
-            icon: "category"   
+            icon: "category"
         },
         {
             path: routes.FEATURED_PRODUCTS,
             name: "Destaques",
-            icon: "star"   
+            icon: "hotel_class"
         },
     ]);
+
+    useEffect(() => {
+        const role = localStorage.getItem("role");
+        if (role === "admin") {
+            setMenuList(() => [
+                {
+                    path: routes.ADMIN_USERS,
+                    name: "Usuários",
+                    icon: "people"
+                },{
+                    path: '',
+                    name: "Lojas",
+                    icon: "storefront"
+                },
+                {
+                    path: '',
+                    name: "Produtos",
+                    icon: "add_shopping_cart"
+                },
+                {
+                    path: '',
+                    name: "Categorias",
+                    icon: "category"
+                },
+                {
+                    path: '',
+                    name: "Destaques",
+                    icon: "hotel_class"
+                },
+
+            ]);
+        }
+    }, []);
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
     };
 
     const renderItemMenu = (menu: IMenuList, index: number) => {
-        const isDisabled = !menu.path; 
+        const isDisabled = !menu.path;
 
         return (
-            <div 
-                key={index} 
+            <div
+                key={index}
                 className={`mt-2 ${isDisabled ? 'cursor-not-allowed' : ''}`}
                 onClick={toggleSidebar}
             >
-                <Link 
+                <Link
                     href={isDisabled ? "#" : menu.path}
                     className={`flex items-center text-lg transition-colors ${isDisabled ? 'text-gray-400 cursor-not-allowed' : 'hover:text-purple-400'}`}
                 >
-                    <span 
+                    <span
                         className={`material-symbols-outlined mr-3 text-xl ${isDisabled ? 'text-gray-400' : 'text-black'}`}
                     >
-                        {isDisabled ? 'lock' : menu.icon} 
+                        {isDisabled ? 'lock' : menu.icon}
                     </span>
                     <span className={`transition-opacity duration-300 ${isSidebarOpen ? 'opacity-100' : 'opacity-0'}`}>
                         {menu.name}
@@ -101,6 +135,6 @@ const Dashboard: React.FC<IDashboardProps> = ({ isSidebarOpenProps }) => {
             </aside>
         </div>
     );
-}
+};
 
 export default Dashboard;
