@@ -16,7 +16,7 @@ import { routes } from "@/router";
 const HeaderClient: React.FC = () => {
     const [user, setUser] = useState<IUserLocalStorage>();
     const [store, setStore] = useState<IStore>();
-    const { push } = useRouter();
+    const { push, replace } = useRouter();
 
     useEffect(() => {
         const userService = new UserService();
@@ -50,11 +50,11 @@ const HeaderClient: React.FC = () => {
     const exitSystem = () => {
         const userService = new UserService();
         userService.removeUserStorage();
-        push("/doge_client");
+        replace(routes.LOGIN);
     };
 
     const handleEditClick = () => {
-       push(routes.PROFILE)
+       replace(routes.PROFILE)
     };
 
     return (
@@ -63,7 +63,7 @@ const HeaderClient: React.FC = () => {
                 <div className="flex items-center">
                     {/* Nome da loja com fallback */}
                     <h1 className="text-xl font-bold text-gray-700">
-                        {store?.name || ""}
+                        {store?.name || "DogeStore"}
                     </h1>
                 </div>
 
