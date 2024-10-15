@@ -98,16 +98,16 @@ export default function RenderPageStoreAdmin() {
                     ) : isDelete ? (
                         <FormDeleteStores />
                     ) : (
-                        <Table>
+                        <Table className="min-w-full mt-4">
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>Imagem</TableHead>
-                                    <TableHead>Nome</TableHead>
-                                    <TableHead>Status</TableHead>
-                                    <TableHead>Cor de Fundo</TableHead>
-                                    <TableHead>Telefone</TableHead>
-                                    <TableHead>Endereço</TableHead>
-                                    <TableHead>Descrição</TableHead>
+                                    <TableHead className="w-[auto]">Imagem</TableHead>
+                                    <TableHead className="w-[auto]">Nome</TableHead>
+                                    <TableHead className="w-[auto]">Status</TableHead>
+                                    <TableHead className="w-[auto]">Cor de Fundo</TableHead>
+                                    <TableHead className="w-[auto]">Telefone</TableHead>
+                                    <TableHead className="w-[auto]">Endereço</TableHead>
+                                    <TableHead className="w-[auto]">Descrição</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
