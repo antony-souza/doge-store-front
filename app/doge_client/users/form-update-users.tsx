@@ -38,6 +38,15 @@ export const FormUpdateUsers = () => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
+        if (!selectedUserId) {
+            toast({
+                title: "Erro",
+                description: "Selecione um usuário antes de salvar.",
+                variant: "destructive",
+            });
+            return;
+        }
+
         if (selectedField === "password" && password !== confirmPassword) {
             toast({
                 title: "Erro de Senha",
@@ -47,16 +56,19 @@ export const FormUpdateUsers = () => {
             return;
         }
 
-        const userService = new UserService();
+        const adminService = new AdminService();
         const form = event.currentTarget;
         const formData = new FormData(form);
         const filteredFormData = new FormData();
-
+        
+        formData.delete('confirm_password');
+        
         formData.forEach((value, key) => {
             if (value) {
                 filteredFormData.append(key, value);
             }
         });
+
 
         if (!form.checkValidity()) {
             toast({
@@ -68,7 +80,7 @@ export const FormUpdateUsers = () => {
         }
 
         try {
-            await userService.updateProfile(filteredFormData);
+            await adminService.updateUserAdmin(filteredFormData, selectedUserId);
 
             toast({
                 title: "Sucesso na Atualização",

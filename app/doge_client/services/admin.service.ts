@@ -43,7 +43,7 @@ export default class AdminService extends CallAPIService {
         return response;
     }
 
-    async updateUser(body: FormData){
+    async updateUserAdmin(body: FormData, id: string){
         const token = localStorage.getItem("token");
 
         if(!token){
@@ -51,7 +51,7 @@ export default class AdminService extends CallAPIService {
         }
 
         const callAPIService = new CallAPIService();
-        const endpoint = "/user/update";
+        const endpoint = `/user/update/${id}`;
 
         const response = await callAPIService.genericRequest(endpoint, "PUT", true, body);
 

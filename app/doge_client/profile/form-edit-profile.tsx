@@ -28,6 +28,7 @@ export const FormUpdateProfile = () => {
         const filteredFormData = new FormData();
         let dataExists = false;
 
+        formData.delete("confirm_password");
         // Adiciona os campos ao FormData, excluindo os vazios
         formData.forEach((value, key) => {
             if (value) {
@@ -35,6 +36,7 @@ export const FormUpdateProfile = () => {
                 dataExists = true;
             }
         });
+
 
         if (!dataExists) {
             toast({
