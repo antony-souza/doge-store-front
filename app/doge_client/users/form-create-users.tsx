@@ -3,19 +3,19 @@ import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import AdminService from "../services/admin.service";
-import { IUpdateStore } from "@/app/util/interfaces-global.service";
+import { IStore, IUpdateStore } from "@/app/util/interfaces-global.service";
 
 export const FormCreateUser = () => {
     const formRef = useRef<HTMLFormElement | null>(null);
     const [password, setPassword] = useState<string | null>(null);
     const [confirmPassword, setConfirmPassword] = useState<string | null>(null);
-    const [store, setStore] = useState<IUpdateStore[]>([]);
+    const [store, setStore] = useState<IStore[]>([]);
 
     useEffect(() => {
         const fetchStore = async () => {
             try {
                 const adminService = new AdminService();
-                const response = await adminService.getAllStoreName();
+                const response = await adminService.getAllStore();
                 setStore(response);
             } catch (error) {
                 console.error("Erro ao buscar as lojas:", error);

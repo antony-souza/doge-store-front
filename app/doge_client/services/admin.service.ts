@@ -1,5 +1,5 @@
 import CallAPIService from "@/app/util/call-api.service";
-import { IUpdateStore } from "@/app/util/interfaces-global.service";
+import { IStore, IUpdateStore } from "@/app/util/interfaces-global.service";
 
 
 export interface IUsers {
@@ -73,7 +73,7 @@ export default class AdminService extends CallAPIService {
         return response;
     }
 
-    async getAllStoreName(){
+    async getAllStore(){
         const token = localStorage.getItem("token");
 
         if(!token){
@@ -83,7 +83,36 @@ export default class AdminService extends CallAPIService {
         const callAPIService = new CallAPIService();
         const endpoint = "/store/all";
 
-        const response = await callAPIService.genericRequest(endpoint, "GET", true) as IUpdateStore[];
+        const response = await callAPIService.genericRequest(endpoint, "GET", true) as IStore[];
+
+        return response;
+    }
+
+    async createStore(body: FormData){
+        const token = localStorage.getItem("token");
+
+        if(!token){
+            throw new Error("Token não encontrado");
+        }
+
+        const callAPIService = new CallAPIService();
+        const endpoint = "/store/create";
+
+        const response = await callAPIService.genericRequest(endpoint, "POST", true, body);
+
+        return response;
+    }
+    async deleteStore(id: string){
+        const token = localStorage.getItem("token");
+
+        if(!token){
+            throw new Error("Token não encontrado");
+        }
+
+        const callAPIService = new CallAPIService();
+        const endpoint = `/store/delete/${id}`;
+
+        const response = await callAPIService.genericRequest(endpoint, "DELETE", true);
 
         return response;
     }

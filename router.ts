@@ -6,4 +6,5 @@ export const routes = {
     PROFILE: "/doge_client/profile",
     FEATURED_PRODUCTS: "/doge_client/featured_product",
     ADMIN_USERS: "/doge_client/users",
+    ADMIN_STORE: "/doge_client/store_admin",
 };

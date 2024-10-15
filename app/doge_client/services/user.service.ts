@@ -76,7 +76,7 @@ export default class UserService extends CallAPIService {
         return response;
     }
 
-    async getStore(): Promise<IStore> {
+    async getStore(): Promise<IStore[]> {
         const storedStore = localStorage.getItem('store');
         const storedTimestamp = localStorage.getItem('store_timestamp');
         const currentTime = new Date().getTime();
@@ -101,7 +101,7 @@ export default class UserService extends CallAPIService {
         console.log(`Chamada para a URL: ${endpoint}`);
 
         const callAPIService = new CallAPIService();
-        const response = await callAPIService.genericRequest(endpoint, "GET", true) as IStore;
+        const response = await callAPIService.genericRequest(endpoint, "GET", true);
 
         // Verifica se os dados retornados pela API são diferentes dos armazenados no localStorage
         try {

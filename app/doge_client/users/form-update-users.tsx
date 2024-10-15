@@ -4,7 +4,7 @@ import { toast } from "@/hooks/use-toast";
 import UserService from "../services/user.service";
 import { Button } from "@/components/ui/button";
 import AdminService, { IUsers } from "../services/admin.service";
-import { IUpdateStore } from "@/app/util/interfaces-global.service";
+import { IStore, IUpdateStore } from "@/app/util/interfaces-global.service";
 
 export const FormUpdateUsers = () => {
     const formRef = useRef<HTMLFormElement | null>(null);
@@ -12,7 +12,7 @@ export const FormUpdateUsers = () => {
     const [password, setPassword] = useState<string | null>(null);
     const [confirmPassword, setConfirmPassword] = useState<string | null>(null);
     const [users, setUsers] = useState<IUsers[]>([]);
-    const [companies, setCompanies] = useState<IUpdateStore[]>([]);
+    const [companies, setCompanies] = useState<IStore[]>([]);
     const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
     useEffect(() => {
@@ -20,7 +20,7 @@ export const FormUpdateUsers = () => {
             try {
                 const adminService = new AdminService();
                 const usersResponse = await adminService.getAllUsers();
-                const companiesResponse = await adminService.getAllStoreName();
+                const companiesResponse = await adminService.getAllStore();
                 setUsers(usersResponse);
                 setCompanies(companiesResponse);
             } catch (error) {
