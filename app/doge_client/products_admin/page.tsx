@@ -110,7 +110,7 @@ export default function RenderProductsPageAdmin() {
                         </Button>
                     </div>
                 </div>
-
+               {/* TODO: Fazer os forms de edição, criação e exclusão de produtos */}
                 {isEditing ? (
                     <FormUpdateProduct />
                 ) : isCreate ? (
@@ -122,7 +122,7 @@ export default function RenderProductsPageAdmin() {
                         <label className="block text-sm font-medium">Escolha a loja a ser mapeada</label>
                         <select
                             name="store_id"
-                            className="mt-1 block w-full p-2 border rounded-md"
+                            className="mt-1 block w-200 p-2 border rounded-md "
                             value={selectedStoreID}
                             onChange={(e) => setSelectedStoreID(e.target.value)}
                         >
@@ -134,7 +134,7 @@ export default function RenderProductsPageAdmin() {
                                     </option>
                                 ))
                             ) : (
-                                <option value="" disabled>Nenhuma Loja Disponível ou Carregando!</option>
+                                <option value="" disabled>Nenhuma Loja Disponível!</option>
                             )}
                         </select>
 
