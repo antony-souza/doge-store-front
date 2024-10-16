@@ -19,7 +19,7 @@ import { FormCreateProductAdmin } from "./form-add-products";
 import { FormUpdateProductAdmin } from "./form-edit-products";
 import { FormDeleteProductAdmin } from "./form-delete-products";
 
-export default function RenderProductsPageAdmin() {
+export default function RenderCategoriesPageAdmin() {
     const [products, setProducts] = useState<IProduct[]>([]);
     const [stores, setStores] = useState<IStore[]>([]);
     const [selectedStoreID, setSelectedStoreID] = useState<string>("");

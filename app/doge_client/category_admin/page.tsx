@@ -9,18 +9,15 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { useEffect, useState } from "react";
-import UserService, { IProduct } from "../services/user.service";
+import UserService, { ICategory, IProduct } from "../services/user.service";
 import { IStore } from "@/app/util/interfaces-global.service";
 import AdminService from "../services/admin.service";
-import { FormUpdateProduct } from "../product/form-product-update";
-import { FormCreateProduct } from "../product/form-product-create";
-import { FormDeleteProduct } from "../product/form-delete-product";
-import { FormCreateProductAdmin } from "./form-add-products";
-import { FormUpdateProductAdmin } from "./form-edit-products";
-import { FormDeleteProductAdmin } from "./form-delete-products";
+import { FormUpdateProductAdmin } from "../products_admin/form-edit-products";
+import { FormCreateProductAdmin } from "../products_admin/form-add-products";
+import { FormDeleteProductAdmin } from "../products_admin/form-delete-products";
 
-export default function RenderProductsPageAdmin() {
-    const [products, setProducts] = useState<IProduct[]>([]);
+export default function RenderCategoriesPageAdmin() {
+    const [category, setCategory] = useState<ICategory[]>([]);
     const [stores, setStores] = useState<IStore[]>([]);
     const [selectedStoreID, setSelectedStoreID] = useState<string>("");
     const [isEditing, setIsEditing] = useState(false);
@@ -57,34 +54,34 @@ export default function RenderProductsPageAdmin() {
     }, []);
 
     useEffect(() => {
-        const fetchProductsByStore = async () => {
+        const fetchCategoriesByStore = async () => {
             if (!selectedStoreID) {
                 return;
             }
 
             try {
                 const userService = new UserService();
-                const products = await userService.getAllProducts(selectedStoreID);
+                const category = await userService.getAllCategories(selectedStoreID);
 
-                if (products.length === 0) {
+                if (category.length === 0) {
                     toast({
-                        title: "Nenhum produto encontrado",
-                        description: `Nenhum produto foi encontrado para a loja selecionada.`,
+                        title: "Nenhuma categoria encontrada",
+                        description: `Nenhuma categoria foi encontrada para a loja selecionada.`,
                         variant: "destructive",
                     });
                 }
 
-                setProducts(products);
+                setCategory(category);
             } catch (error) {
                 toast({
-                    title: "Erro ao carregar produtos",
-                    description: "Ocorreu um erro ao carregar os produtos desta loja.",
+                    title: "Erro ao carregar categorias",
+                    description: "Ocorreu um erro ao carregar as categorias desta loja.",
                     variant: "destructive",
                 });
             }
         };
 
-        fetchProductsByStore();
+        fetchCategoriesByStore();
     }, [selectedStoreID]);
 
     return (
@@ -92,27 +89,27 @@ export default function RenderProductsPageAdmin() {
             <LayoutPage>
                 <div className="flex justify-between align-middle">
                     <TitlePage name={
-                        isEditing ? 'Produtos Gerais - Editando'
-                            : isCreate ? 'Produtos Gerais - Criando'
-                                : isDelete ? 'Produtos Gerais - Excluindo' : 'Produtos Gerais'} />
+                        isEditing ? 'Categorias - Editando'
+                            : isCreate ? 'Categorias - Criando'
+                                : isDelete ? 'Categorias - Excluindo' : 'Categorias'} />
                     <div className="flex gap-2">
                         <Button variant={"destructive"} className="flex gap-3" onClick={handleDeleteClick}>
                             <span className="material-symbols-outlined">
                                 {isDelete ? 'arrow_back' : 'delete'}
                             </span>
-                            {isDelete ? 'Voltar' : 'Excluir Produto'}
+                            {isDelete ? 'Voltar' : 'Excluir Categoria'}
                         </Button>
                         <Button className="flex gap-3" onClick={handleEditClick}>
                             <span className="material-symbols-outlined">
                                 {isEditing ? 'arrow_back' : 'edit'}
                             </span>
-                            {isEditing ? 'Voltar' : 'Editar Produto'}
+                            {isEditing ? 'Voltar' : 'Editar Categoria'}
                         </Button>
                         <Button className="flex gap-3" onClick={handleCreateClick}>
                             <span className="material-symbols-outlined">
                                 {isCreate ? 'arrow_back' : 'add'}
                             </span>
-                            {isCreate ? 'Voltar' : 'Novo Produto'}
+                            {isCreate ? 'Voltar' : 'Nova Categoria'}
                         </Button>
                     </div>
                 </div>
@@ -148,35 +145,39 @@ export default function RenderProductsPageAdmin() {
                                 <TableRow>
                                     <TableHead className="w-[auto]">Foto</TableHead>
                                     <TableHead className="w-[auto]">Nome</TableHead>
-                                    <TableHead className="w-[auto]">Preço</TableHead>
-                                    <TableHead className="w-[auto]">Descrição</TableHead>
-                                    <TableHead className="w-[auto]">Categoria</TableHead>
-                                    <TableHead className="w-[auto]">Destaque</TableHead>
+                                    <TableHead className="w-[auto]">Loja</TableHead>
+                                    <TableHead className="w-[auto]">Produtos Relacionados</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {products.length > 0 ? (
-                                    products.map(product => (
-                                        <TableRow key={product.id}>
+                                {category.length > 0 ? (
+                                    category.map(category => (
+                                        <TableRow key={category.id}>
                                             <TableCell className="font-medium">
                                                 <Avatar>
                                                     <AvatarImage
-                                                        className="rounded-full w-auto h-12 border-2"
-                                                        src={product.image_url || ""}
-                                                        alt={product.name || "Imagem do produto"}
+                                                        className="rounded-full w-12 h-12 object-cover border-2"
+                                                        src={category.image_url || ""}
+                                                        alt={category.name || "Imagem da categoria"}
                                                     />
                                                 </Avatar>
                                             </TableCell>
-                                            <TableCell>{product.name || "-"}</TableCell>
-                                            <TableCell>{formatPrice(product.price) || "-"}</TableCell>
-                                            <TableCell>{product.description || "-"}</TableCell>
-                                            <TableCell>{product.category?.name || "-"}</TableCell>
-                                            <TableCell>{product.featured_products ? "Sim" : "Não"}</TableCell>
+                                            <TableCell>{category.name || "-"}</TableCell>
+                                            <TableCell>{category.store.name || "-"}</TableCell>
+                                            <TableCell>
+                                                {category.product.length > 0 ? (
+                                                    category.product.map(product => (
+                                                        <div key={product.id}>{product.name}</div>
+                                                    ))
+                                                ) : (
+                                                    "-"
+                                                )}
+                                            </TableCell>
                                         </TableRow>
                                     ))
                                 ) : (
                                     <TableRow>
-                                        <TableCell colSpan={6} className="text-center">Nenhum produto encontrado</TableCell>
+                                        <TableCell colSpan={6} className="text-center">Nenhuma categoria encontrada</TableCell>
                                     </TableRow>
                                 )}
                             </TableBody>

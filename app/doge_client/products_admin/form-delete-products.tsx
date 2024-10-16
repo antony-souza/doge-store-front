@@ -62,16 +62,16 @@ export const FormDeleteProductAdmin = () => {
                     variant: "default",
                 });
                 formRef.current?.reset();
-            } 
+            }
 
-            if(!response) {
+            if (!response) {
                 toast({
                     title: "Erro ao deletar produto",
                     description: "Verifique os dados e tente novamente.",
                     variant: "destructive",
                 });
             }
-            
+
         } catch (error) {
             console.error("Erro ao deletar produto:", error);
             toast({
