@@ -8,8 +8,8 @@ import AdminService, { IUsers } from "../services/admin.service";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FormCreateUser } from "./form-create-users";
-import { FormUpdateUsers } from "./form-update-users";
 import { FormDeleteUsers } from "./form-delete-users";
+import { FormUpdateUsers } from "./form-update-users";
 
 export default function RenderUserPage() {
     const [users, setUsers] = useState<IUsers[]>([]);

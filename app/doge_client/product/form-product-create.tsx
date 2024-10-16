@@ -13,7 +13,8 @@ export const FormCreateProduct = () => {
         const fetchProducts = async () => {
             try {
                 const productService = new UserService();
-                const response = await productService.getAllCategories();
+                const id = localStorage.getItem('store_id');
+                const response = await productService.getAllCategories(id as string);
                 setCategories(response);
             } catch (error) {
                 console.error("Erro ao buscar as categorias:", error);

@@ -277,32 +277,32 @@ export default class UserService extends CallAPIService {
         return response;
     }
 
-    async getAllCategories() {
+    async getAllCategories(id:string) {
         const token = localStorage.getItem('token');
         const storeCategory = localStorage.getItem('category');
-        const storedTimestamp = localStorage.getItem('categoryTimestamp');
+  /*       const storedTimestamp = localStorage.getItem('categoryTimestamp');
         const currentTime = new Date().getTime();
-        const expirationTime = 5 * 60 * 1000; // 5 minutos
+        const expirationTime = 5 * 60 * 1000; // 5 minutos */
 
         // Verifica se os dados no localStorage ainda estão válidos
-        if (storeCategory && storedTimestamp && (currentTime - parseInt(storedTimestamp)) < expirationTime) {
+       /*  if (storeCategory && storedTimestamp && (currentTime - parseInt(storedTimestamp)) < expirationTime) {
             console.log("Dados da loja carregadoss do localStorage.");
             return JSON.parse(storeCategory);
         }
-
+ */
         if (!token) {
             throw new Error('Token não encontrado');
         }
 
-        const store_id = localStorage.getItem('store_id');
-        const endpoint = `/category/search/${store_id}`;
+
+        const endpoint = `/category/search/${id}`;
         console.log(`Chamada para a URL: ${endpoint}`);
 
         const callAPIService = new CallAPIService();
         const response = await callAPIService.genericRequest(endpoint, "GET", true) as ICategory[];
 
-        localStorage.setItem('category', JSON.stringify(response));
-        localStorage.setItem('categoryTimestamp', currentTime.toString());
+/*         localStorage.setItem('category', JSON.stringify(response));
+        localStorage.setItem('categoryTimestamp', currentTime.toString()); */
 
         return response;
     }

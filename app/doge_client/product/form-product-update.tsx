@@ -16,7 +16,8 @@ export const FormUpdateProduct = () => {
         const fetchCategory = async () => {
             try {
                 const categoryService = new UserService();
-                const response = await categoryService.getAllCategories();
+                const id = localStorage.getItem('store_id');
+                const response = await categoryService.getAllCategories(id as string);
                 setCategories(response);
             } catch (error) {
                 toast({
