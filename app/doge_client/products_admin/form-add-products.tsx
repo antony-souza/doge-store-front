@@ -89,7 +89,7 @@ export const FormCreateProductAdmin = () => {
             <Toaster />
             <form onSubmit={handleSubmit} ref={formRef} className="space-y-4 mt-5">
                 <div className="pt-3 mt-5">
-                    <label className="block text-sm font-medium">Escolha a loja a ser mapeada</label>
+                    <label className="block text-sm font-medium">Escolha a loja</label>
                     <select
                         name="store_id"
                         className="mt-1 block w-200 p-2 border rounded-md"

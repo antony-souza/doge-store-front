@@ -36,7 +36,8 @@ export const FormUpdateProduct = () => {
         const fetchProducts = async () => {
             try {
                 const productService = new UserService();
-                const response = await productService.getAllProducts();
+                const id = localStorage.getItem('store_id');
+                const response = await productService.getAllProducts(id as string);
                 setProducts(response);
             } catch (error) {
                 console.error("Erro ao buscar os produtos:", error);
@@ -52,17 +53,16 @@ export const FormUpdateProduct = () => {
         const form = event.currentTarget;
         const formData = new FormData(form);
         const filteredFormData = new FormData();
-        let data = false;
 
         // Adiciona os campos ao FormData, excluindo os vazios
         formData.forEach((value, key) => {
             if (value) {
                 filteredFormData.append(key, value);
-                data = true;
+
             }
         });
-
-        if (!data) {
+    
+        if (!form) {
             toast({
                 title: "Erro - Campos Vazios",
                 description: "Nenhum campo foi preenchido. Por favor, preencha pelo menos um campo.",

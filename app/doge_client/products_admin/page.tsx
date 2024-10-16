@@ -16,6 +16,7 @@ import { FormUpdateProduct } from "../product/form-product-update";
 import { FormCreateProduct } from "../product/form-product-create";
 import { FormDeleteProduct } from "../product/form-delete-product";
 import { FormCreateProductAdmin } from "./form-add-products";
+import { FormUpdateProductAdmin } from "./form-edit-products";
 
 export default function RenderProductsPageAdmin() {
     const [products, setProducts] = useState<IProduct[]>([]);
@@ -113,7 +114,7 @@ export default function RenderProductsPageAdmin() {
                 </div>
                {/* TODO: Fazer os forms de edição, criação e exclusão de produtos */}
                 {isEditing ? (
-                    <FormUpdateProduct />
+                    <FormUpdateProductAdmin />
                 ) : isCreate ? (
                     <FormCreateProductAdmin />
                 ) : isDelete ? (

@@ -33,7 +33,8 @@ export default function ProductPage() {
         const fetchProducts = async () => {
             try {
                 const userService = new UserService();
-                const response = await userService.getAllProducts();
+                const id = localStorage.getItem("store_id");
+                const response = await userService.getAllProducts(id as string);
                 setProducts(response);
             } catch (error) {
                 console.error("Erro ao buscar os produtos:", error);

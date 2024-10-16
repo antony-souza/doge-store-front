@@ -14,7 +14,8 @@ export const FormUpdateCategory = () => {
         const fetchCategories = async () => {
             try {
                 const productService = new UserService();
-                const response = await productService.getAllCategories();
+                const id = localStorage.getItem("store_id");
+                const response = await productService.getAllCategories(id as string);
                 setCategory(response);
             } catch (error) {
                 console.error("Erro ao buscar os produtos:", error);

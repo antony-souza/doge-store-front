@@ -13,7 +13,8 @@ export const FormDeleteProduct = () => {
         const fetchProducts = async () => {
             try {
                 const productService = new UserService();
-                const response = await productService.getAllProducts();
+                const id = localStorage.getItem("store_id");
+                const response = await productService.getAllProducts(id as string);
                 setDelProduct(response);
             } catch (error) {
                 console.error("Erro ao buscar os produtos:", error);

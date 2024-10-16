@@ -179,13 +179,7 @@ export default class UserService extends CallAPIService {
         return response;
     }
 
-    async getAllProducts(): Promise<IProduct[]> {
-
-        const storedProducts = localStorage.getItem('products');
-
-        if (storedProducts) {
-            return JSON.parse(storedProducts);
-        }
+    async getAllProducts(id: string): Promise<IProduct[]> {
 
         const token = localStorage.getItem('token');
 
@@ -193,15 +187,12 @@ export default class UserService extends CallAPIService {
             throw new Error('Token não encontrado');
         }
 
-        const store_id = localStorage.getItem('store_id');
-
-        const endpoint = `/product/search/${store_id}`;
+        const endpoint = `/product/search/${id}`;
         console.log(`Chamada para a URL: ${endpoint}`);
 
         const callAPIService = new CallAPIService();
         const response = await callAPIService.genericRequest(endpoint, "GET", true) as IProduct[];
 
-        localStorage.setItem('products', JSON.stringify(response));
 
         return response;
     }
