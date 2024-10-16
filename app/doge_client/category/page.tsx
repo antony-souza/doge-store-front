@@ -31,7 +31,8 @@ export default function CategoryPage() {
         const fetchCategories = async () => {
             try {
                 const userService = new UserService();
-                const response = await userService.getAllCategories();
+                const id = localStorage.getItem('store_id');
+                const response = await userService.getAllCategories(id as string);
                 setCategory(response);
             } catch (error) {
                 console.error("Erro ao buscar as categorias:", error);

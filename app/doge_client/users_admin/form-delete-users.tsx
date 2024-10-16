@@ -85,7 +85,7 @@ export const FormDeleteUsers = () => {
                                 </option>
                             ))
                         ) : (
-                            <option value="">Nenhum Usuário Disponível ou Carregando!</option>
+                            <option value="" disabled>Nenhum Usuário Disponível ou Carregando!</option>
                         )}
                     </select>
                 </div>

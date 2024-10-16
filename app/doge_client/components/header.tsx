@@ -15,7 +15,7 @@ import { routes } from "@/router";
 
 const HeaderClient: React.FC = () => {
     const [user, setUser] = useState<IUserLocalStorage>();
-    const [store, setStore] = useState<IStore>();
+    const [store, setStore] = useState<IStore[]>([]);
     const { push, replace } = useRouter();
 
     useEffect(() => {
@@ -59,7 +59,7 @@ const HeaderClient: React.FC = () => {
 
     return (
         <div className="flex justify-center text-slate-950">
-            <header className="w-full h-16 bg-white flex items-center justify-between p-4 rounded-b border border-gray-300 shadow-md">
+            <header className="w-full h-16 bg-white flex items-center justify-between p-4 rounded-b border border-gray-300 shadow-md fixed">
                 <div className="flex items-center">
                     {/* Nome da loja com fallback */}
                     <h1 className="text-xl font-bold text-gray-700">

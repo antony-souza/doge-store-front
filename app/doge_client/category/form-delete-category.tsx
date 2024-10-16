@@ -13,7 +13,8 @@ export const FormDeleteCategory = () => {
         const fetchCategories = async () => {
             try {
                 const categoryService = new UserService();
-                const response = await categoryService.getAllCategories();
+                const id = localStorage.getItem('store_id');
+                const response = await categoryService.getAllCategories(id as string);
                 setDelCategory(response);
             } catch (error) {
                 console.error("Erro ao buscar as categorias:", error);

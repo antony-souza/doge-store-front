@@ -4,7 +4,7 @@ import { toast } from "@/hooks/use-toast";
 import UserService from "../services/user.service";
 import { Button } from "@/components/ui/button";
 import AdminService, { IUsers } from "../services/admin.service";
-import { IUpdateStore } from "@/app/util/interfaces-global.service";
+import { IStore, IUpdateStore } from "@/app/util/interfaces-global.service";
 
 export const FormUpdateUsers = () => {
     const formRef = useRef<HTMLFormElement | null>(null);
@@ -12,7 +12,7 @@ export const FormUpdateUsers = () => {
     const [password, setPassword] = useState<string | null>(null);
     const [confirmPassword, setConfirmPassword] = useState<string | null>(null);
     const [users, setUsers] = useState<IUsers[]>([]);
-    const [companies, setCompanies] = useState<IUpdateStore[]>([]);
+    const [companies, setCompanies] = useState<IStore[]>([]);
     const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
     useEffect(() => {
@@ -20,7 +20,7 @@ export const FormUpdateUsers = () => {
             try {
                 const adminService = new AdminService();
                 const usersResponse = await adminService.getAllUsers();
-                const companiesResponse = await adminService.getAllStoreName();
+                const companiesResponse = await adminService.getAllStore();
                 setUsers(usersResponse);
                 setCompanies(companiesResponse);
             } catch (error) {
@@ -38,6 +38,15 @@ export const FormUpdateUsers = () => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
+        if (!selectedUserId) {
+            toast({
+                title: "Erro",
+                description: "Selecione um usuário antes de salvar.",
+                variant: "destructive",
+            });
+            return;
+        }
+
         if (selectedField === "password" && password !== confirmPassword) {
             toast({
                 title: "Erro de Senha",
@@ -47,16 +56,19 @@ export const FormUpdateUsers = () => {
             return;
         }
 
-        const userService = new UserService();
+        const adminService = new AdminService();
         const form = event.currentTarget;
         const formData = new FormData(form);
         const filteredFormData = new FormData();
-
+        
+        formData.delete('confirm_password');
+        
         formData.forEach((value, key) => {
             if (value) {
                 filteredFormData.append(key, value);
             }
         });
+
 
         if (!form.checkValidity()) {
             toast({
@@ -68,7 +80,7 @@ export const FormUpdateUsers = () => {
         }
 
         try {
-            await userService.updateProfile(filteredFormData);
+            await adminService.updateUserAdmin(filteredFormData, selectedUserId);
 
             toast({
                 title: "Sucesso na Atualização",
