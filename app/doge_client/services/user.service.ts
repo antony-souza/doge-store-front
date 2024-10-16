@@ -193,8 +193,7 @@ export default class UserService extends CallAPIService {
             throw new Error('Token não encontrado');
         }
 
-        const decodedToken = jwtDecode<DecodedToken>(token);
-        const store_id = decodedToken.store_id;
+        const store_id = localStorage.getItem('store_id');
 
         const endpoint = `/product/search/${store_id}`;
         console.log(`Chamada para a URL: ${endpoint}`);

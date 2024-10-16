@@ -53,7 +53,7 @@ const Dashboard: React.FC<IDashboardProps> = ({ isSidebarOpenProps }) => {
                     icon: "storefront"
                 },
                 {
-                    path: '',
+                    path: routes.ADMIN_PRODUCTS,
                     name: "Produtos",
                     icon: "add_shopping_cart"
                 },

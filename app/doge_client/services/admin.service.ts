@@ -1,5 +1,6 @@
 import CallAPIService from "@/app/util/call-api.service";
 import { IStore, IUpdateStore } from "@/app/util/interfaces-global.service";
+import { IProduct } from "./user.service";
 
 
 export interface IUsers {
@@ -113,6 +114,21 @@ export default class AdminService extends CallAPIService {
         const endpoint = `/store/delete/${id}`;
 
         const response = await callAPIService.genericRequest(endpoint, "DELETE", true);
+
+        return response;
+    }
+
+    async getAllProductsByStore(id: string){ 
+        const token = localStorage.getItem("token");
+
+        if(!token){
+            throw new Error("Token não encontrado");
+        }
+
+        const callAPIService = new CallAPIService();
+        const endpoint = `/product/search/${id}`;
+
+        const response = await callAPIService.genericRequest(endpoint, "GET", true) as IProduct[];
 
         return response;
     }
