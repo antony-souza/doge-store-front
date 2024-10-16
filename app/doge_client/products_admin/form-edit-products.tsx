@@ -97,9 +97,6 @@ export const FormUpdateProductAdmin = () => {
                 description: "O produto foi atualizado com sucesso!",
             });
             formRef.current?.reset();
-            setPrice(null);
-            setSelectedProductId(null);
-            setSelectedField(null);
         } catch (error) {
             console.error(error);
             toast({

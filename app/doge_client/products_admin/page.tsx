@@ -17,6 +17,7 @@ import { FormCreateProduct } from "../product/form-product-create";
 import { FormDeleteProduct } from "../product/form-delete-product";
 import { FormCreateProductAdmin } from "./form-add-products";
 import { FormUpdateProductAdmin } from "./form-edit-products";
+import { FormDeleteProductAdmin } from "./form-delete-products";
 
 export default function RenderProductsPageAdmin() {
     const [products, setProducts] = useState<IProduct[]>([]);
@@ -112,13 +113,12 @@ export default function RenderProductsPageAdmin() {
                         </Button>
                     </div>
                 </div>
-               {/* TODO: Fazer os forms de edição, criação e exclusão de produtos */}
                 {isEditing ? (
                     <FormUpdateProductAdmin />
                 ) : isCreate ? (
                     <FormCreateProductAdmin />
                 ) : isDelete ? (
-                    <FormDeleteProduct />
+                    <FormDeleteProductAdmin />
                 ) : (
                     <div className="pt-3 mt-5">
                         <label className="block text-sm font-medium">Escolha a loja a ser mapeada</label>
