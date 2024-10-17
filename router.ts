@@ -8,4 +8,6 @@ export const routes = {
     ADMIN_USERS: "/doge_client/users_admin",
     ADMIN_STORE: "/doge_client/store_admin",
     ADMIN_PRODUCTS: "/doge_client/products_admin",
+    ADMIN_CATEGORY: "/doge_client/category_admin",
+    ADMIN_FEATURED: "/doge_client/featured_admin",
 };

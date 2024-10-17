@@ -47,7 +47,7 @@ export const FormUpdateProductAdmin = () => {
             try {
                 const productService = new UserService();
                 const response = await productService.getAllCategories(selectedStoreID);
-                setCategory(response);  
+                setCategory(response);
             } catch (error) {
                 console.error("Erro ao buscar os produtos:", error);
             }
@@ -62,16 +62,15 @@ export const FormUpdateProductAdmin = () => {
         const form = event.currentTarget;
         const formData = new FormData(form);
         const filteredFormData = new FormData();
-        let data = false;
 
         formData.forEach((value, key) => {
-            if (value) {
-                filteredFormData.append(key, value);
-                data = true;
+            if(value){
+            filteredFormData.append(key, value);
             }
         });
 
-        if (!data) {
+
+        if (!form) {
             toast({
                 title: "Erro - Campos Vazios",
                 description: "Nenhum campo foi preenchido. Por favor, preencha pelo menos um campo.",
@@ -90,16 +89,17 @@ export const FormUpdateProductAdmin = () => {
         }
 
         try {
-            await productService.updateProduct(filteredFormData, selectedProduct);
+            await productService.updateProduct(selectedProduct, filteredFormData);
 
             toast({
                 title: "Sucesso",
                 description: "O produto foi atualizado com sucesso!",
             });
-            formRef.current?.reset();
-            setPrice(null);
-            setSelectedProductId(null);
-            setSelectedField(null);
+            
+            if (formRef.current) {
+                formRef.current.reset();
+            }
+            
         } catch (error) {
             console.error(error);
             toast({
@@ -113,27 +113,27 @@ export const FormUpdateProductAdmin = () => {
     return (
         <>
             <Toaster />
+            <div className="pt-3 mt-5">
+                <label className="block text-sm font-medium">Escolha a loja</label>
+                <select
+                    name="store_id"
+                    className="mt-1 block w-200 p-2 border rounded-md "
+                    value={selectedStoreID}
+                    onChange={(e) => setSelectedStoreID(e.target.value)}
+                >
+                    <option value="" disabled>Selecione uma loja</option>
+                    {store.length > 0 ? (
+                        store.map((store) => (
+                            <option key={store.id} value={store.id}>
+                                {store.name}
+                            </option>
+                        ))
+                    ) : (
+                        <option value="" disabled>Nenhuma Loja Disponível!</option>
+                    )}
+                </select>
+            </div>
             <form onSubmit={handleSubmit} ref={formRef} className="space-y-4 mt-5">
-                <div className="pt-3 mt-5">
-                    <label className="block text-sm font-medium">Escolha a loja</label>
-                    <select
-                        name="store_id"
-                        className="mt-1 block w-200 p-2 border rounded-md "
-                        value={selectedStoreID}
-                        onChange={(e) => setSelectedStoreID(e.target.value)}
-                    >
-                        <option value="" disabled>Selecione uma loja</option>
-                        {store.length > 0 ? (
-                            store.map((store) => (
-                                <option key={store.id} value={store.id}>
-                                    {store.name}
-                                </option>
-                            ))
-                        ) : (
-                            <option value="" disabled>Nenhuma Loja Disponível!</option>
-                        )}
-                    </select>
-                </div>
                 <div>
                     <label className="block text-sm font-medium">Escolha o produto para editar</label>
                     <select

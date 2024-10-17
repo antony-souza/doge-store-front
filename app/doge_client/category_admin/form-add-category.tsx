@@ -1,15 +1,15 @@
+"use client"
 import { useEffect, useRef, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
-import UserService, { IUpdateProduct } from "../services/user.service";
+import UserService, { ICategory } from "../services/user.service";
 import { Button } from "@/components/ui/button";
+import { IStore } from "@/app/util/interfaces-global.service";
 import AdminService from "../services/admin.service";
 
-export const FormDeleteProductAdmin = () => {
+export const FormAddCatergoryAdmin = () => {
     const formRef = useRef<HTMLFormElement | null>(null);
-    const [delProduct, setDelProduct] = useState<IUpdateProduct[]>([]);
-    const [selectedProduct, setSelectedProduct] = useState<string>("");
-    const [store, setStore] = useState<IUpdateProduct[]>([]);
+    const [store, setStore] = useState<IStore[]>([]);
     const [selectedStoreID, setSelectedStoreID] = useState<string>("");
 
     useEffect(() => {
@@ -25,59 +25,43 @@ export const FormDeleteProductAdmin = () => {
         fetchStore();
     }, []);
 
-    useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const productService = new UserService();
-                const response = await productService.getAllProducts(selectedStoreID);
-                setDelProduct(response);
-            } catch (error) {
-                console.error("Erro ao buscar os produtos:", error);
-            }
-        };
-        fetchProducts();
-    }, [selectedStoreID]);
-
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        if (!selectedProduct) {
+        const form = event.currentTarget;
+        const formData = new FormData(form);
+
+        if (!form.checkValidity()) {
             toast({
-                title: "Seleção de produto",
-                description: "Por favor, selecione um produto para deletar.",
-                variant: "destructive",
+                title: "Erro",
+                description: "Preencha todos os campos obrigatórios para adicionar a categoria!",
             });
             return;
         }
 
-        const productService = new UserService();
-
         try {
-            const response = await productService.deleteProduct(selectedProduct);
+            const productService = new UserService();
+            const response = await productService.createCategory(formData);
 
             if (response) {
                 toast({
-                    title: "Produto deletado com sucesso!",
-                    description: "O produto foi desativado.",
+                    title: "Categoria criada com sucesso!",
+                    description: "A categoria foi adicionada à lista.",
                     variant: "default",
                 });
                 formRef.current?.reset();
-            }
-
-            if (!response) {
+            } else {
                 toast({
-                    title: "Erro ao deletar produto",
+                    title: "Erro ao criar categoria",
                     description: "Verifique os dados e tente novamente.",
                     variant: "destructive",
                 });
             }
-
         } catch (error) {
-            console.error("Erro ao deletar produto:", error);
+            console.error("Erro ao criar categoria:", error);
             toast({
                 title: "Erro no servidor",
-                description: "Ocorreu um erro ao deletar o produto.",
-                variant: "destructive",
+                description: "Ocorreu um erro ao enviar os dados para a categoria.",
             });
         }
     };
@@ -106,28 +90,27 @@ export const FormDeleteProductAdmin = () => {
                         )}
                     </select>
                 </div>
-                <div className="pt-3">
-                    <label className="block text-sm font-medium">Escolha o Produto</label>
-                    <select
-                        name="product_id"
+                <div>
+                    <label className="block text-sm font-medium">Foto da Categoria</label>
+                    <input
+                        type="file"
+                        name="image_url"
                         className="mt-1 block w-full p-2 border rounded-md"
-                        value={selectedProduct}
-                        onChange={(e) => setSelectedProduct(e.target.value)}
-                    >
-                        <option value="" disabled>Selecione um produto para excluir</option>
-                        {delProduct.length > 0 ? (
-                            delProduct.map((product) => (
-                                <option key={product.id} value={product.id}>
-                                    {product.name}
-                                </option>
-                            ))
-                        ) : (
-                            <option value="">Nenhum Produto Disponível ou Carregando!</option>
-                        )}
-                    </select>
+                        accept="image/*"
+                        required
+                    />
                 </div>
-
-                <Button type="submit" className="w-20">Excluir</Button>
+                <div>
+                    <label className="block text-sm font-medium">Nome da Categoria</label>
+                    <input
+                        type="text"
+                        name="name"
+                        className="mt-1 block w-full p-2 border rounded-md"
+                        placeholder="Nome da categoria"
+                        required
+                    />
+                </div>
+                <Button type="submit" className="w-20">Salvar</Button>
             </form>
         </>
     );

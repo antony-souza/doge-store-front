@@ -5,10 +5,10 @@ import UserService, { IUpdateProduct } from "../services/user.service";
 import { Button } from "@/components/ui/button";
 import AdminService from "../services/admin.service";
 
-export const FormDeleteProductAdmin = () => {
+export const FormDeleteCategoryAdmin = () => {
     const formRef = useRef<HTMLFormElement | null>(null);
-    const [delProduct, setDelProduct] = useState<IUpdateProduct[]>([]);
-    const [selectedProduct, setSelectedProduct] = useState<string>("");
+    const [delCategory, setDelCategory] = useState<IUpdateProduct[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<string>("");
     const [store, setStore] = useState<IUpdateProduct[]>([]);
     const [selectedStoreID, setSelectedStoreID] = useState<string>("");
 
@@ -26,25 +26,25 @@ export const FormDeleteProductAdmin = () => {
     }, []);
 
     useEffect(() => {
-        const fetchProducts = async () => {
+        const fetchCategory = async () => {
             try {
                 const productService = new UserService();
-                const response = await productService.getAllProducts(selectedStoreID);
-                setDelProduct(response);
+                const response = await productService.getAllCategories(selectedStoreID);
+                setDelCategory(response);
             } catch (error) {
-                console.error("Erro ao buscar os produtos:", error);
+                console.error("Erro ao buscar as categorias:", error);
             }
         };
-        fetchProducts();
+        fetchCategory();
     }, [selectedStoreID]);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        if (!selectedProduct) {
+        if (!selectedCategory) {
             toast({
-                title: "Seleção de produto",
-                description: "Por favor, selecione um produto para deletar.",
+                title: "Seleção de categoria",
+                description: "Por favor, selecione uma categoria para deletar.",
                 variant: "destructive",
             });
             return;
@@ -53,12 +53,12 @@ export const FormDeleteProductAdmin = () => {
         const productService = new UserService();
 
         try {
-            const response = await productService.deleteProduct(selectedProduct);
+            const response = await productService.deleteProduct(selectedCategory);
 
             if (response) {
                 toast({
-                    title: "Produto deletado com sucesso!",
-                    description: "O produto foi desativado.",
+                    title: "Categoria deletada com sucesso!",
+                    description: "A categoria foi desativada.",
                     variant: "default",
                 });
                 formRef.current?.reset();
@@ -66,17 +66,17 @@ export const FormDeleteProductAdmin = () => {
 
             if (!response) {
                 toast({
-                    title: "Erro ao deletar produto",
+                    title: "Erro ao deletar categoria",
                     description: "Verifique os dados e tente novamente.",
                     variant: "destructive",
                 });
             }
 
         } catch (error) {
-            console.error("Erro ao deletar produto:", error);
+            console.error("Erro ao deletar categoria:", error);
             toast({
                 title: "Erro no servidor",
-                description: "Ocorreu um erro ao deletar o produto.",
+                description: "Ocorreu um erro ao deletar a categoria.",
                 variant: "destructive",
             });
         }
@@ -107,22 +107,22 @@ export const FormDeleteProductAdmin = () => {
                     </select>
                 </div>
                 <div className="pt-3">
-                    <label className="block text-sm font-medium">Escolha o Produto</label>
+                    <label className="block text-sm font-medium">Escolha a Categoria</label>
                     <select
-                        name="product_id"
+                        name="category_id"
                         className="mt-1 block w-full p-2 border rounded-md"
-                        value={selectedProduct}
-                        onChange={(e) => setSelectedProduct(e.target.value)}
+                        value={selectedCategory}
+                        onChange={(e) => setSelectedCategory(e.target.value)}
                     >
-                        <option value="" disabled>Selecione um produto para excluir</option>
-                        {delProduct.length > 0 ? (
-                            delProduct.map((product) => (
-                                <option key={product.id} value={product.id}>
-                                    {product.name}
+                        <option value="" disabled>Selecione uma categoria para excluir</option>
+                        {delCategory.length > 0 ? (
+                            delCategory.map((category) => (
+                                <option key={category.id} value={category.id}>
+                                    {category.name}
                                 </option>
                             ))
                         ) : (
-                            <option value="">Nenhum Produto Disponível ou Carregando!</option>
+                            <option value="">Nenhuma Categoria Disponível ou Carregando!</option>
                         )}
                     </select>
                 </div>

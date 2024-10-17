@@ -58,12 +58,12 @@ const Dashboard: React.FC<IDashboardProps> = ({ isSidebarOpenProps }) => {
                     icon: "add_shopping_cart"
                 },
                 {
-                    path: '',
+                    path: routes.ADMIN_CATEGORY,
                     name: "Categorias",
                     icon: "category"
                 },
                 {
-                    path: '',
+                    path: routes.ADMIN_FEATURED,
                     name: "Destaques",
                     icon: "hotel_class"
                 },
