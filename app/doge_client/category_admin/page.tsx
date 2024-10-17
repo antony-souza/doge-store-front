@@ -9,12 +9,12 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { useEffect, useState } from "react";
-import UserService, { ICategory, IProduct } from "../services/user.service";
+import UserService, { ICategory } from "../services/user.service";
 import { IStore } from "@/app/util/interfaces-global.service";
 import AdminService from "../services/admin.service";
-import { FormUpdateProductAdmin } from "../products_admin/form-edit-products";
-import { FormCreateProductAdmin } from "../products_admin/form-add-products";
 import { FormDeleteProductAdmin } from "../products_admin/form-delete-products";
+import { FormUpdateCategoryAdmin } from "./form-edit-category";
+import { FormAddCatergoryAdmin } from "./form-add-category";
 
 export default function RenderCategoriesPageAdmin() {
     const [category, setCategory] = useState<ICategory[]>([]);
@@ -89,9 +89,9 @@ export default function RenderCategoriesPageAdmin() {
             <LayoutPage>
                 <div className="flex justify-between align-middle">
                     <TitlePage name={
-                        isEditing ? 'Categorias - Editando'
-                            : isCreate ? 'Categorias - Criando'
-                                : isDelete ? 'Categorias - Excluindo' : 'Categorias'} />
+                        isEditing ? 'Categorias Gerais - Editando'
+                            : isCreate ? 'Categorias Gerais - Criando'
+                                : isDelete ? 'Categorias Gerais - Excluindo' : 'Categorias Gerais'} />
                     <div className="flex gap-2">
                         <Button variant={"destructive"} className="flex gap-3" onClick={handleDeleteClick}>
                             <span className="material-symbols-outlined">
@@ -114,9 +114,9 @@ export default function RenderCategoriesPageAdmin() {
                     </div>
                 </div>
                 {isEditing ? (
-                    <FormUpdateProductAdmin />
+                    <FormUpdateCategoryAdmin />
                 ) : isCreate ? (
-                    <FormCreateProductAdmin />
+                    <FormAddCatergoryAdmin />
                 ) : isDelete ? (
                     <FormDeleteProductAdmin />
                 ) : (
@@ -146,7 +146,6 @@ export default function RenderCategoriesPageAdmin() {
                                     <TableHead className="w-[auto]">Foto</TableHead>
                                     <TableHead className="w-[auto]">Nome</TableHead>
                                     <TableHead className="w-[auto]">Loja</TableHead>
-                                    <TableHead className="w-[auto]">Produtos Relacionados</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -164,15 +163,6 @@ export default function RenderCategoriesPageAdmin() {
                                             </TableCell>
                                             <TableCell>{category.name || "-"}</TableCell>
                                             <TableCell>{category.store.name || "-"}</TableCell>
-                                            <TableCell>
-                                                {category.product.length > 0 ? (
-                                                    category.product.map(product => (
-                                                        <div key={product.id}>{product.name}</div>
-                                                    ))
-                                                ) : (
-                                                    "-"
-                                                )}
-                                            </TableCell>
                                         </TableRow>
                                     ))
                                 ) : (

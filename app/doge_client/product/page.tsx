@@ -92,7 +92,7 @@ export default function ProductPage() {
                                             <TableCell className="font-medium">
                                                 <Avatar>
                                                     <AvatarImage
-                                                        className="rounded-full w-auto h-12 border-2"
+                                                        className="rounded-full w-auto object-cover h-12 border-2"
                                                         src={product.image_url || ""}
                                                         alt={product.name || "Imagem do produto"}
                                                     />

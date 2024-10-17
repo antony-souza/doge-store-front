@@ -57,7 +57,8 @@ export const FormCreateProduct = () => {
 
         try {
             const productService = new UserService();
-            const response = await productService.createProduct(formData);
+            const id = localStorage.getItem('store_id');
+            const response = await productService.createProduct(formData, id as string);
 
             if (response) {
                 toast({

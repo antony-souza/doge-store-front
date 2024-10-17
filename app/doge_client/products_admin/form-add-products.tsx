@@ -58,7 +58,7 @@ export const FormCreateProductAdmin = () => {
 
         try {
             const productService = new UserService();
-            const response = await productService.createProduct(formData);
+            const response = await productService.createProduct(formData, selectedStoreID);
 
             if (response) {
                 toast({

@@ -199,17 +199,14 @@ export default class UserService extends CallAPIService {
         return response;
     }
 
-    async createProduct(body: FormData) {
+    async createProduct(body: FormData, id: string) {
         const token = localStorage.getItem('token');
 
         if (!token) {
             throw new Error('Token não encontrado');
         }
 
-        const decodedToken = jwtDecode<DecodedToken>(token);
-        const store_id = decodedToken.store_id;
-
-        const endpoint = `/product/create/${store_id}`;
+        const endpoint = `/product/create/${id}`;
         console.log(`Chamada para a URL: ${endpoint}`);
 
         const callAPIService = new CallAPIService();
@@ -219,7 +216,7 @@ export default class UserService extends CallAPIService {
         return response;
     }
 
-    async updateProduct(body: FormData, id: string) {
+    async updateProduct(id: string, body: FormData) {
         const token = localStorage.getItem('token');
 
         if (!token) {
@@ -272,7 +269,7 @@ export default class UserService extends CallAPIService {
 
     async getAllCategories(id:string) {
         const token = localStorage.getItem('token');
-        const storeCategory = localStorage.getItem('category');
+   /*      const storeCategory = localStorage.getItem('category'); */
   /*       const storedTimestamp = localStorage.getItem('categoryTimestamp');
         const currentTime = new Date().getTime();
         const expirationTime = 5 * 60 * 1000; // 5 minutos */

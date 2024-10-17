@@ -58,7 +58,6 @@ export const FormUpdateProduct = () => {
         formData.forEach((value, key) => {
             if (value) {
                 filteredFormData.append(key, value);
-
             }
         });
     
@@ -81,7 +80,7 @@ export const FormUpdateProduct = () => {
         }
 
         try {
-            await productService.updateProduct(filteredFormData, selectedProduct);
+            await productService.updateProduct(selectedProduct, filteredFormData);
 
             toast({
                 title: "Sucesso",

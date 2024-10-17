@@ -1,190 +1,117 @@
-"use client";
-import { LayoutDashboard } from "@/app/components/layout-dashboard";
-import { LayoutPage } from "@/app/components/layout-page";
-import { TitlePage } from "@/app/components/title-page";
-import { formatPrice } from "@/app/util/formt-price";
+"use client"
+import { useEffect, useRef, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
+import UserService, { ICategory } from "../services/user.service";
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
-import { useEffect, useState } from "react";
-import UserService, { IProduct } from "../services/user.service";
 import { IStore } from "@/app/util/interfaces-global.service";
 import AdminService from "../services/admin.service";
-import { FormUpdateProduct } from "../product/form-product-update";
-import { FormCreateProduct } from "../product/form-product-create";
-import { FormDeleteProduct } from "../product/form-delete-product";
-import { FormCreateProductAdmin } from "./form-add-products";
-import { FormUpdateProductAdmin } from "./form-edit-products";
-import { FormDeleteProductAdmin } from "./form-delete-products";
 
-export default function RenderCategoriesPageAdmin() {
-    const [products, setProducts] = useState<IProduct[]>([]);
-    const [stores, setStores] = useState<IStore[]>([]);
+export const FormAddCatergoryAdmin = () => {
+    const formRef = useRef<HTMLFormElement | null>(null);
+    const [store, setStore] = useState<IStore[]>([]);
     const [selectedStoreID, setSelectedStoreID] = useState<string>("");
-    const [isEditing, setIsEditing] = useState(false);
-    const [isCreate, setIsCreate] = useState(false);
-    const [isDelete, setIsDelete] = useState(false);
-
-    const handleEditClick = () => {
-        setIsEditing(!isEditing);
-    };
-    const handleCreateClick = () => {
-        setIsCreate(!isCreate);
-    };
-    const handleDeleteClick = () => {
-        setIsDelete(!isDelete);
-    };
 
     useEffect(() => {
-        const fetchStores = async () => {
+        const fetchStore = async () => {
             try {
                 const adminService = new AdminService();
-                const stores = await adminService.getAllStore();
-
-                setStores(stores);
+                const response = await adminService.getAllStore();
+                setStore(response);
             } catch (error) {
-                toast({
-                    title: "Erro ao carregar lojas",
-                    description: "Ocorreu um erro ao carregar as lojas.",
-                    variant: "destructive",
-                });
+                console.error("Erro ao buscar as lojas:", error);
             }
         };
-
-        fetchStores();
+        fetchStore();
     }, []);
 
-    useEffect(() => {
-        const fetchProductsByStore = async () => {
-            if (!selectedStoreID) {
-                return;
-            }
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
 
-            try {
-                const userService = new UserService();
-                const products = await userService.getAllProducts(selectedStoreID);
+        const form = event.currentTarget;
+        const formData = new FormData(form);
 
-                if (products.length === 0) {
-                    toast({
-                        title: "Nenhum produto encontrado",
-                        description: `Nenhum produto foi encontrado para a loja selecionada.`,
-                        variant: "destructive",
-                    });
-                }
+        if (!form.checkValidity()) {
+            toast({
+                title: "Erro",
+                description: "Preencha todos os campos obrigatórios para adicionar a categoria!",
+            });
+            return;
+        }
 
-                setProducts(products);
-            } catch (error) {
+        try {
+            const productService = new UserService();
+            const response = await productService.createCategory(formData);
+
+            if (response) {
                 toast({
-                    title: "Erro ao carregar produtos",
-                    description: "Ocorreu um erro ao carregar os produtos desta loja.",
+                    title: "Categoria criada com sucesso!",
+                    description: "A categoria foi adicionada à lista.",
+                    variant: "default",
+                });
+                formRef.current?.reset();
+            } else {
+                toast({
+                    title: "Erro ao criar categoria",
+                    description: "Verifique os dados e tente novamente.",
                     variant: "destructive",
                 });
             }
-        };
-
-        fetchProductsByStore();
-    }, [selectedStoreID]);
+        } catch (error) {
+            console.error("Erro ao criar categoria:", error);
+            toast({
+                title: "Erro no servidor",
+                description: "Ocorreu um erro ao enviar os dados para a categoria.",
+            });
+        }
+    };
 
     return (
-        <LayoutDashboard dashboardConfig={{ isSidebarOpenProps: false }}>
-            <LayoutPage>
-                <div className="flex justify-between align-middle">
-                    <TitlePage name={
-                        isEditing ? 'Produtos Gerais - Editando'
-                            : isCreate ? 'Produtos Gerais - Criando'
-                                : isDelete ? 'Produtos Gerais - Excluindo' : 'Produtos Gerais'} />
-                    <div className="flex gap-2">
-                        <Button variant={"destructive"} className="flex gap-3" onClick={handleDeleteClick}>
-                            <span className="material-symbols-outlined">
-                                {isDelete ? 'arrow_back' : 'delete'}
-                            </span>
-                            {isDelete ? 'Voltar' : 'Excluir Produto'}
-                        </Button>
-                        <Button className="flex gap-3" onClick={handleEditClick}>
-                            <span className="material-symbols-outlined">
-                                {isEditing ? 'arrow_back' : 'edit'}
-                            </span>
-                            {isEditing ? 'Voltar' : 'Editar Produto'}
-                        </Button>
-                        <Button className="flex gap-3" onClick={handleCreateClick}>
-                            <span className="material-symbols-outlined">
-                                {isCreate ? 'arrow_back' : 'add'}
-                            </span>
-                            {isCreate ? 'Voltar' : 'Novo Produto'}
-                        </Button>
-                    </div>
-                </div>
-                {isEditing ? (
-                    <FormUpdateProductAdmin />
-                ) : isCreate ? (
-                    <FormCreateProductAdmin />
-                ) : isDelete ? (
-                    <FormDeleteProductAdmin />
-                ) : (
-                    <div className="pt-3 mt-5">
-                        <label className="block text-sm font-medium">Escolha a loja a ser mapeada</label>
-                        <select
-                            name="store_id"
-                            className="mt-1 block w-200 p-2 border rounded-md "
-                            value={selectedStoreID}
-                            onChange={(e) => setSelectedStoreID(e.target.value)}
-                        >
-                            <option value="" disabled>Selecione uma loja</option>
-                            {stores.length > 0 ? (
-                                stores.map((store) => (
-                                    <option key={store.id} value={store.id}>
-                                        {store.name}
-                                    </option>
-                                ))
-                            ) : (
-                                <option value="" disabled>Nenhuma Loja Disponível!</option>
-                            )}
-                        </select>
-
-                        <Table className="min-w-full mt-4">
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead className="w-[auto]">Foto</TableHead>
-                                    <TableHead className="w-[auto]">Nome</TableHead>
-                                    <TableHead className="w-[auto]">Preço</TableHead>
-                                    <TableHead className="w-[auto]">Descrição</TableHead>
-                                    <TableHead className="w-[auto]">Categoria</TableHead>
-                                    <TableHead className="w-[auto]">Destaque</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {products.length > 0 ? (
-                                    products.map(product => (
-                                        <TableRow key={product.id}>
-                                            <TableCell className="font-medium">
-                                                <Avatar>
-                                                    <AvatarImage
-                                                        className="rounded-full w-auto h-12 border-2"
-                                                        src={product.image_url || ""}
-                                                        alt={product.name || "Imagem do produto"}
-                                                    />
-                                                </Avatar>
-                                            </TableCell>
-                                            <TableCell>{product.name || "-"}</TableCell>
-                                            <TableCell>{formatPrice(product.price) || "-"}</TableCell>
-                                            <TableCell>{product.description || "-"}</TableCell>
-                                            <TableCell>{product.category?.name || "-"}</TableCell>
-                                            <TableCell>{product.featured_products ? "Sim" : "Não"}</TableCell>
-                                        </TableRow>
-                                    ))
-                                ) : (
-                                    <TableRow>
-                                        <TableCell colSpan={6} className="text-center">Nenhum produto encontrado</TableCell>
-                                    </TableRow>
-                                )}
-                            </TableBody>
-                        </Table>
-                    </div>
-                )}
-            </LayoutPage>
+        <>
             <Toaster />
-        </LayoutDashboard>
+            <form onSubmit={handleSubmit} ref={formRef} className="space-y-4 mt-5">
+                <div className="pt-3 mt-5">
+                    <label className="block text-sm font-medium">Escolha a loja</label>
+                    <select
+                        name="store_id"
+                        className="mt-1 block w-200 p-2 border rounded-md"
+                        value={selectedStoreID}
+                        onChange={(e) => setSelectedStoreID(e.target.value)}
+                    >
+                        <option value="" disabled>Selecione uma loja</option>
+                        {store.length > 0 ? (
+                            store.map((store) => (
+                                <option key={store.id} value={store.id}>
+                                    {store.name}
+                                </option>
+                            ))
+                        ) : (
+                            <option value="" disabled>Nenhuma Loja Disponível!</option>
+                        )}
+                    </select>
+                </div>
+                <div>
+                    <label className="block text-sm font-medium">Foto da Categoria</label>
+                    <input
+                        type="file"
+                        name="image_url"
+                        className="mt-1 block w-full p-2 border rounded-md"
+                        accept="image/*"
+                        required
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium">Nome da Categoria</label>
+                    <input
+                        type="text"
+                        name="name"
+                        className="mt-1 block w-full p-2 border rounded-md"
+                        placeholder="Nome da categoria"
+                        required
+                    />
+                </div>
+                <Button type="submit" className="w-20">Salvar</Button>
+            </form>
+        </>
     );
-}
+};
