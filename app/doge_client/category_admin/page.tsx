@@ -2,7 +2,6 @@
 import { LayoutDashboard } from "@/app/components/layout-dashboard";
 import { LayoutPage } from "@/app/components/layout-page";
 import { TitlePage } from "@/app/components/title-page";
-import { formatPrice } from "@/app/util/formt-price";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -12,9 +11,9 @@ import { useEffect, useState } from "react";
 import UserService, { ICategory } from "../services/user.service";
 import { IStore } from "@/app/util/interfaces-global.service";
 import AdminService from "../services/admin.service";
-import { FormDeleteProductAdmin } from "../products_admin/form-delete-products";
 import { FormUpdateCategoryAdmin } from "./form-edit-category";
 import { FormAddCatergoryAdmin } from "./form-add-category";
+import { FormDeleteCategoryAdmin } from "./form-delete-category";
 
 export default function RenderCategoriesPageAdmin() {
     const [category, setCategory] = useState<ICategory[]>([]);
@@ -118,7 +117,7 @@ export default function RenderCategoriesPageAdmin() {
                 ) : isCreate ? (
                     <FormAddCatergoryAdmin />
                 ) : isDelete ? (
-                    <FormDeleteProductAdmin />
+                    <FormDeleteCategoryAdmin />
                 ) : (
                     <div className="pt-3 mt-5">
                         <label className="block text-sm font-medium">Escolha a loja a ser mapeada</label>

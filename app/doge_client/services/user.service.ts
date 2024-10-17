@@ -37,6 +37,7 @@ export interface IProduct {
     category_id: string,
     image_url: string,
     featured_products: boolean,
+    store: IStore
 }
 
 export interface IUpdateProduct {
@@ -249,15 +250,14 @@ export default class UserService extends CallAPIService {
         return response;
     }
 
-    async getAllFeaturedProducts() {
+    async getAllFeaturedProducts(id:string) {
         const token = localStorage.getItem('token');
         
         if(!token){
             throw new Error('Token não encontrado');
         }
 
-        const store_id = localStorage.getItem('store_id');
-        const endpoint = `/product/featured/${store_id}`;
+        const endpoint = `/product/featured/${id}`;
 
         console.log(`Chamada para a URL: ${endpoint}`);
 

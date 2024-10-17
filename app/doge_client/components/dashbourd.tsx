@@ -63,7 +63,7 @@ const Dashboard: React.FC<IDashboardProps> = ({ isSidebarOpenProps }) => {
                     icon: "category"
                 },
                 {
-                    path: '',
+                    path: routes.ADMIN_FEATURED,
                     name: "Destaques",
                     icon: "hotel_class"
                 },
