@@ -1,3 +1,3 @@
-# doge-delivery
+# doge-store-front
 
 [![My Skills](https://skillicons.dev/icons?i=next,tailwind,ts)](https://skillicons.dev) 
