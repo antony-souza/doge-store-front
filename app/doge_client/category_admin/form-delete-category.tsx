@@ -53,7 +53,7 @@ export const FormDeleteCategoryAdmin = () => {
         const productService = new UserService();
 
         try {
-            const response = await productService.deleteProduct(selectedCategory);
+            const response = await productService.deleteCategory(selectedCategory);
 
             if (response) {
                 toast({
