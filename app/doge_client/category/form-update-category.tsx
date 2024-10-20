@@ -36,18 +36,13 @@ export const FormUpdateCategory = () => {
         formData.forEach((value, key) => {
             if (value) {
                 filteredFormData.append(key, value);
-
             }
         });
-
-        const name = formData.get("name")?.toString().trim();
-        const image = formData.get("image_url");
-
-
-        if (!name || !image) {
+      
+        if(!form){
             toast({
-                title: "Erro ao criar categoria",
-                description: "Todos os campos obrigatórios devem ser preenchidos.",
+                title: "Erro",
+                description: "Formulário vazio.",
                 variant: "destructive",
             });
             return;

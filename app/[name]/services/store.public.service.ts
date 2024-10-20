@@ -1,25 +1,20 @@
 import CallAPIService from "@/app/util/call-api.service";
+import { IStore } from "@/app/util/interfaces-global.service";
 
-export interface IParams {
-    name: string;
-}
-
-export interface ICategory {
-    id: number;
-    name: string;
-    image_url: string;
-}
-
+export interface IPublicPageProps {
+    params: {
+      name: string;
+    };
+  }
 
 export default class PublicStoreService {
     async getPublicStore(name: string) {
-
-        const encodedName = encodeURIComponent(name);
-        const endpoint = `/public/search_store/?name=${encodedName}`;
+        
+        const endpoint = `/public/search/?name=${name}`;
 
         const callAPIService = new CallAPIService();
         
-        const response = await callAPIService.genericRequest(endpoint, "GET", false);
+        const response = await callAPIService.genericRequest(endpoint, "GET", false) as IStore[];
 
         return response;
     }

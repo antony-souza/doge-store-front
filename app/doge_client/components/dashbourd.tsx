@@ -16,7 +16,7 @@ interface IDashboardProps {
 const Dashboard: React.FC<IDashboardProps> = ({ isSidebarOpenProps }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(isSidebarOpenProps ?? true);
     const [menuList, setMenuList] = useState<IMenuList[]>([
-        
+
         {
             path: routes.STORE,
             icon: "store",
@@ -47,7 +47,7 @@ const Dashboard: React.FC<IDashboardProps> = ({ isSidebarOpenProps }) => {
                     path: routes.ADMIN_USERS,
                     name: "Usuários",
                     icon: "people"
-                },{
+                }, {
                     path: routes.ADMIN_STORE,
                     name: "Lojas",
                     icon: "storefront"

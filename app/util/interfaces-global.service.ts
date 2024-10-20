@@ -1,3 +1,5 @@
+import { ICategory, IProduct } from "../doge_client/services/user.service";
+
 export interface IStore {
     id: string;
     name: string;
@@ -7,6 +9,8 @@ export interface IStore {
     is_open: boolean;
     description: string;
     background_color: string;
+    category: ICategory;
+    products: IProduct;
 }
 
 export interface IUpdateStore {
