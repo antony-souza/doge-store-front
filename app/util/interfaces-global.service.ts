@@ -9,8 +9,8 @@ export interface IStore {
     is_open: boolean;
     description: string;
     background_color: string;
-    category: ICategory;
-    products: IProduct;
+    category: ICategory[];
+    product: IProduct[];
 }
 
 export interface IUpdateStore {
