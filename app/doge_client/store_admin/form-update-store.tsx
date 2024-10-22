@@ -10,7 +10,7 @@ export const FormUpdateStoreAdmin = () => {
     const formRef = useRef<HTMLFormElement | null>(null);
     const [selectedField, setSelectedField] = useState<string | null>(null);
     const [stores, setStores] = useState<IStore[]>([]);
-    const [selectedStoreId, setSelectedStoreId] = useState<string | null>(null);
+    const [selectedStoreId, setSelectedStoreId] = useState<string>('');
 
     useEffect(() => {
         const fetchStore = async () => {
@@ -73,7 +73,7 @@ export const FormUpdateStoreAdmin = () => {
             if (formRef.current) {
                 formRef.current.reset();
                 setSelectedField(null);
-                setSelectedStoreId(null); 
+                setSelectedStoreId(''); 
             }
         } catch (error) {
             console.error(error);
@@ -93,6 +93,7 @@ export const FormUpdateStoreAdmin = () => {
                     <label className="block text-sm font-medium">Loja (Empresa)</label>
                     <select
                         className="mt-1 block w-full p-2 border rounded-md"
+                        value={selectedStoreId}
                         onChange={(e) => setSelectedStoreId(e.target.value)} // Atualiza o ID da loja selecionada
                     >
                         <option value="" disabled>Selecione a loja</option>
@@ -116,6 +117,7 @@ export const FormUpdateStoreAdmin = () => {
                     >
                         <option value="" disabled>Selecione um campo</option>
                         <option value="image_url">Foto da Loja</option>
+                        <option value="banner_url">Banner da Loja</option>
                         <option value="name">Nome da Loja</option>
                         <option value="phone">Telefone</option>
                         <option value="description">Descrição</option>
@@ -129,6 +131,18 @@ export const FormUpdateStoreAdmin = () => {
                         <input
                             type="file"
                             name="image_url"
+                            className="mt-1 block w-full p-2 border rounded-md"
+                            accept="image/*"
+                        />
+                    </div>
+                )}
+
+                {selectedField === "banner_url" && (
+                    <div>
+                        <label className="block text-sm font-medium">Banner da Loja</label>
+                        <input
+                            type="file"
+                            name="banner_url"
                             className="mt-1 block w-full p-2 border rounded-md"
                             accept="image/*"
                         />
