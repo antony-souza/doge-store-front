@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
-import UserService from "../services/user.service";
+import UserService, { DecodedToken } from "../services/user.service";
 import { Button } from "@/components/ui/button";
+import { jwtDecode } from "jwt-decode";
 
 export const FormUpdateStore = () => {
     const formRef = useRef<HTMLFormElement | null>(null);
@@ -15,18 +16,15 @@ export const FormUpdateStore = () => {
         const form = event.currentTarget;
         const formData = new FormData(form);
 
-
         const filteredFormData = new FormData();
-        let hasData = false;
 
         formData.forEach((value, key) => {
             if (value) {
                 filteredFormData.append(key, value);
-                hasData = true;
             }
         });
 
-        if (!hasData) {
+        if (!form) {
             toast({
                 title: "Erro",
                 description: "Nenhum campo foi preenchido. Por favor, preencha pelo menos um campo.",
@@ -36,7 +34,9 @@ export const FormUpdateStore = () => {
         }
 
         try {
-            await userService.updateStore(filteredFormData);
+       
+            const id = localStorage.getItem("store_id") as string;
+            await userService.updateStore(id, filteredFormData);
 
             toast({
                 title: "Sucesso",

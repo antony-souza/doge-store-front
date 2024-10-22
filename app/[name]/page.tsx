@@ -49,7 +49,7 @@ export default function PublicPage({ params }: IPublicPageProps) {
                 <div
                   className="w-full h-[200px] flex flex-col justify-center items-center rounded-lg overflow-hidden"
                   style={{
-                    backgroundImage: `url('https://i.imgur.com/WLne9K1.jpeg')`,
+                    backgroundImage: `url('${store.background_image}')`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                   }}
