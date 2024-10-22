@@ -162,17 +162,14 @@ export default class UserService extends CallAPIService {
         return response;
     }
 
-    async updateStore(body: FormData) {
+    async updateStore(id:string ,body: FormData) {
         const token = localStorage.getItem('token');
 
         if (!token) {
             throw new Error('Token não encontrado');
         }
 
-        const decodedToken = jwtDecode<DecodedToken>(token);
-        const store_id = decodedToken.store_id;
-
-        const endpoint = `/store/update/${store_id}`;
+        const endpoint = `/store/update/${id}`;
         console.log(`Chamada para a URL: ${endpoint}`);
 
         const callAPIService = new CallAPIService();

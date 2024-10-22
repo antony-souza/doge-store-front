@@ -11,7 +11,8 @@ export const FormUpdateStoreAdmin = () => {
     const [selectedField, setSelectedField] = useState<string | null>(null);
     const [stores, setStores] = useState<IStore[]>([]);
     const [users, setUsers] = useState<IUsers[]>([]);
-    const [selectedUserId, setSelectedUserId] = useState<string | null>(null); // Adicionado estado para usuário selecionado
+    const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+    const [selectedStoreId, setSelectedStoreId] = useState<string>('');
 
     useEffect(() => {
         const fetchStore = async () => {
@@ -36,7 +37,6 @@ export const FormUpdateStoreAdmin = () => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        const userService = new UserService();
         const form = event.currentTarget;
         const formData = new FormData(form);
 
@@ -58,7 +58,8 @@ export const FormUpdateStoreAdmin = () => {
         }
 
         try {
-            await userService.updateStore(filteredFormData);
+            const userService = new UserService();
+            await userService.updateStore(selectedStoreId, filteredFormData);
             toast({
                 title: "Sucesso",
                 description: "A loja foi atualizada com sucesso!",
@@ -84,20 +85,21 @@ export const FormUpdateStoreAdmin = () => {
             <Toaster />
             <form onSubmit={handleSubmit} ref={formRef} className="space-y-4 mt-5">
                 <div>
-                    <label className="block text-sm font-medium">Loja (Empresa)</label>
+                    <label className="block text-sm font-medium">Escolha a loja</label>
                     <select
-                        name="store_id"
-                        className="mt-1 block w-full p-2 border rounded-md"
+                        className="mt-1 block w-200 p-2 border rounded-md "
+                        value={selectedStoreId}
+                        onChange={(e) => setSelectedStoreId(e.target.value)}
                     >
-                        <option value="" disabled>Selecione a loja</option>
+                        <option value="" disabled>Selecione uma loja</option>
                         {stores.length > 0 ? (
-                            stores.map((store, index) => (
-                                <option key={index} value={store.id}>
+                            stores.map((store) => (
+                                <option key={store.id} value={store.id}>
                                     {store.name}
                                 </option>
                             ))
                         ) : (
-                            <option value="">Nenhuma loja disponível</option>
+                            <option value="" disabled>Nenhuma Loja Disponível!</option>
                         )}
                     </select>
                 </div>
@@ -114,6 +116,7 @@ export const FormUpdateStoreAdmin = () => {
                         <option value="phone">Telefone</option>
                         <option value="description">Descrição</option>
                         <option value="background_color">Cor da Loja</option>
+                        <option value="background_image">Foto de Fundo</option>
                     </select>
                 </div>
 
@@ -123,6 +126,18 @@ export const FormUpdateStoreAdmin = () => {
                         <input
                             type="file"
                             name="image_url"
+                            className="mt-1 block w-full p-2 border rounded-md"
+                            accept="image/*"
+                        />
+                    </div>
+                )}
+
+                {selectedField === "background_image" && (
+                    <div>
+                        <label className="block text-sm font-medium">Foto da Loja</label>
+                        <input
+                            type="file"
+                            name="background_image"
                             className="mt-1 block w-full p-2 border rounded-md"
                             accept="image/*"
                         />

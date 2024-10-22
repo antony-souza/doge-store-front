@@ -11,7 +11,6 @@ export const FormUpdateStore = () => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        const userService = new UserService();
         const form = event.currentTarget;
         const formData = new FormData(form);
 
@@ -36,7 +35,9 @@ export const FormUpdateStore = () => {
         }
 
         try {
-            await userService.updateStore(filteredFormData);
+            const userService = new UserService();
+            const id = localStorage.getItem("store_id");
+            await userService.updateStore(id as string, filteredFormData);
 
             toast({
                 title: "Sucesso",
