@@ -4,12 +4,13 @@ import { toast } from "@/hooks/use-toast";
 import UserService, { IUpdateProduct } from "../services/user.service";
 import { Button } from "@/components/ui/button";
 import AdminService from "../services/admin.service";
+import { IStore } from "@/app/util/interfaces-global.service";
 
 export const FormDeleteCategoryAdmin = () => {
     const formRef = useRef<HTMLFormElement | null>(null);
     const [delCategory, setDelCategory] = useState<IUpdateProduct[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<string>("");
-    const [store, setStore] = useState<IUpdateProduct[]>([]);
+    const [store, setStore] = useState<IStore[]>([]);
     const [selectedStoreID, setSelectedStoreID] = useState<string>("");
 
     useEffect(() => {

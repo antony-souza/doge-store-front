@@ -2,6 +2,11 @@ import CallAPIService from "@/app/util/call-api.service";
 import { IStore, IUpdateStore } from "@/app/util/interfaces-global.service";
 import { jwtDecode } from "jwt-decode";
 
+export interface IQrCode {
+    text: string,
+    size: string
+}
+
 export interface IAuth {
     email: string;
     password: string;
@@ -141,7 +146,7 @@ export default class UserService extends CallAPIService {
         return response;
     }
 
-    async updateStore(id:string,body: FormData) {
+    async updateStore(id: string, body: FormData) {
         const token = localStorage.getItem('token');
 
         if (!token) {
@@ -325,6 +330,22 @@ export default class UserService extends CallAPIService {
         const response = await callAPIService.genericRequest(endpoint, "DELETE", true) as ICategory[];
 
         return response;
+    }
+
+    async generateQrCode(text: string, size: string) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            throw new Error('Token não encontrado');
+        }
+
+        const encodedText = encodeURIComponent(text);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_QR_CODE}?data=${encodedText}&size=${size}`, {
+            method: 'GET',
+            mode: 'cors',
+        });
+
+        return response.url;
     }
 
 }
