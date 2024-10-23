@@ -11,17 +11,17 @@ import { toast } from "@/hooks/use-toast";
 
 export default function QrCodePage() {
     const [text, setText] = useState('');
-    const [size, setSize] = useState('200x200'); 
-    const [qrCodeResponse, setQrCodeResponse] = useState<string>(''); 
+    const [size, setSize] = useState('200x200');
+    const [qrCodeResponse, setQrCodeResponse] = useState<string>('');
     const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setIsLoading(true); 
+        setIsLoading(true);
 
         try {
             const userService = new UserService();
-            const response = await userService.generateQrCode(text, size); 
+            const response = await userService.generateQrCode(text, size);
 
             if (response) {
                 setQrCodeResponse(response);
@@ -37,7 +37,7 @@ export default function QrCodePage() {
                 });
             }
 
-            setSize('200x200'); 
+            setSize('200x200');
         } catch (error) {
             console.error("Erro ao gerar QR Code", error);
             setQrCodeResponse('');
@@ -47,7 +47,7 @@ export default function QrCodePage() {
                 variant: "destructive",
             });
         } finally {
-            setIsLoading(false); 
+            setIsLoading(false);
         }
     };
 
@@ -60,11 +60,11 @@ export default function QrCodePage() {
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `qr-code-${text}.png`; 
-            document.body.appendChild(link); 
+            link.download = `qr-code-${text}.png`;
+            document.body.appendChild(link);
             link.click();
-            document.body.removeChild(link); 
-            window.URL.revokeObjectURL(url); 
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
         } catch (error) {
             console.error("Erro ao baixar QR Code", error);
             toast({
@@ -78,8 +78,9 @@ export default function QrCodePage() {
     return (
         <LayoutDashboard dashboardConfig={{ isSidebarOpenProps: false }}>
             <LayoutPage>
-                <div className="flex">
+                <div className="flex items-center justify-between">
                     <TitlePage name={'QR Code'} />
+                    <span className="material-symbols-outlined">qr_code_2_add</span>
                 </div>
                 <form onSubmit={handleSubmit} className="pt-5">
                     <div className="flex flex-col mb-4 gap-2">
@@ -94,7 +95,7 @@ export default function QrCodePage() {
                         />
                     </div>
                     <div className="flex flex-col mb-4 gap-2">
-                        <label htmlFor="size">Tamanho do QR Code (ex: 150x150)</label>
+                        <label htmlFor="size">Tamanho do QR Code (ex: 200x200)</label>
                         <input
                             type="text"
                             name="size"
@@ -106,6 +107,7 @@ export default function QrCodePage() {
                     </div>
                     <Button disabled={isLoading}>
                         {isLoading ? "Gerando..." : "Gerar QR Code"}
+                        <span className="material-symbols-outlined">qr_code_scanner</span>
                     </Button>
                 </form>
                 {qrCodeResponse && (
@@ -114,6 +116,7 @@ export default function QrCodePage() {
                         <img src={qrCodeResponse} alt="QR Code" className="mt-5" />
                         <Button onClick={handleDownload} className="mt-5">
                             Baixar QR Code
+                            <span className="material-symbols-outlined">download</span>
                         </Button>
                     </div>
                 )}
