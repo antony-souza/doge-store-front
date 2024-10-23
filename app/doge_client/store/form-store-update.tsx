@@ -34,7 +34,7 @@ export const FormUpdateStore = () => {
         }
 
         try {
-       
+
             const id = localStorage.getItem("store_id") as string;
             await userService.updateStore(id, filteredFormData);
 
@@ -69,6 +69,7 @@ export const FormUpdateStore = () => {
                     >
                         <option value="" disabled>Selecione um campo</option>
                         <option value="image_url">Foto da Loja</option>
+                        <option value="banner_url">Banner da Loja</option>
                         <option value="name">Nome da Loja</option>
                         <option value="phone">Telefone</option>
                         <option value="description">Descrição</option>
@@ -82,6 +83,18 @@ export const FormUpdateStore = () => {
                         <input
                             type="file"
                             name="image_url"
+                            className="mt-1 block w-full p-2 border rounded-md"
+                            accept="image/*"
+                        />
+                    </div>
+                )}
+
+                {selectedField === "banner_url" && (
+                    <div>
+                        <label className="block text-sm font-medium">Banner da Loja</label>
+                        <input
+                            type="file"
+                            name="banner_url"
                             className="mt-1 block w-full p-2 border rounded-md"
                             accept="image/*"
                         />
