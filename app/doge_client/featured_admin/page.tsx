@@ -78,7 +78,6 @@ export default function RenderFeaturedProductsAdmin() {
                             <TableHead className="w-[auto]">Descrição</TableHead>
                             <TableHead className="w-[100px]">Categoria</TableHead>
                             <TableHead className="w-[100px]">Loja</TableHead>
-                            <TableHead className="w-[100px]">Destaque</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -99,7 +98,6 @@ export default function RenderFeaturedProductsAdmin() {
                                     <TableCell>{product.description || "-"}</TableCell>
                                     <TableCell>{product.category?.name || "-"}</TableCell>
                                     <TableCell>{product.store?.name || "-"}</TableCell>
-                                    <TableCell>{product.featured_products ? "Sim" : "Não"}</TableCell>
                                 </TableRow>
                             ))
                         ) : (
