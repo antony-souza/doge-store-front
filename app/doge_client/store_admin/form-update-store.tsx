@@ -10,17 +10,14 @@ export const FormUpdateStoreAdmin = () => {
     const formRef = useRef<HTMLFormElement | null>(null);
     const [selectedField, setSelectedField] = useState<string | null>(null);
     const [stores, setStores] = useState<IStore[]>([]);
-    const [users, setUsers] = useState<IUsers[]>([]);
-    const [selectedUserId, setSelectedUserId] = useState<string | null>(null); // Adicionado estado para usuário selecionado
+    const [selectedStoreId, setSelectedStoreId] = useState<string>('');
 
     useEffect(() => {
         const fetchStore = async () => {
             try {
                 const adminService = new AdminService();
                 const store = await adminService.getAllStore();
-                const users = await adminService.getAllUsers();
                 setStores(store);
-                setUsers(users);
             } catch (error) {
                 console.error("Erro ao buscar a loja:", error);
                 toast({
@@ -40,8 +37,16 @@ export const FormUpdateStoreAdmin = () => {
         const form = event.currentTarget;
         const formData = new FormData(form);
 
-        const filteredFormData = new FormData();
+        if (!selectedStoreId) {
+            toast({
+                title: "Erro",
+                description: "Por favor, selecione uma loja para atualizar.",
+                variant: "destructive",
+            });
+            return;
+        }
 
+        const filteredFormData = new FormData();
         formData.forEach((value, key) => {
             if (value) {
                 filteredFormData.append(key, value);
@@ -58,7 +63,8 @@ export const FormUpdateStoreAdmin = () => {
         }
 
         try {
-            await userService.updateStore(filteredFormData);
+            
+            await userService.updateStore(selectedStoreId, filteredFormData);
             toast({
                 title: "Sucesso",
                 description: "A loja foi atualizada com sucesso!",
@@ -67,7 +73,7 @@ export const FormUpdateStoreAdmin = () => {
             if (formRef.current) {
                 formRef.current.reset();
                 setSelectedField(null);
-                setSelectedUserId(null); // Reseta o usuário selecionado
+                setSelectedStoreId(''); 
             }
         } catch (error) {
             console.error(error);
@@ -86,8 +92,9 @@ export const FormUpdateStoreAdmin = () => {
                 <div>
                     <label className="block text-sm font-medium">Loja (Empresa)</label>
                     <select
-                        name="store_id"
                         className="mt-1 block w-full p-2 border rounded-md"
+                        value={selectedStoreId}
+                        onChange={(e) => setSelectedStoreId(e.target.value)} // Atualiza o ID da loja selecionada
                     >
                         <option value="" disabled>Selecione a loja</option>
                         {stores.length > 0 ? (
@@ -110,6 +117,7 @@ export const FormUpdateStoreAdmin = () => {
                     >
                         <option value="" disabled>Selecione um campo</option>
                         <option value="image_url">Foto da Loja</option>
+                        <option value="banner_url">Banner da Loja</option>
                         <option value="name">Nome da Loja</option>
                         <option value="phone">Telefone</option>
                         <option value="description">Descrição</option>
@@ -123,6 +131,18 @@ export const FormUpdateStoreAdmin = () => {
                         <input
                             type="file"
                             name="image_url"
+                            className="mt-1 block w-full p-2 border rounded-md"
+                            accept="image/*"
+                        />
+                    </div>
+                )}
+
+                {selectedField === "banner_url" && (
+                    <div>
+                        <label className="block text-sm font-medium">Banner da Loja</label>
+                        <input
+                            type="file"
+                            name="banner_url"
                             className="mt-1 block w-full p-2 border rounded-md"
                             accept="image/*"
                         />
