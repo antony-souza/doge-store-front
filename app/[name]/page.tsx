@@ -127,7 +127,7 @@ export default function PublicPage({ params }: IPublicPageProps) {
                 {/* Contêiner com overflow para deslizar */}
                 <div className="overflow-x-auto">
                   <div
-                    className="grid grid-flow-col gap-4"
+                    className="grid grid-flow-col gap-8"
                     style={{
                       gridAutoColumns: "minmax(250px, 1fr)",
                     }}
@@ -180,7 +180,7 @@ export default function PublicPage({ params }: IPublicPageProps) {
               <h1 className="text-2xl font-semibold mb-6">Produtos</h1>
               <div className="overflow-x-auto">
                 <div
-                  className="grid grid-flow-col gap-4"
+                  className="grid grid-flow-col gap-8"
                   style={{
                     gridAutoColumns: "minmax(250px, 1fr)",
                   }}
