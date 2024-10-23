@@ -6,9 +6,9 @@ export default class CallAPIService {
     private readonly baseURL: string;
 
     constructor() {
-        const apiUrlType = process.env.API_URL as API_URL || "LOCALHOST";
+        const apiUrlType = process.env.API_URL as API_URL || "AWS";
 
-        this.baseURL = apiUrlType === "LOCALHOST"
+        this.baseURL = apiUrlType === "AWS"
             ? process.env.NEXT_PUBLIC_API_URL_LOCALHOST as string
             : process.env.NEXT_PUBLIC_API_URL_AWS as string;
 

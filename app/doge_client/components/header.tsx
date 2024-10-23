@@ -15,7 +15,7 @@ import { routes } from "@/router";
 
 const HeaderClient: React.FC = () => {
     const [user, setUser] = useState<IUserLocalStorage>();
-    const [store, setStore] = useState<IStore[]>([]);
+    const [store, setStore] = useState<IStore>();
     const { push, replace } = useRouter();
 
     useEffect(() => {
