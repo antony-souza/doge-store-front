@@ -133,35 +133,96 @@ export default function PublicPage({ params }: IPublicPageProps) {
                     }}
                   >
                     {store.product && store.product.length > 0 ? (
-                      store.product.map((product) => (
-                        <div key={product.id} className="bg-white p-6 rounded-lg shadow-lg flex flex-col justify-between w-full">
-                          <div className="flex flex-col items-center">
-                            <Avatar>
-                              <AvatarImage
-                                src={product.image_url}
-                                alt={product.name}
-                                className="rounded-lg w-40 h-40 object-cover"
-                              />
-                            </Avatar>
-                            <h2 className="text-xl font-bold text-center mt-4">{product.name}</h2>
-                            <p className="text-gray-600 text-center mt-2">{product.description}</p>
-                            <p className="text-lg font-semibold text-center text-green-600 mt-2">
-                              {formatPrice(product.price)}
-                            </p>
+                      store.product
+                        .filter((product) => product.featured_products)
+                        .map((product) => (
+                          <div
+                            key={product.id}
+                            className="bg-white p-6 rounded-lg shadow-lg flex flex-col justify-between w-full"
+                          >
+                            <div className="flex flex-col items-center">
+                              <Avatar>
+                                <AvatarImage
+                                  src={product.image_url}
+                                  alt={product.name}
+                                  className="rounded-lg w-40 h-40 object-cover"
+                                />
+                              </Avatar>
+                              <h2 className="text-xl font-bold text-center mt-4">
+                                {product.name}
+                              </h2>
+                              <p className="text-lg font-semibold text-center text-green-600 mt-2">
+                                {formatPrice(product.price)}
+                              </p>
+                              <p className="text-gray-600 text-center mt-2">
+                                {product.description}
+                              </p>
+                            </div>
+                            <div className="mt-4 flex justify-center flex-col gap-4">
+                              <Button>
+                                <span className="material-symbols-outlined">
+                                  shopping_cart
+                                </span>
+                                Adicionar ao Carrinho
+                              </Button>
+                              <Button variant="outline">Detalhes</Button>
+                            </div>
                           </div>
-                          <div className="mt-4 flex justify-center flex-col gap-4">
-                            <Button>
-                              <span className="material-symbols-outlined">shopping_cart</span>
-                              Adicionar ao Carrinho
-                            </Button>
-                            <Button variant="outline">Detalhes</Button>
-                          </div>
-                        </div>
-                      ))
+                        ))
                     ) : (
-                      <p className="text-center">Nenhum produto disponível</p>
+                      <p className="text-center">Nenhum produto em destaque disponível</p>
                     )}
                   </div>
+                </div>
+              </div>
+            </section>
+            <section className="mt-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h1 className="text-2xl font-semibold mb-6">Produtos</h1>
+              <div className="overflow-x-auto">
+                <div
+                  className="grid grid-flow-col gap-4"
+                  style={{
+                    gridAutoColumns: "minmax(250px, 1fr)",
+                  }}
+                >
+                  {store.product && store.product.length > 0 ? (
+                    store.product.map((product) => (
+                      <div
+                        key={product.id}
+                        className="bg-white p-6 rounded-lg shadow-lg flex flex-col justify-between w-full"
+                      >
+                        <div className="flex flex-col items-center">
+                          <Avatar>
+                            <AvatarImage
+                              src={product.image_url}
+                              alt={product.name}
+                              className="rounded-lg w-40 h-40 object-cover"
+                            />
+                          </Avatar>
+                          <h2 className="text-xl font-bold text-center mt-4">
+                            {product.name}
+                          </h2>
+                          <p className="text-lg font-semibold text-center text-green-600 mt-2">
+                            {formatPrice(product.price)}
+                          </p>
+                          <p className="text-gray-600 text-center mt-2">
+                            {product.description}
+                          </p>
+                        </div>
+                        <div className="mt-4 flex justify-center flex-col gap-4">
+                          <Button>
+                            <span className="material-symbols-outlined">
+                              shopping_cart
+                            </span>
+                            Adicionar ao Carrinho
+                          </Button>
+                          <Button variant="outline">Detalhes</Button>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-center">Nenhum produto em destaque disponível</p>
+                  )}
                 </div>
               </div>
             </section>
@@ -175,7 +236,6 @@ export default function PublicPage({ params }: IPublicPageProps) {
             <Skeleton className="h-3 w-[150px]" />
           </div>
         </div>
-
       )}
     </div>
   );
