@@ -148,7 +148,6 @@ export default function RenderProductsPageAdmin() {
                                     <TableHead className="w-[auto]">Preço</TableHead>
                                     <TableHead className="w-[auto]">Descrição</TableHead>
                                     <TableHead className="w-[auto]">Categoria</TableHead>
-                                    <TableHead className="w-[auto]">Destaque</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -168,7 +167,6 @@ export default function RenderProductsPageAdmin() {
                                             <TableCell>{formatPrice(product.price) || "-"}</TableCell>
                                             <TableCell>{product.description || "-"}</TableCell>
                                             <TableCell>{product.category?.name || "-"}</TableCell>
-                                            <TableCell>{product.featured_products ? "Sim" : "Não"}</TableCell>
                                         </TableRow>
                                     ))
                                 ) : (
