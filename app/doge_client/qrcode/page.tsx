@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
 
-export default function QrCodePage() {
+function QrCodePage() {
     const [text, setText] = useState('');
     const [size, setSize] = useState('200x200');
     const [qrCodeResponse, setQrCodeResponse] = useState<string>('');
@@ -125,3 +125,5 @@ export default function QrCodePage() {
         </LayoutDashboard>
     );
 }
+
+export default withAuth(QrCodePage);
