@@ -18,7 +18,7 @@ export const FormCreateUser = () => {
                 const response = await adminService.getAllStore();
                 setStore(response);
             } catch (error) {
-                console.error("Erro ao buscar as lojas:", error);
+                ("Erro ao buscar as lojas:", error);
             }
         };
         fetchStore();
@@ -64,7 +64,7 @@ export const FormCreateUser = () => {
             setPassword(null);
             setConfirmPassword(null);
         } catch (error) {
-            console.error(error);
+            (error);
             toast({
                 title: "Erro",
                 description: "Houve um problema ao criar o usuário. Tente novamente.",

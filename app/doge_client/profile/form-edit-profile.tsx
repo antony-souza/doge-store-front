@@ -63,7 +63,7 @@ export const FormUpdateProfile = () => {
             setPassword(null);
             setConfirmPassword(null);
         } catch (error) {
-            console.error(error);
+            (error);
             toast({
                 title: "Erro",
                 description: "Houve um problema ao atualizar o perfil. Tente novamente.",

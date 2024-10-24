@@ -23,7 +23,6 @@ function RenderStorePage() {
                 const response = await userService.getStore();
                 setStore(response);
             } catch (error) {
-                console.error("Erro ao buscar a loja:", error);
             }
         };
 

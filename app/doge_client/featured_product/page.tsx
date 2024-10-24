@@ -22,7 +22,6 @@ function RenderFeaturedProducts() {
                 const response = await userService.getAllFeaturedProducts(id as string);
                 setProducts(response);
             } catch (error) {
-                console.error("Erro ao buscar os produtos:", error);
             }
         };
         fetchProducts();

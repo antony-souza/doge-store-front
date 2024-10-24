@@ -24,7 +24,7 @@ export const FormUpdateUsers = () => {
                 setUsers(usersResponse);
                 setCompanies(companiesResponse);
             } catch (error) {
-                console.error("Erro ao buscar dados:", error);
+                ("Erro ao buscar dados:", error);
                 toast({
                     title: "Erro ao carregar dados",
                     description: "Não foi possível carregar usuários ou lojas. Tente novamente mais tarde.",
@@ -95,7 +95,7 @@ export const FormUpdateUsers = () => {
             setPassword(null);
             setConfirmPassword(null);
         } catch (error) {
-            console.error(error);
+            (error);
             toast({
                 title: "Erro ao Atualizar Perfil",
                 description: "Houve um problema ao tentar atualizar o perfil. Por favor, tente novamente.",

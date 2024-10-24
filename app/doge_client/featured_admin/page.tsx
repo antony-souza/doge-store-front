@@ -25,7 +25,6 @@ function RenderFeaturedProductsAdmin() {
                 const stores = await adminService.getAllStore();
                 setStores(stores);
             } catch (error) {
-                console.error("Erro ao buscar as lojas:", error);
             }
         };
         fetchStores();
@@ -38,7 +37,6 @@ function RenderFeaturedProductsAdmin() {
                 const response = await userService.getAllFeaturedProducts(selectedStoreID);
                 setProducts(response);
             } catch (error) {
-                console.error("Erro ao buscar os produtos:", error);
             }
         };
         fetchProducts();

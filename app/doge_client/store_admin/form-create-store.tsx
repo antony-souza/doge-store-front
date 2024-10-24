@@ -17,7 +17,7 @@ export const FormCreateStore = () => {
                 const response = await adminService.getAllUsers();
                 setUsers(response);
             } catch (error) {
-                console.error("Erro ao buscar os usuários:", error);
+                ("Erro ao buscar os usuários:", error);
             }
         };
         fetchUsers();
@@ -55,7 +55,7 @@ export const FormCreateStore = () => {
             }
             setSelectedUser(""); // Resetar o usuário selecionado após o envio
         } catch (error) {
-            console.error(error);
+            (error);
             toast({
                 title: "Erro",
                 description: "Houve um problema ao criar a loja. Tente novamente.",

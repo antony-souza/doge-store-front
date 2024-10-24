@@ -108,7 +108,6 @@ export default class UserService extends CallAPIService {
         localStorage.setItem('store_id', store_id);
 
         const endpoint = `/store/store-client/${store_id}`;
-        console.log(`Chamada para a URL: ${endpoint}`);
 
         const callAPIService = new CallAPIService();
         const response = await callAPIService.genericRequest(endpoint, "GET", true) as IStore;
@@ -147,7 +146,6 @@ export default class UserService extends CallAPIService {
         const userId = user.id;
 
         const endpoint = `/user/update/${userId}`;
-        console.log(`Chamada para a URL: ${endpoint}`);
 
         const callAPIService = new CallAPIService();
 
@@ -169,7 +167,7 @@ export default class UserService extends CallAPIService {
         const store_id = decodedToken.store_id; */
 
         const endpoint = `/store/update/${id}`;
-        console.log(`Chamada para a URL: ${endpoint}`);
+      ;
 
         const callAPIService = new CallAPIService();
 
@@ -187,7 +185,7 @@ export default class UserService extends CallAPIService {
         }
 
         const endpoint = `/product/search/${id}`;
-        console.log(`Chamada para a URL: ${endpoint}`);
+
 
         const callAPIService = new CallAPIService();
         const response = await callAPIService.genericRequest(endpoint, "GET", true) as IProduct[];
@@ -204,7 +202,6 @@ export default class UserService extends CallAPIService {
         }
 
         const endpoint = `/product/create/${id}`;
-        console.log(`Chamada para a URL: ${endpoint}`);
 
         const callAPIService = new CallAPIService();
 
@@ -220,7 +217,6 @@ export default class UserService extends CallAPIService {
             throw new Error('Token não encontrado');
         }
         const endpoint = `/product/update/${id}`;
-        console.log(`Chamada para a URL: ${endpoint}`);
 
         const callAPIService = new CallAPIService();
 
@@ -237,7 +233,6 @@ export default class UserService extends CallAPIService {
         }
 
         const endpoint = `/product/delete/${id}`;
-        console.log(`Chamada para a URL: ${endpoint}`);
 
         const callAPIService = new CallAPIService();
 
@@ -255,8 +250,6 @@ export default class UserService extends CallAPIService {
 
         const endpoint = `/product/featured/${id}`;
 
-        console.log(`Chamada para a URL: ${endpoint}`);
-
         const callAPIService = new CallAPIService();
         const response = await callAPIService.genericRequest(endpoint, "GET", true) as IProduct[];
 
@@ -265,24 +258,13 @@ export default class UserService extends CallAPIService {
 
     async getAllCategories(id: string) {
         const token = localStorage.getItem('token');
-        /*      const storeCategory = localStorage.getItem('category'); */
-        /*       const storedTimestamp = localStorage.getItem('categoryTimestamp');
-              const currentTime = new Date().getTime();
-              const expirationTime = 5 * 60 * 1000; // 5 minutos */
-
-        // Verifica se os dados no localStorage ainda estão válidos
-        /*  if (storeCategory && storedTimestamp && (currentTime - parseInt(storedTimestamp)) < expirationTime) {
-             console.log("Dados da loja carregadoss do localStorage.");
-             return JSON.parse(storeCategory);
-         }
-  */
+  
         if (!token) {
             throw new Error('Token não encontrado');
         }
 
 
         const endpoint = `/category/search/${id}`;
-        console.log(`Chamada para a URL: ${endpoint}`);
 
         const callAPIService = new CallAPIService();
         const response = await callAPIService.genericRequest(endpoint, "GET", true) as ICategory[];
@@ -301,7 +283,6 @@ export default class UserService extends CallAPIService {
         }
 
         const endpoint = `/category/create`;
-        console.log(`Chamada para a URL: ${endpoint}`);
 
         const callAPIService = new CallAPIService();
 
@@ -318,7 +299,6 @@ export default class UserService extends CallAPIService {
         }
 
         const endpoint = `/category/update/${id}`;
-        console.log(`Chamada para a URL: ${endpoint}`);
 
         const callAPIService = new CallAPIService();
 
@@ -335,7 +315,6 @@ export default class UserService extends CallAPIService {
         }
 
         const endpoint = `/category/delete/${id}`;
-        console.log(`Chamada para a URL: ${endpoint}`);
 
         const callAPIService = new CallAPIService();
 

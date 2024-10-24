@@ -19,7 +19,7 @@ export const FormAddCatergoryAdmin = () => {
                 const response = await adminService.getAllStore();
                 setStore(response);
             } catch (error) {
-                console.error("Erro ao buscar as lojas:", error);
+                
             }
         };
         fetchStore();
@@ -58,7 +58,6 @@ export const FormAddCatergoryAdmin = () => {
                 });
             }
         } catch (error) {
-            console.error("Erro ao criar categoria:", error);
             toast({
                 title: "Erro no servidor",
                 description: "Ocorreu um erro ao enviar os dados para a categoria.",

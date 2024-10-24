@@ -21,7 +21,7 @@ export const FormUpdateCategoryAdmin = () => {
                 const response = await adminService.getAllStore();
                 setStore(response);
             } catch (error) {
-                console.error("Erro ao buscar as lojas:", error);
+
             }
         };
         fetchStore();
@@ -34,7 +34,7 @@ export const FormUpdateCategoryAdmin = () => {
                 const response = await productService.getAllCategories(selectedStoreID);
                 setCategory(response);
             } catch (error) {
-                console.error("Erro ao buscar as categorias:", error);
+                
             }
         };
         fetchCategory();
@@ -81,7 +81,7 @@ export const FormUpdateCategoryAdmin = () => {
             });
             formRef.current?.reset();
         } catch (error) {
-            console.error(error);
+            (error);
             toast({
                 title: "Erro",
                 description: "Ocorreu um problema ao atualizar a categoria. Tente novamente.",

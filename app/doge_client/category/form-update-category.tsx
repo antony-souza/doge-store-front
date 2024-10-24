@@ -18,7 +18,6 @@ export const FormUpdateCategory = () => {
                 const response = await productService.getAllCategories(id as string);
                 setCategory(response);
             } catch (error) {
-                console.error("Erro ao buscar os produtos:", error);
             }
         };
         fetchCategories();
@@ -71,7 +70,6 @@ export const FormUpdateCategory = () => {
             setSelectedCategoryId(null);
             setSelectedField(null);
         } catch (error) {
-            console.error(error);
             toast({
                 title: "Erro",
                 description: "Houve um problema ao atualizar a categoria. Tente novamente.",

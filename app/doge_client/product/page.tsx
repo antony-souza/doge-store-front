@@ -38,7 +38,6 @@ function ProductPage() {
                 const response = await userService.getAllProducts(id as string);
                 setProducts(response);
             } catch (error) {
-                console.error("Erro ao buscar os produtos:", error);
             }
         };
         fetchProducts();

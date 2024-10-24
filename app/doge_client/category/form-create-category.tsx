@@ -59,7 +59,6 @@ export const FormCreateCategory = () => {
                 });
             }
         } catch (error) {
-            console.error("Erro ao criar categoria:", error);
             toast({
                 title: "Erro no servidor",
                 description: "Ocorreu um erro ao enviar os dados."

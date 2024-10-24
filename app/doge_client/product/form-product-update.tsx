@@ -25,7 +25,6 @@ export const FormUpdateProduct = () => {
                     description: "Houve um problema ao buscar as categorias.",
                     variant: "destructive",
                 })
-                console.error("Erro ao buscar as categorias:", error);
             }
         };
         fetchCategory();
@@ -40,7 +39,6 @@ export const FormUpdateProduct = () => {
                 const response = await productService.getAllProducts(id as string);
                 setProducts(response);
             } catch (error) {
-                console.error("Erro ao buscar os produtos:", error);
             }
         };
         fetchProducts();
@@ -91,7 +89,7 @@ export const FormUpdateProduct = () => {
                 formRef.current.reset();
             }
         } catch (error) {
-            console.error(error);
+            (error);
             toast({
                 title: "Erro",
                 description: "Houve um problema ao atualizar o produto. Tente novamente.",

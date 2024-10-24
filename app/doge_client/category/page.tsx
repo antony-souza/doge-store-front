@@ -36,7 +36,6 @@ function CategoryPage() {
                 const response = await userService.getAllCategories(id as string);
                 setCategory(response);
             } catch (error) {
-                console.error("Erro ao buscar as categorias:", error);
             }
         };
         fetchCategories();
