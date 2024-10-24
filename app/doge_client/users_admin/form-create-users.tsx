@@ -18,7 +18,6 @@ export const FormCreateUser = () => {
                 const response = await adminService.getAllStore();
                 setStore(response);
             } catch (error) {
-                ("Erro ao buscar as lojas:", error);
             }
         };
         fetchStore();
