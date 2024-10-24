@@ -35,7 +35,7 @@ export default function Auth() {
         description: "Não foi possível autenticar o usuário, email ou senha incorreto. Se o problema persistir, entre em contato com o suporte.",
         variant: "destructive",
       });
-      console.error(error);
+      (error);
     }
   };
 

@@ -20,7 +20,6 @@ export const FormDeleteProductAdmin = () => {
                 const response = await adminService.getAllStore();
                 setStore(response);
             } catch (error) {
-                console.error("Erro ao buscar as lojas:", error);
             }
         };
         fetchStore();
@@ -33,7 +32,7 @@ export const FormDeleteProductAdmin = () => {
                 const response = await productService.getAllProducts(selectedStoreID);
                 setDelProduct(response);
             } catch (error) {
-                console.error("Erro ao buscar os produtos:", error);
+
             }
         };
         fetchProducts();
@@ -74,7 +73,6 @@ export const FormDeleteProductAdmin = () => {
             }
 
         } catch (error) {
-            console.error("Erro ao deletar produto:", error);
             toast({
                 title: "Erro no servidor",
                 description: "Ocorreu um erro ao deletar o produto.",

@@ -17,7 +17,6 @@ export const FormCreateProduct = () => {
                 const response = await productService.getAllCategories(id as string);
                 setCategories(response);
             } catch (error) {
-                console.error("Erro ao buscar as categorias:", error);
             }
         };
         fetchProducts();
@@ -76,7 +75,6 @@ export const FormCreateProduct = () => {
                 });
             }
         } catch (error) {
-            console.error("Erro ao criar produto:", error);
             toast({
                 title: "Erro no servidor",
                 description: "Ocorreu um erro ao enviar os dados."

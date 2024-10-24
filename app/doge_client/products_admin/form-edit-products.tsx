@@ -23,7 +23,6 @@ export const FormUpdateProductAdmin = () => {
                 const response = await adminService.getAllStore();
                 setStore(response);
             } catch (error) {
-                console.error("Erro ao buscar as lojas:", error);
             }
         };
         fetchStore();
@@ -36,7 +35,6 @@ export const FormUpdateProductAdmin = () => {
                 const response = await productService.getAllProducts(selectedStoreID);
                 setProducts(response);
             } catch (error) {
-                console.error("Erro ao buscar os produtos:", error);
             }
         };
         fetchProducts();
@@ -49,7 +47,6 @@ export const FormUpdateProductAdmin = () => {
                 const response = await productService.getAllCategories(selectedStoreID);
                 setCategory(response);
             } catch (error) {
-                console.error("Erro ao buscar os produtos:", error);
             }
         };
         fetchCategories();
@@ -101,7 +98,7 @@ export const FormUpdateProductAdmin = () => {
             }
             
         } catch (error) {
-            console.error(error);
+            (error);
             toast({
                 title: "Erro",
                 description: "Houve um problema ao atualizar o produto. Tente novamente.",

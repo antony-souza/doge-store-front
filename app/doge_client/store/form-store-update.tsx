@@ -47,7 +47,7 @@ export const FormUpdateStore = () => {
                 formRef.current.reset()
             }
         } catch (error) {
-            console.error(error);
+            (error);
             toast({
                 title: "Erro",
                 description: "Houve um problema ao atualizar a loja. Tente novamente.",

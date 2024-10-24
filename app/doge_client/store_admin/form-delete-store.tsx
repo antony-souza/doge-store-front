@@ -17,7 +17,6 @@ export const FormDeleteStores = () => {
                 const response = await adminService.getAllStore();
                 setStores(response);
             } catch (error) {
-                console.error("Erro ao buscar as lojas:", error);
                 toast({
                     title: "Erro ao buscar lojas",
                     description: "Não foi possível carregar a lista de lojas.",
@@ -61,7 +60,6 @@ export const FormDeleteStores = () => {
                 });
             }
         } catch (error) {
-            console.error("Erro ao excluir loja:", error);
             toast({
                 title: "Erro no Servidor",
                 description: "Houve um problema ao processar sua solicitação. Tente novamente mais tarde.",

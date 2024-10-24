@@ -40,7 +40,7 @@ function QrCodePage() {
 
             setSize('200x200');
         } catch (error) {
-            console.error("Erro ao gerar QR Code", error);
+
             setQrCodeResponse('');
             toast({
                 title: "Erro",
@@ -67,7 +67,6 @@ function QrCodePage() {
             document.body.removeChild(link);
             window.URL.revokeObjectURL(url);
         } catch (error) {
-            console.error("Erro ao baixar QR Code", error);
             toast({
                 title: "Erro ao baixar QR Code",
                 description: "Não foi possível baixar a imagem.",

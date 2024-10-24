@@ -17,7 +17,6 @@ export const FormDeleteProduct = () => {
                 const response = await productService.getAllProducts(id as string);
                 setDelProduct(response);
             } catch (error) {
-                console.error("Erro ao buscar os produtos:", error);
             }
         };
         fetchProducts();
@@ -56,7 +55,6 @@ export const FormDeleteProduct = () => {
                 });
             }
         } catch (error) {
-            console.error("Erro ao deletar produto:", error);
             toast({
                 title: "Erro no servidor",
                 description: "Ocorreu um erro ao deletar o produto.",
