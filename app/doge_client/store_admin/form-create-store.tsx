@@ -81,7 +81,7 @@ export const FormCreateStore = () => {
                     <label className="block text-sm font-medium">Banner de Fundo</label>
                     <input
                         type="file"
-                        name="background_image"
+                        name="banner_url"
                         className="mt-1 block w-full p-2 border rounded-md"
                         accept="image/*"
                         required
