@@ -17,7 +17,11 @@ export const FormDeleteUsers = () => {
                 const response = await adminService.getAllUsers();
                 setUser(response);
             } catch (error) {
-                ("Erro ao buscar os usuários:", error);
+                toast({
+                    title: "Erro",
+                    description: "Houve um problema ao buscar os usuários.",
+                    variant: "destructive",
+                })
             }
         };
         fetchProducts();
@@ -56,7 +60,6 @@ export const FormDeleteUsers = () => {
                 });
             }
         } catch (error) {
-            ("Erro ao excluir usuário:", error);
             toast({
                 title: "Erro no Servidor",
                 description: "Houve um problema ao processar sua solicitação. Tente novamente mais tarde.",

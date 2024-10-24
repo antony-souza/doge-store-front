@@ -37,7 +37,7 @@ function RenderPageStoreAdmin() {
                 const response = await adminService.getAllStore();
                 setStore(response);
             } catch (error) {
-                ("Erro ao buscar a loja:", error);
+             
             }
         };
 

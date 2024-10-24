@@ -24,7 +24,6 @@ export const FormUpdateUsers = () => {
                 setUsers(usersResponse);
                 setCompanies(companiesResponse);
             } catch (error) {
-                ("Erro ao buscar dados:", error);
                 toast({
                     title: "Erro ao carregar dados",
                     description: "Não foi possível carregar usuários ou lojas. Tente novamente mais tarde.",

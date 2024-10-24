@@ -37,7 +37,6 @@ function RenderUserPage() {
                 const response = await adminService.getAllUsers();
                 setUsers(response);
             } catch (error) {
-                ("Erro ao buscar os usuários:", error);
             }
         };
         fetchUsers();

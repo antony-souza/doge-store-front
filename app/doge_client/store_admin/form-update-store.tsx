@@ -19,7 +19,7 @@ export const FormUpdateStoreAdmin = () => {
                 const store = await adminService.getAllStore();
                 setStores(store);
             } catch (error) {
-                ("Erro ao buscar a loja:", error);
+            
                 toast({
                     title: "Erro ao buscar a loja",
                     description: "Não foi possível buscar a loja. Tente novamente mais tarde.",
