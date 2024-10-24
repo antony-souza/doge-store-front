@@ -45,6 +45,18 @@ export interface IProduct {
     store: IStore
 }
 
+export interface IFeaturedProducts {
+    id: string,
+    name: string,
+    price: number,
+    description: string,
+    category: ICategory,
+    store_id: string,
+    category_id: string,
+    image_url: string,
+    store: IStore
+}
+
 export interface IUpdateProduct {
     id?: string,
     name?: string,

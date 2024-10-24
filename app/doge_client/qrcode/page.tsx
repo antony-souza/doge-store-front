@@ -8,6 +8,7 @@ import UserService from "../services/user.service";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
+import withAuth from "@/app/util/withToken";
 
 function QrCodePage() {
     const [text, setText] = useState('');
