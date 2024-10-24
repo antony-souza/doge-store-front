@@ -5,8 +5,9 @@ import { LayoutPage } from "@/app/components/layout-page";
 import { TitlePage } from "@/app/components/title-page";
 import { FormUpdateProfile } from "./form-edit-profile";
 import { useState } from "react";
+import withAuth from "@/app/util/withToken";
 
-export default function PageProfile() {
+function PageProfile() {
     const [isEditing, setIsEditing] = useState(false);
 
     return (
@@ -20,3 +21,5 @@ export default function PageProfile() {
         </>
     )
 }
+
+export default withAuth(PageProfile);

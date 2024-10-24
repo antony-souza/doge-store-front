@@ -12,8 +12,9 @@ import AdminService from "../services/admin.service";
 import { FormUpdateStoreAdmin } from "./form-update-store";
 import { FormCreateStore } from "./form-create-store";
 import { FormDeleteStores } from "./form-delete-store";
+import withAuth from "@/app/util/withToken";
 
-export default function RenderPageStoreAdmin() {
+function RenderPageStoreAdmin() {
     const [stores, setStore] = useState<IStore[]>([]);
     const [isEditing, setIsEditing] = useState(false);
     const [isCreate, setIsCreate] = useState(false);
@@ -173,3 +174,5 @@ export default function RenderPageStoreAdmin() {
         </>
     );
 }
+
+export default withAuth(RenderPageStoreAdmin);

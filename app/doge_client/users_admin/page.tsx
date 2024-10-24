@@ -10,8 +10,9 @@ import { Button } from "@/components/ui/button";
 import { FormCreateUser } from "./form-create-users";
 import { FormDeleteUsers } from "./form-delete-users";
 import { FormUpdateUsers } from "./form-update-users";
+import withAuth from "@/app/util/withToken";
 
-export default function RenderUserPage() {
+function RenderUserPage() {
     const [users, setUsers] = useState<IUsers[]>([]);
     const [isEditing, setIsEditing] = useState(false);
     const [isCreate, setIsCreate] = useState(false);
@@ -114,3 +115,5 @@ export default function RenderUserPage() {
         </LayoutDashboard>
     )
 }
+
+export default withAuth(RenderUserPage);

@@ -1,7 +1,9 @@
+"use client";
+import withAuth from "@/app/util/withToken";
 import Dashboard from "../components/dashbourd";
 import HeaderClient from "../components/header";
 
-export default function RenderHomePage() {
+function RenderHomePage() {
     return (
         <>
             <HeaderClient />
@@ -9,3 +11,5 @@ export default function RenderHomePage() {
         </>
     )
 }
+
+export default withAuth(RenderHomePage);

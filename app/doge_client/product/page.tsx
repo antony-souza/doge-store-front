@@ -12,8 +12,9 @@ import { FormUpdateProduct } from "./form-product-update";
 import { formatPrice } from "@/app/util/formt-price";
 import { FormCreateProduct } from "./form-product-create";
 import { FormDeleteProduct } from "./form-delete-product";
+import withAuth from "@/app/util/withToken";
 
-export default function ProductPage() {
+function ProductPage() {
     const [products, setProducts] = useState<IProduct[]>([]);
     const [isEditing, setIsEditing] = useState(false);
     const [isCreate, setIsCreate] = useState(false);
@@ -117,3 +118,5 @@ export default function ProductPage() {
         </LayoutDashboard>
     );
 }
+
+export default withAuth(ProductPage);
