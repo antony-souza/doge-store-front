@@ -17,7 +17,6 @@ export const FormCreateStore = () => {
                 const response = await adminService.getAllUsers();
                 setUsers(response);
             } catch (error) {
-                console.error("Erro ao buscar os usuários:", error);
             }
         };
         fetchUsers();
@@ -55,7 +54,7 @@ export const FormCreateStore = () => {
             }
             setSelectedUser(""); // Resetar o usuário selecionado após o envio
         } catch (error) {
-            console.error(error);
+            (error);
             toast({
                 title: "Erro",
                 description: "Houve um problema ao criar a loja. Tente novamente.",
@@ -82,7 +81,7 @@ export const FormCreateStore = () => {
                     <label className="block text-sm font-medium">Banner de Fundo</label>
                     <input
                         type="file"
-                        name="background_image"
+                        name="banner_url"
                         className="mt-1 block w-full p-2 border rounded-md"
                         accept="image/*"
                         required

@@ -14,8 +14,9 @@ import AdminService from "../services/admin.service";
 import { FormUpdateCategoryAdmin } from "./form-edit-category";
 import { FormAddCatergoryAdmin } from "./form-add-category";
 import { FormDeleteCategoryAdmin } from "./form-delete-category";
+import withAuth from "@/app/util/withToken";
 
-export default function RenderCategoriesPageAdmin() {
+function RenderCategoriesPageAdmin() {
     const [category, setCategory] = useState<ICategory[]>([]);
     const [stores, setStores] = useState<IStore[]>([]);
     const [selectedStoreID, setSelectedStoreID] = useState<string>("");
@@ -178,3 +179,5 @@ export default function RenderCategoriesPageAdmin() {
         </LayoutDashboard>
     );
 }
+
+export default withAuth(RenderCategoriesPageAdmin);

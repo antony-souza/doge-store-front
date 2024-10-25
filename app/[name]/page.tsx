@@ -24,14 +24,12 @@ export default function PublicPage({ params }: IPublicPageProps) {
           const response = await publicStoreService.getPublicStore(name);
           setStores(response);
           setCategory(response[0].category);
-          console.log("Resposta da API:", response);
         } catch (error) {
           toast({
             title: "Erro - Loja não encontrada",
             description: "Erro ao buscar a loja. Verifique o link ou tente novamente mais tarde. Se persistir o erro, entre em contato com o suporte.",
             variant: "destructive",
           })
-          console.error("Erro ao buscar a loja:", error);
         }
       };
       fetchPublicStore();

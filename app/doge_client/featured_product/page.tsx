@@ -9,8 +9,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import UserService, { IProduct } from "../services/user.service";
 import { formatPrice } from "@/app/util/formt-price";
+import withAuth from "@/app/util/withToken";
 
-export default function RenderFeaturedProducts() {
+function RenderFeaturedProducts() {
     const [products, setProducts] = useState<IProduct[]>([]);
 
     useEffect(() => {
@@ -21,7 +22,6 @@ export default function RenderFeaturedProducts() {
                 const response = await userService.getAllFeaturedProducts(id as string);
                 setProducts(response);
             } catch (error) {
-                console.error("Erro ao buscar os produtos:", error);
             }
         };
         fetchProducts();
@@ -73,3 +73,5 @@ export default function RenderFeaturedProducts() {
         </LayoutDashboard>
     );
 }
+
+export default withAuth(RenderFeaturedProducts);

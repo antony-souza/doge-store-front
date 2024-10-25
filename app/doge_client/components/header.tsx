@@ -33,7 +33,6 @@ const HeaderClient: React.FC = () => {
                 const store = await userService.getStore();
                 setStore(store);
             } catch (error) {
-                console.error("Erro ao buscar a loja:", error);
             }
         };
 

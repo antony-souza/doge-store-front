@@ -21,7 +21,6 @@ export const FormCreateProductAdmin = () => {
                 const response = await adminService.getAllStore();
                 setStore(response);
             } catch (error) {
-                console.error("Erro ao buscar as lojas:", error);
             }
         };
         fetchStore();
@@ -33,9 +32,7 @@ export const FormCreateProductAdmin = () => {
                 const productService = new UserService();
                 const response = await productService.getAllCategories(selectedStoreID);
                 setCategories(response);
-            } catch (error) {
-                console.error("Erro ao buscar as categorias:", error);
-            }
+            } catch (error) { }
         };
         if (selectedStoreID) {
             fetchCategory();
@@ -76,7 +73,6 @@ export const FormCreateProductAdmin = () => {
                 });
             }
         } catch (error) {
-            console.error("Erro ao criar produto:", error);
             toast({
                 title: "Erro no servidor",
                 description: "Ocorreu um erro ao enviar os dados."

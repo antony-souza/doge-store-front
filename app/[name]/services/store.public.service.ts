@@ -17,5 +17,5 @@ export default class PublicStoreService {
         const response = await callAPIService.genericRequest(endpoint, "GET", false) as IStore[];
 
         return response;
-    }
+    };
 }
