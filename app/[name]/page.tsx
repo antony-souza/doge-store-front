@@ -200,7 +200,7 @@ export default function PublicPage({ params }: IPublicPageProps) {
                           <h2 className="text-xl font-bold text-center mt-4">
                             {product.name}
                           </h2>
-                          <p className="text-lg font-semibold text-center text-green-600 mt-2">
+                          <p className="text-lg font-semibold text-cente mt-2">
                             {formatPrice(product.price)}
                           </p>
                           <p className="text-gray-600 text-center mt-2">
