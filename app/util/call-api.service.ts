@@ -36,7 +36,7 @@ export default class CallAPIService {
 
         const requestConfig: RequestInit = {
             method: method,
-            mode: "cors",
+            mode: "no-cors",
             headers: headers,
             // Não fazer JSON.stringify para FormData
             ...(method !== "GET" && body ? { body: body instanceof FormData ? body : JSON.stringify(body) } : {}),
