@@ -333,7 +333,6 @@ export default class UserService extends CallAPIService {
         const encodedText = encodeURIComponent(text);
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_QR_CODE}?data=${encodedText}&size=${size}`, {
             method: 'GET',
-            mode: 'cors',
         });
 
         return response.url;
