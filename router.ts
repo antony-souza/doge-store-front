@@ -4,6 +4,7 @@ export const routes = {
     PRODUCTS: "/doge_client/product",
     LOGIN: "/doge_client",
     PROFILE: "/doge_client/profile",
+    QR_CODE: "/doge_client/qrcode",
     FEATURED_PRODUCTS: "/doge_client/featured_product",
     ADMIN_USERS: "/doge_client/users_admin",
     ADMIN_STORE: "/doge_client/store_admin",

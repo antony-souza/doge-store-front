@@ -4,12 +4,13 @@ import { toast } from "@/hooks/use-toast";
 import UserService, { IUpdateProduct } from "../services/user.service";
 import { Button } from "@/components/ui/button";
 import AdminService from "../services/admin.service";
+import { IStore } from "@/app/util/interfaces-global.service";
 
 export const FormDeleteProductAdmin = () => {
     const formRef = useRef<HTMLFormElement | null>(null);
     const [delProduct, setDelProduct] = useState<IUpdateProduct[]>([]);
     const [selectedProduct, setSelectedProduct] = useState<string>("");
-    const [store, setStore] = useState<IUpdateProduct[]>([]);
+    const [store, setStore] = useState<IStore[]>([]);
     const [selectedStoreID, setSelectedStoreID] = useState<string>("");
 
     useEffect(() => {
@@ -19,7 +20,6 @@ export const FormDeleteProductAdmin = () => {
                 const response = await adminService.getAllStore();
                 setStore(response);
             } catch (error) {
-                console.error("Erro ao buscar as lojas:", error);
             }
         };
         fetchStore();
@@ -32,7 +32,7 @@ export const FormDeleteProductAdmin = () => {
                 const response = await productService.getAllProducts(selectedStoreID);
                 setDelProduct(response);
             } catch (error) {
-                console.error("Erro ao buscar os produtos:", error);
+
             }
         };
         fetchProducts();
@@ -73,7 +73,6 @@ export const FormDeleteProductAdmin = () => {
             }
 
         } catch (error) {
-            console.error("Erro ao deletar produto:", error);
             toast({
                 title: "Erro no servidor",
                 description: "Ocorreu um erro ao deletar o produto.",

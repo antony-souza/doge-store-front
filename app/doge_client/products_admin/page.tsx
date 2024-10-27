@@ -12,14 +12,13 @@ import { useEffect, useState } from "react";
 import UserService, { IProduct } from "../services/user.service";
 import { IStore } from "@/app/util/interfaces-global.service";
 import AdminService from "../services/admin.service";
-import { FormUpdateProduct } from "../product/form-product-update";
-import { FormCreateProduct } from "../product/form-product-create";
-import { FormDeleteProduct } from "../product/form-delete-product";
+
 import { FormCreateProductAdmin } from "./form-add-products";
 import { FormUpdateProductAdmin } from "./form-edit-products";
 import { FormDeleteProductAdmin } from "./form-delete-products";
+import withAuth from "@/app/util/withToken";
 
-export default function RenderProductsPageAdmin() {
+function RenderProductsPageAdmin() {
     const [products, setProducts] = useState<IProduct[]>([]);
     const [stores, setStores] = useState<IStore[]>([]);
     const [selectedStoreID, setSelectedStoreID] = useState<string>("");
@@ -188,3 +187,5 @@ export default function RenderProductsPageAdmin() {
         </LayoutDashboard>
     );
 }
+
+export default withAuth(RenderProductsPageAdmin);

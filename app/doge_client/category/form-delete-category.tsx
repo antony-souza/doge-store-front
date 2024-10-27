@@ -17,7 +17,6 @@ export const FormDeleteCategory = () => {
                 const response = await categoryService.getAllCategories(id as string);
                 setDelCategory(response);
             } catch (error) {
-                console.error("Erro ao buscar as categorias:", error);
             }
         };
         fetchCategories();
@@ -56,7 +55,6 @@ export const FormDeleteCategory = () => {
                 });
             }
         } catch (error) {
-            console.error("Erro ao deletar categoria:", error);
             toast({
                 title: "Erro no servidor",
                 description: "Ocorreu um erro ao deletar a categoria.",

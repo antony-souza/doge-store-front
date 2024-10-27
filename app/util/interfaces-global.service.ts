@@ -9,6 +9,7 @@ export interface IStore {
     is_open: boolean;
     description: string;
     background_color: string;
+    banner_url?: string;
     category: ICategory[];
     product: IProduct[];
 }
@@ -17,9 +18,10 @@ export interface IUpdateStore {
     id?: number;
     name?: string;
     phone?: string;
+    is_open?: boolean;
     address?: string;
     image_url?: File;
-    is_open?: boolean;
     description?: string;
+    banner_url?: File;
     background_color?: string;
 }

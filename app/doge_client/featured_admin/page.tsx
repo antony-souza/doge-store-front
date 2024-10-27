@@ -11,8 +11,9 @@ import UserService, { IProduct } from "../services/user.service";
 import { formatPrice } from "@/app/util/formt-price";
 import { IStore } from "@/app/util/interfaces-global.service";
 import AdminService from "../services/admin.service";
+import withAuth from "@/app/util/withToken";
 
-export default function RenderFeaturedProductsAdmin() {
+function RenderFeaturedProductsAdmin() {
     const [products, setProducts] = useState<IProduct[]>([]);
     const [stores, setStores] = useState<IStore[]>([]);
     const [selectedStoreID, setSelectedStoreID] = useState<string>("");
@@ -24,7 +25,6 @@ export default function RenderFeaturedProductsAdmin() {
                 const stores = await adminService.getAllStore();
                 setStores(stores);
             } catch (error) {
-                console.error("Erro ao buscar as lojas:", error);
             }
         };
         fetchStores();
@@ -37,7 +37,6 @@ export default function RenderFeaturedProductsAdmin() {
                 const response = await userService.getAllFeaturedProducts(selectedStoreID);
                 setProducts(response);
             } catch (error) {
-                console.error("Erro ao buscar os produtos:", error);
             }
         };
         fetchProducts();
@@ -78,7 +77,6 @@ export default function RenderFeaturedProductsAdmin() {
                             <TableHead className="w-[auto]">Descrição</TableHead>
                             <TableHead className="w-[100px]">Categoria</TableHead>
                             <TableHead className="w-[100px]">Loja</TableHead>
-                            <TableHead className="w-[100px]">Destaque</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -99,7 +97,6 @@ export default function RenderFeaturedProductsAdmin() {
                                     <TableCell>{product.description || "-"}</TableCell>
                                     <TableCell>{product.category?.name || "-"}</TableCell>
                                     <TableCell>{product.store?.name || "-"}</TableCell>
-                                    <TableCell>{product.featured_products ? "Sim" : "Não"}</TableCell>
                                 </TableRow>
                             ))
                         ) : (
@@ -113,3 +110,5 @@ export default function RenderFeaturedProductsAdmin() {
         </LayoutDashboard>
     );
 }
+
+export default withAuth(RenderFeaturedProductsAdmin);

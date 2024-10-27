@@ -2,6 +2,7 @@
 
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { routes } from "@/router";
 
 export default function RedirectPage() {
 
@@ -9,12 +10,6 @@ export default function RedirectPage() {
 
   //TODO remover na versao final
   useEffect(() => {
-    router.replace('/doge_client');
-  }, [])
-
-  return (
-    <>
-
-    </>
-  );
+    router.replace(routes.LOGIN);
+  }, [router]);
 }

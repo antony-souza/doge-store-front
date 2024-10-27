@@ -10,8 +10,9 @@ import UserService, { ICategory } from "../services/user.service";
 import { FormCreateCategory } from "./form-create-category";
 import { FormUpdateCategory } from "./form-update-category";
 import { FormDeleteCategory } from "./form-delete-category";
+import withAuth from "@/app/util/withToken";
 
-export default function CategoryPage() {
+function CategoryPage() {
     const [category, setCategory] = useState<ICategory[]>([]);
     const [isEditing, setIsEditing] = useState(false);
     const [isCreate, setIsCreate] = useState(false);
@@ -35,7 +36,6 @@ export default function CategoryPage() {
                 const response = await userService.getAllCategories(id as string);
                 setCategory(response);
             } catch (error) {
-                console.error("Erro ao buscar as categorias:", error);
             }
         };
         fetchCategories();
@@ -108,3 +108,5 @@ export default function CategoryPage() {
         </>
     );
 }
+
+export default withAuth(CategoryPage);

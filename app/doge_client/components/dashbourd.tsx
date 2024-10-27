@@ -37,6 +37,11 @@ const Dashboard: React.FC<IDashboardProps> = ({ isSidebarOpenProps }) => {
             name: "Destaques",
             icon: "hotel_class"
         },
+        {
+            path: routes.QR_CODE,
+            name: "QrCode",
+            icon: "qr_code_scanner"
+        },
     ]);
 
     useEffect(() => {
@@ -66,6 +71,11 @@ const Dashboard: React.FC<IDashboardProps> = ({ isSidebarOpenProps }) => {
                     path: routes.ADMIN_FEATURED,
                     name: "Destaques",
                     icon: "hotel_class"
+                },
+                {
+                    path: routes.QR_CODE,
+                    name: "QrCode",
+                    icon: "qr_code_scanner"
                 },
 
             ]);
@@ -122,7 +132,6 @@ const Dashboard: React.FC<IDashboardProps> = ({ isSidebarOpenProps }) => {
                 </div>
                 {/* Linha abaixo do título Dashboard */}
                 <hr className="border-t border-gray-300 mb-4" />
-
                 <nav>
                     <ul className='pl-2'>
                         {

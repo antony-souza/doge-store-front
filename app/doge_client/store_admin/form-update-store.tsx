@@ -19,11 +19,9 @@ export const FormUpdateStoreAdmin = () => {
             try {
                 const adminService = new AdminService();
                 const store = await adminService.getAllStore();
-                const users = await adminService.getAllUsers();
                 setStores(store);
-                setUsers(users);
             } catch (error) {
-                console.error("Erro ao buscar a loja:", error);
+            
                 toast({
                     title: "Erro ao buscar a loja",
                     description: "Não foi possível buscar a loja. Tente novamente mais tarde.",
@@ -40,8 +38,16 @@ export const FormUpdateStoreAdmin = () => {
         const form = event.currentTarget;
         const formData = new FormData(form);
 
-        const filteredFormData = new FormData();
+        if (!selectedStoreId) {
+            toast({
+                title: "Erro",
+                description: "Por favor, selecione uma loja para atualizar.",
+                variant: "destructive",
+            });
+            return;
+        }
 
+        const filteredFormData = new FormData();
         formData.forEach((value, key) => {
             if (value) {
                 filteredFormData.append(key, value);
@@ -68,10 +74,10 @@ export const FormUpdateStoreAdmin = () => {
             if (formRef.current) {
                 formRef.current.reset();
                 setSelectedField(null);
-                setSelectedUserId(null); // Reseta o usuário selecionado
+                setSelectedStoreId(''); 
             }
         } catch (error) {
-            console.error(error);
+            (error);
             toast({
                 title: "Erro",
                 description: "Houve um problema ao atualizar a loja. Tente novamente.",
@@ -87,11 +93,10 @@ export const FormUpdateStoreAdmin = () => {
                 <div>
                     <label className="block text-sm font-medium">Escolha a loja</label>
                     <select
-                        className="mt-1 block w-200 p-2 border rounded-md "
-                        value={selectedStoreId}
-                        onChange={(e) => setSelectedStoreId(e.target.value)}
+                        name="store_id"
+                        className="mt-1 block w-full p-2 border rounded-md"
                     >
-                        <option value="" disabled>Selecione uma loja</option>
+                        <option value="" disabled>Selecione a loja</option>
                         {stores.length > 0 ? (
                             stores.map((store) => (
                                 <option key={store.id} value={store.id}>
@@ -112,6 +117,7 @@ export const FormUpdateStoreAdmin = () => {
                     >
                         <option value="" disabled>Selecione um campo</option>
                         <option value="image_url">Foto da Loja</option>
+                        <option value="banner_url">Banner da Loja</option>
                         <option value="name">Nome da Loja</option>
                         <option value="phone">Telefone</option>
                         <option value="description">Descrição</option>

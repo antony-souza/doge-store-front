@@ -10,8 +10,9 @@ import { LayoutDashboard } from "@/app/components/layout-dashboard";
 import { LayoutPage } from "@/app/components/layout-page";
 import { TitlePage } from "@/app/components/title-page";
 import { FormUpdateStore } from "./form-store-update";
+import withAuth from "@/app/util/withToken";
 
-export default function RenderStorePage() {
+function RenderStorePage() {
     const [store, setStore] = useState<IStore | null>(null);
     const [isEditing, setIsEditing] = useState(false);
 
@@ -22,7 +23,6 @@ export default function RenderStorePage() {
                 const response = await userService.getStore();
                 setStore(response);
             } catch (error) {
-                console.error("Erro ao buscar a loja:", error);
             }
         };
 
@@ -122,3 +122,5 @@ export default function RenderStorePage() {
         </>
     );
 }
+
+export default withAuth(RenderStorePage);

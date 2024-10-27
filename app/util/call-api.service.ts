@@ -13,7 +13,7 @@ export default class CallAPIService {
             : process.env.NEXT_PUBLIC_API_URL_AWS as string;
 
         if (!this.baseURL) {
-            console.error("Base URL não definida. Verifique as variáveis de ambiente.");
+            ("Base URL não definida. Verifique as variáveis de ambiente.");
         }
     }
 
