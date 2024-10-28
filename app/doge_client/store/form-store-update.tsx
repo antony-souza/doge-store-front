@@ -68,6 +68,7 @@ export const FormUpdateStore = () => {
                         onChange={(e) => setSelectedField(e.target.value)}
                     >
                         <option value="" disabled>Selecione um campo</option>
+                        <option value="is_open">Status</option>
                         <option value="image_url">Foto da Loja</option>
                         <option value="banner_url">Banner da Loja</option>
                         <option value="name">Nome da Loja</option>
@@ -160,7 +161,19 @@ export const FormUpdateStore = () => {
                         />
                     </div>
                 )}
-
+                {selectedField === "is_open" && (
+                    <div>
+                        <label className="block text-sm font-medium">Loja Aberta?</label>
+                        <select
+                            name="is_open"
+                            className="mt-1 block w-full p-2 border rounded-md"
+                        >
+                            <option value="" disabled>Selecione uma opção</option>
+                            <option value="true">Sim</option>
+                            <option value="false">Não</option>
+                        </select>
+                    </div>
+                )}
                 <Button type="submit" className="w-20">Salvar</Button>
             </form>
         </>

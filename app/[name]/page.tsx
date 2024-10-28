@@ -65,16 +65,14 @@ export default function PublicPage({ params }: IPublicPageProps) {
                 <h1 className="text-3xl font-bold mt-4 text-gray-800">{store.name}</h1>
                 <div className="flex flex-col items-center">
                   <div className="flex items-center justify-center space-x-2 mt-2">
-                    <p className={`text-lg ${store.is_open ? 'text-green-500' : 'text-red-500'}`}>
+                    <p className={`text-lg flex items-center ${store.is_open ? 'text-green-500' : 'text-red-500'}`}>
                       {store.is_open ? 'Aberto agora' : 'Fechado no momento'}
                       <span
                         className={`ml-2 w-2 h-2 inline-block rounded-full ${store.is_open ? 'bg-green-500' : 'bg-red-500'}`}
                       />
                     </p>
-                    <span className="text-slate-500">
-                      {store.is_open ? 'Fecharemos às 22:30' : 'Abriremos às 18:00'}
-                    </span>
                   </div>
+
                   <Button variant="outline" className="mt-4" onClick={() => setMoreInfo(!moreInfo)}>
                     <span className="material-symbols-outlined">
                       info

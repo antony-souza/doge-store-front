@@ -3,15 +3,13 @@ import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
 import UserService from "../services/user.service";
 import { Button } from "@/components/ui/button";
-import AdminService, { IUsers } from "../services/admin.service";
+import AdminService from "../services/admin.service";
 import { IStore } from "@/app/util/interfaces-global.service";
 
 export const FormUpdateStoreAdmin = () => {
     const formRef = useRef<HTMLFormElement | null>(null);
     const [selectedField, setSelectedField] = useState<string | null>(null);
     const [stores, setStores] = useState<IStore[]>([]);
-    const [users, setUsers] = useState<IUsers[]>([]);
-    const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
     const [selectedStoreId, setSelectedStoreId] = useState<string>('');
 
     useEffect(() => {
@@ -21,7 +19,7 @@ export const FormUpdateStoreAdmin = () => {
                 const store = await adminService.getAllStore();
                 setStores(store);
             } catch (error) {
-            
+
                 toast({
                     title: "Erro ao buscar a loja",
                     description: "Não foi possível buscar a loja. Tente novamente mais tarde.",
@@ -74,7 +72,7 @@ export const FormUpdateStoreAdmin = () => {
             if (formRef.current) {
                 formRef.current.reset();
                 setSelectedField(null);
-                setSelectedStoreId(''); 
+                setSelectedStoreId('');
             }
         } catch (error) {
             (error);
@@ -93,7 +91,8 @@ export const FormUpdateStoreAdmin = () => {
                 <div>
                     <label className="block text-sm font-medium">Escolha a loja</label>
                     <select
-                        name="store_id"
+                        value={selectedStoreId}
+                        onChange={(e) => setSelectedStoreId(e.target.value)}
                         className="mt-1 block w-full p-2 border rounded-md"
                     >
                         <option value="" disabled>Selecione a loja</option>
@@ -116,16 +115,30 @@ export const FormUpdateStoreAdmin = () => {
                         onChange={(e) => setSelectedField(e.target.value)}
                     >
                         <option value="" disabled>Selecione um campo</option>
+                        <option value="is_open">Status da Loja</option>
                         <option value="image_url">Foto da Loja</option>
                         <option value="banner_url">Banner da Loja</option>
                         <option value="name">Nome da Loja</option>
-                        <option value="phone">Telefone</option>
-                        <option value="description">Descrição</option>
+                        <option value="phone">Telefone da Loja</option>
+                        <option value="description">Descrição da Loja</option>
                         <option value="background_color">Cor da Loja</option>
                         <option value="background_image">Foto de Fundo</option>
                     </select>
                 </div>
 
+                {selectedField === "is_open" && (
+                    <div>
+                        <label className="block text-sm font-medium">Loja Aberta?</label>
+                        <select
+                            name="is_open"
+                            className="mt-1 block w-full p-2 border rounded-md"
+                        >
+                            <option value="" disabled>Selecione uma opção</option>
+                            <option value="true">Sim</option>
+                            <option value="false">Não</option>
+                        </select>
+                    </div>
+                )}
                 {selectedField === "image_url" && (
                     <div>
                         <label className="block text-sm font-medium">Foto da Loja</label>
