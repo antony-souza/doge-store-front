@@ -15,6 +15,7 @@ export default function PublicPage({ params }: IPublicPageProps) {
   const { name } = params;
   const [stores, setStores] = useState<IStore[]>([]);
   const [category, setCategory] = useState<ICategory[]>([]);
+  const [moreInfo, setMoreInfo] = useState<boolean>(false);
 
   useEffect(() => {
     if (name) {
@@ -74,12 +75,38 @@ export default function PublicPage({ params }: IPublicPageProps) {
                       {store.is_open ? 'Fecharemos às 22:30' : 'Abriremos às 18:00'}
                     </span>
                   </div>
-                  <Button variant="outline" className="mt-4">
+                  <Button variant="outline" className="mt-4" onClick={() => setMoreInfo(!moreInfo)}>
                     <span className="material-symbols-outlined">
                       info
                     </span>
                     Mais Informações
                   </Button>
+                  {moreInfo && (
+                    <div className="flex flex-col justify-start mt-4 items-start">
+                      <div className="flex flex-row flex-wrap items-center gap-2">
+                        <span className="material-symbols-outlined">
+                          description
+                        </span>
+                        <p className="font-bold text-gray-800 text-center">Descrição:</p>
+                        <p className="text-gray-600">{store.description}</p>
+                      </div>
+                      <div className="flex flex-row flex-wrap items-center gap-2 mt-2">
+                        <span className="material-symbols-outlined">
+                          home
+                        </span>
+                        <p className="font-bold text-gray-800">Endereço:</p>
+                        <p className="text-gray-600">{store.address}</p>
+                      </div>
+                      <div className="flex flex-row flex-wrap items-center gap-2 mt-2">
+                        <span className="material-symbols-outlined">
+                          call
+                        </span>
+                        <p className="font-bold text-gray-800">Contato:</p>
+                        <p className="text-gray-600">{store.phone}</p>
+                      </div>
+                    </div>
+                  )}
+
                 </div>
               </div>
             </section>

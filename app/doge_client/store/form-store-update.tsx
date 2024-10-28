@@ -71,6 +71,7 @@ export const FormUpdateStore = () => {
                         <option value="image_url">Foto da Loja</option>
                         <option value="banner_url">Banner da Loja</option>
                         <option value="name">Nome da Loja</option>
+                        <option value="address">Endereço da Loja</option>
                         <option value="phone">Telefone</option>
                         <option value="description">Descrição</option>
                         <option value="background_color">Cor da Loja</option>
@@ -121,6 +122,18 @@ export const FormUpdateStore = () => {
                             name="phone"
                             className="mt-1 block w-full p-2 border rounded-md"
                             placeholder="Telefone"
+                        />
+                    </div>
+                )}
+
+                {selectedField === "address" && (
+                    <div>
+                        <label className="block text-sm font-medium">Endereço</label>
+                        <input
+                            type="text"
+                            name="address"
+                            className="mt-1 block w-full p-2 border rounded-md"
+                            placeholder="Endereço"
                         />
                     </div>
                 )}
