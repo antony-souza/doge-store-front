@@ -10,6 +10,7 @@ import { formatPrice } from "../util/formt-price";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
 import { ICategory } from "../doge_client/services/user.service";
+import { Copyright } from "./cop";
 
 export default function PublicPage({ params }: IPublicPageProps) {
   const { name } = params;
@@ -249,6 +250,7 @@ export default function PublicPage({ params }: IPublicPageProps) {
                 </div>
               </div>
             </section>
+            <Copyright />
           </div>
         ))
       ) : (
@@ -260,6 +262,8 @@ export default function PublicPage({ params }: IPublicPageProps) {
           </div>
         </div>
       )}
+      
+
     </div>
   );
 }

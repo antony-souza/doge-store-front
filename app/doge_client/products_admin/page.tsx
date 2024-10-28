@@ -145,7 +145,7 @@ function RenderProductsPageAdmin() {
                         <Table className="min-w-full mt-4">
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead className="w-[auto]">Foto</TableHead>
+                                    <TableHead className="w-20 h-20">Foto</TableHead>
                                     <TableHead className="w-[auto]">Nome</TableHead>
                                     <TableHead className="w-[auto]">Preço</TableHead>
                                     <TableHead className="w-[auto]">Descrição</TableHead>
@@ -160,7 +160,7 @@ function RenderProductsPageAdmin() {
                                             <TableCell className="font-medium">
                                                 <Avatar>
                                                     <AvatarImage
-                                                        className="rounded-full w-20 h-18 object-cover border-2"
+                                                        className="rounded-full w-20 h-auto object-cover border-2"
                                                         src={product.image_url || ""}
                                                         alt={product.name || "Imagem do produto"}
                                                     />
