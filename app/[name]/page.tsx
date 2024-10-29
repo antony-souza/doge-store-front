@@ -20,7 +20,6 @@ export default function PublicPage({ params }: IPublicPageProps) {
   const [moreInfo, setMoreInfo] = useState<boolean>(false);
   const [isInCart, setIsInCart] = useState<{ [key: string]: boolean }>({});
   const [arrayCartSessionStorange, setArrayCartSessionStorange] = useState<IProduct[]>([]);
-  const [countCart, setCountCart] = useState<number>(0);
 
   useEffect(() => {
     const productsSavedInCart = sessionStorage.getItem("cart");
@@ -34,7 +33,6 @@ export default function PublicPage({ params }: IPublicPageProps) {
         productsSavedInStorange[product.id] = true;
       }
       setIsInCart(productsSavedInStorange);
-      setCountCart(productsFromCart.length);
     }
   }, []);
 
@@ -106,13 +104,13 @@ export default function PublicPage({ params }: IPublicPageProps) {
   );
   return (
     <>
-      <div className="flex flex-col gap-10">
+      <div className="flex flex-col gap-12">
         <Toaster />
         <HeaderPublicPage name={stores.length > 0 ? stores[0].name : 'notfound'}/>
         {stores.length > 0 ? (
           stores.map((store) => (
             <div key={store.id} className="relative mb-12">
-              <section className="bg-gradient-to-b from-gray-100 to-white p-6 rounded-lg shadow-lg">
+              <section className="bg-white p-6 rounded-lg shadow-lg">
                 <div className="flex justify-center items-center mb-4">
                   <div
                     className="w-full h-[200px] flex flex-col justify-center items-center rounded-lg overflow-hidden"
@@ -141,7 +139,6 @@ export default function PublicPage({ params }: IPublicPageProps) {
                         />
                       </p>
                     </div>
-
                     <Button variant="outline" className="mt-4" onClick={() => setMoreInfo(!moreInfo)}>
                       <span className="material-symbols-outlined">info</span>
                       Mais Informações

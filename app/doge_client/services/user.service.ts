@@ -92,23 +92,20 @@ export default class UserService extends CallAPIService {
 
         localStorage.setItem('token', response.token);
         localStorage.setItem('role', decodedToken.role);
+        localStorage.setItem('store_id', decodedToken.store_id)
         localStorage.setItem(this.USER_LOCAL_STORAGE_KEY, JSON.stringify(response.user));
 
         return response;
     }
 
-    async getStore(): Promise<IStore> {
+    async getStore(id:string): Promise<IStore> {
 
         const token = localStorage.getItem('token');
         if (!token) {
             throw new Error('Token não encontrado');
         }
 
-        const decodedToken = jwtDecode<DecodedToken>(token);
-        const store_id = decodedToken.store_id;
-        localStorage.setItem('store_id', store_id);
-
-        const endpoint = `/store/store-client/${store_id}`;
+        const endpoint = `/store/store-client/${id}`;
 
         const callAPIService = new CallAPIService();
         const response = await callAPIService.genericRequest(endpoint, "GET", true) as IStore;

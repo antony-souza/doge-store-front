@@ -30,7 +30,8 @@ const HeaderClient: React.FC = () => {
         const fetchStore = async () => {
             const userService = new UserService();
             try {
-                const store = await userService.getStore();
+                const id = localStorage.getItem("store_id") as string;
+                const store = await userService.getStore(id);
                 setStore(store);
             } catch (error) {
             }

@@ -20,7 +20,8 @@ function RenderStorePage() {
         const fetchStore = async () => {
             try {
                 const userService = new UserService();
-                const response = await userService.getStore();
+                const id = localStorage.getItem("store_id") as string;
+                const response = await userService.getStore(id);
                 setStore(response);
             } catch (error) {
             }
@@ -32,7 +33,6 @@ function RenderStorePage() {
     const handleEditClick = () => {
         setIsEditing(!isEditing);
     };
-
     return (
         <>
             <LayoutDashboard dashboardConfig={{ isSidebarOpenProps: false }}>
