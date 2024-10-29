@@ -90,7 +90,7 @@ export default function CartPage() {
                             <input
                                 type="number"
                                 value={installments}
-                                onChange={(e) => setInstallments(Math.max(Number(e.target.value), 1))}
+                                onChange={(e) => setInstallments(Math.max(Number(e.target.value)))}
                                 min={1}
                                 className="border rounded w-24 p-1"
                             />
