@@ -151,6 +151,7 @@ function RenderProductsPageAdmin() {
                                     <TableHead className="w-[auto]">Descrição</TableHead>
                                     <TableHead className="w-[auto]">Categoria</TableHead>
                                     <TableHead className="w-[auto]">Destaque</TableHead>
+                                    <TableHead className="w-[auto]">Carrinho</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -171,6 +172,7 @@ function RenderProductsPageAdmin() {
                                             <TableCell>{product.description || "-"}</TableCell>
                                             <TableCell>{product.category?.name || "-"}</TableCell>
                                             <TableCell>{product.featured_products ? "Sim" : "Não"}</TableCell>
+                                            <TableCell>{product.cart ? "Sim" : "Não"}</TableCell>
                                         </TableRow>
                                     ))
                                 ) : (

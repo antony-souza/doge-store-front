@@ -41,6 +41,7 @@ export interface IProduct {
     store_id: string,
     category_id: string,
     image_url: string,
+    cart: boolean,
     featured_products: boolean,
     store: IStore
 }

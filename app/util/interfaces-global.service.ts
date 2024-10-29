@@ -1,4 +1,5 @@
-import { ICategory, IProduct } from "../doge_client/services/user.service";
+import { IUsers } from "../doge_client/services/admin.service";
+import { ICategory, IProduct, IUserLocalStorage } from "../doge_client/services/user.service";
 
 export interface IStore {
     id: string;

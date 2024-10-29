@@ -1,3 +1,4 @@
+import { IProduct } from "@/app/doge_client/services/user.service";
 import CallAPIService from "@/app/util/call-api.service";
 import { IStore } from "@/app/util/interfaces-global.service";
 

@@ -61,8 +61,8 @@ export const FormUpdateProductAdmin = () => {
         const filteredFormData = new FormData();
 
         formData.forEach((value, key) => {
-            if(value){
-            filteredFormData.append(key, value);
+            if (value) {
+                filteredFormData.append(key, value);
             }
         });
 
@@ -92,11 +92,11 @@ export const FormUpdateProductAdmin = () => {
                 title: "Sucesso",
                 description: "O produto foi atualizado com sucesso!",
             });
-            
+
             if (formRef.current) {
                 formRef.current.reset();
             }
-            
+
         } catch (error) {
             (error);
             toast({
@@ -253,7 +253,6 @@ export const FormUpdateProductAdmin = () => {
                         </select>
                     </div>
                 )}
-
                 <Button type="submit" className="w-20">Salvar</Button>
             </form>
         </>
