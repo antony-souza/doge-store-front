@@ -66,12 +66,12 @@ export default function CartPage() {
                                             <input
                                                 type="number"
                                                 value={quantities[product.id] || 0}
-                                                onChange={(e) => handleQuantityChange(product.id, Math.max(Number(e.target.value), 1))}
+                                                onChange={(e) => handleQuantityChange(product.id, Math.max(Number(e.target.value), 0))}
                                                 min={1}
                                                 className="ml-2 border rounded w-16 p-1"
                                             />
                                         </p>
-                                        <p>Total: {formatPrice((product.price * (quantities[product.id] || 1)))}</p>
+                                        <p>Total: {formatPrice((product.price * (quantities[product.id] || 0)))}</p>
                                         <Button variant={'destructive'} onClick={() => handleRemoveProduct(product.id)}
                                             className="w-20 mt-3 font-bold">
                                             Remover

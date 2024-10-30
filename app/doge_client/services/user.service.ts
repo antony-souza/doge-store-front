@@ -98,7 +98,7 @@ export default class UserService extends CallAPIService {
         return response;
     }
 
-    async getStore(id:string): Promise<IStore> {
+    async getStore(id:string) {
 
         const token = localStorage.getItem('token');
         if (!token) {
@@ -108,7 +108,7 @@ export default class UserService extends CallAPIService {
         const endpoint = `/store/store-client/${id}`;
 
         const callAPIService = new CallAPIService();
-        const response = await callAPIService.genericRequest(endpoint, "GET", true) as IStore;
+        const response = await callAPIService.genericRequest(endpoint, "GET", true) as IStore[];
 
         return response;
     }
