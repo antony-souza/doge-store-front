@@ -6,9 +6,12 @@ import UserService from "../services/user.service";
 import { toast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import LayoutForm from "@/app/components/layout-form";
+import { z } from "zod";
+import errorMessages from "@/app/util/errorMessages";
 
 function FormEditPerfil() {
     const [loading, setLoading] = useState(false);
+    const [isFormValid, setIsFormValid] = useState(false);
     const [formData, setFormData] = useState({
         image_url: "",
         name: "",
@@ -16,21 +19,21 @@ function FormEditPerfil() {
         password: ""
     });
 
-    const [isFormValid, setIsFormValid] = useState(false);
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 
-        setFormData((prev) => ({
-            ...prev,
+        setFormData({
+            ...formData,
             [name]: value,
-        }));
+        });
 
-        setIsFormValid(Object.values({ ...formData, [name]: value }).some(field => field.trim() !== ""));
+        setIsFormValid(Object.values({ ...formData, [name]: value }).some(inputForm => inputForm.trim() !== ""));
     };
 
     const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        setLoading(true);
 
         const filteredFormData = new FormData();
 
@@ -39,36 +42,6 @@ function FormEditPerfil() {
                 filteredFormData.append(key, value);
             }
         });
-
-        const { email, password } = formData;
-        if (email && !/\S+@\S+\.\S+/.test(email)) {
-            toast({
-                title: 'Falha ao atualizar',
-                description: 'Por favor, insira um email válido.',
-                variant: 'destructive',
-            });
-            return;
-        }
-
-        if (password && password.length < 6) {
-            toast({
-                title: 'Falha ao atualizar',
-                description: 'A senha deve ter pelo menos 6 caracteres.',
-                variant: 'destructive',
-            });
-            return;
-        }
-
-        if (!isFormValid) {
-            toast({
-                title: 'Falha ao atualizar',
-                description: 'Preencha ao menos um campo para atualizar',
-                variant: 'destructive',
-            });
-            return;
-        }
-
-        setLoading(true);
 
         try {
             const service = new UserService();
@@ -116,13 +89,15 @@ function FormEditPerfil() {
                             placeholder="Digite seu novo nome"
                             onChange={handleChange}
                         />
+
                         <InputsCase
                             label="Email"
-                            type="text"
+                            type="email"
                             name="email"
                             placeholder="Digite seu novo email"
                             onChange={handleChange}
                         />
+
                         <InputsCase
                             label="Senha"
                             type="password"
@@ -130,6 +105,7 @@ function FormEditPerfil() {
                             placeholder="Digite a nova senha"
                             onChange={handleChange}
                         />
+
                         <div className="flex justify-end w-60">
                             <Button
                                 disabled={loading || !isFormValid}

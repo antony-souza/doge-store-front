@@ -81,8 +81,7 @@ const Dashboard: React.FC<IDashboardProps> = ({ isSidebarOpenProps }) => {
                     path: routes.TEST,
                     name: "Teste",
                     icon: "bug_report"
-                } */,
-
+                } , */
             ]);
         }
     }, []);
