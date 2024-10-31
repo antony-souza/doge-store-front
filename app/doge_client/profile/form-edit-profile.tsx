@@ -7,6 +7,7 @@ import { toast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import LayoutForm from "@/app/components/layout-form";
 import validateMessages from "@/app/util/errorMessages";
+import Image from "next/image";
 
 function FormEditPerfil() {
     const [loading, setLoading] = useState(false);
@@ -77,58 +78,69 @@ function FormEditPerfil() {
     return (
         <>
             <Toaster />
-            <div className="flex justify-start mt-5">
-                <LayoutForm onSubmit={handleFormSubmit}>
-                    <div className="flex flex-col gap-5">
-                        <InputsCase
-                            label="Foto (Clicar para selecionar)"
-                            type="file"
-                            name="image_url"
-                            placeholder="Alterar foto"
-                            onChange={handleChange}
-                        />
-                        <InputsCase
-                            label="Nome"
-                            type="text"
-                            name="name"
-                            placeholder="Digite seu novo nome"
-                            onChange={handleChange}
-                        />
-                        <InputsCase
-                            label="Email"
-                            type="email"
-                            name="email"
-                            placeholder="Digite seu novo email"
-                            onChange={handleChange}
-                        />
-                        {errorEmail ? (
-                            <span className="text-red-500">{validateMessages.emailError}</span>
-                        ) : (
-                            <span className="text-slate-700">{validateMessages.emailValid}</span>
-                        )}
-                        <InputsCase
-                            label="Senha"
-                            type="password"
-                            name="password"
-                            minLength={6}
-                            placeholder="Digite a nova senha"
-                            onChange={handleChange}
-                        />
-                        {errorPassword ? (
-                            <span className="text-red-500">{validateMessages.passwordError}</span>
-                        ) : (
-                            <span className="text-slate-700">{validateMessages.passwordValid}</span>
-                        )}
-                        <div className="flex justify-end w-60">
-                            <Button
-                                disabled={loading || !btnActive}
-                                className={loading ? 'bg-gray-300 cursor-not-allowed' : ''}
-                            >
-                                {loading ? 'Carregando...' : 'Salvar'}
-                            </Button>
+            <div className="flex justify-between mt-5">
+                <div className="flex flex-col w-1/2 p-5">
+                    <LayoutForm onSubmit={handleFormSubmit}>
+                        <div className="flex flex-col gap-5">
+                            <InputsCase
+                                label="Foto (Clicar para selecionar)"
+                                type="file"
+                                name="image_url"
+                                placeholder="Alterar foto"
+                                onChange={handleChange}
+                            />
+                            <InputsCase
+                                label="Nome"
+                                type="text"
+                                name="name"
+                                placeholder="Digite seu novo nome"
+                                onChange={handleChange}
+                            />
+                            <InputsCase
+                                label="Email"
+                                type="email"
+                                name="email"
+                                placeholder="Digite seu novo email"
+                                onChange={handleChange}
+                            />
+                            {errorEmail ? (
+                                <span className="text-red-500">{validateMessages.emailError}</span>
+                            ) : (
+                                <span className="text-slate-700">{validateMessages.emailValid}</span>
+                            )}
+                            <InputsCase
+                                label="Senha"
+                                type="password"
+                                name="password"
+                                minLength={6}
+                                placeholder="Digite a nova senha"
+                                onChange={handleChange}
+                            />
+                            {errorPassword ? (
+                                <span className="text-red-500">{validateMessages.passwordError}</span>
+                            ) : (
+                                <span className="text-slate-700">{validateMessages.passwordValid}</span>
+                            )}
+                            <div className="flex justify-end w-60">
+                                <Button
+                                    disabled={loading || !btnActive}
+                                    className={loading ? 'bg-gray-300 cursor-not-allowed' : ''}
+                                >
+                                    {loading ? 'Carregando...' : 'Salvar'}
+                                </Button>
+                            </div>
                         </div>
-                    </div>
-                </LayoutForm>
+                    </LayoutForm>
+                </div>
+                <div className="relative w-1/2 h-full p-5">
+                    <Image
+                        src="https://i.imgur.com/fUfBPtY.png"
+                        alt="store_logo"
+                        width={300}
+                        height={300}
+                        className="opacity-20"
+                    />
+                </div>
             </div>
         </>
     );
