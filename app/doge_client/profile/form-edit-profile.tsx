@@ -6,12 +6,13 @@ import UserService from "../services/user.service";
 import { toast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import LayoutForm from "@/app/components/layout-form";
-import { z } from "zod";
-import errorMessages from "@/app/util/errorMessages";
+import validateMessages from "@/app/util/errorMessages";
 
 function FormEditPerfil() {
     const [loading, setLoading] = useState(false);
-    const [isFormValid, setIsFormValid] = useState(false);
+    const [errorEmail, setErrorEmail] = useState(false);
+    const [btnActive, setBtnActive] = useState(false);
+    const [errorPassword, setErrorPassword] = useState(false);
     const [formData, setFormData] = useState({
         image_url: "",
         name: "",
@@ -27,7 +28,17 @@ function FormEditPerfil() {
             [name]: value,
         });
 
-        setIsFormValid(Object.values({ ...formData, [name]: value }).some(inputForm => inputForm.trim() !== ""));
+        setBtnActive(Object.values({ ...formData, [name]: value })
+            .some((inputValue) => inputValue.trim() !== ""));
+
+        if (name === "email") {
+            const isValidEmail = /\S+@\S+\.\S+/.test(value);
+            setErrorEmail(!isValidEmail);
+        }
+
+        if (name === "password") {
+            setErrorPassword(value.length < 6);
+        }
     };
 
     const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -58,12 +69,6 @@ function FormEditPerfil() {
                 title: 'Sucesso',
                 description: 'Perfil atualizado com sucesso',
             });
-        } catch (error) {
-            toast({
-                title: 'Erro',
-                description: 'Erro ao atualizar perfil, falha de comunicação com o servidor',
-                variant: 'destructive',
-            });
         } finally {
             setLoading(false);
         }
@@ -89,7 +94,6 @@ function FormEditPerfil() {
                             placeholder="Digite seu novo nome"
                             onChange={handleChange}
                         />
-
                         <InputsCase
                             label="Email"
                             type="email"
@@ -97,18 +101,27 @@ function FormEditPerfil() {
                             placeholder="Digite seu novo email"
                             onChange={handleChange}
                         />
-
+                        {errorEmail ? (
+                            <span className="text-red-500">{validateMessages.emailError}</span>
+                        ) : (
+                            <span className="text-slate-700">{validateMessages.emailValid}</span>
+                        )}
                         <InputsCase
                             label="Senha"
                             type="password"
                             name="password"
+                            minLength={6}
                             placeholder="Digite a nova senha"
                             onChange={handleChange}
                         />
-
+                        {errorPassword ? (
+                            <span className="text-red-500">{validateMessages.passwordError}</span>
+                        ) : (
+                            <span className="text-slate-700">{validateMessages.passwordValid}</span>
+                        )}
                         <div className="flex justify-end w-60">
                             <Button
-                                disabled={loading || !isFormValid}
+                                disabled={loading || !btnActive}
                                 className={loading ? 'bg-gray-300 cursor-not-allowed' : ''}
                             >
                                 {loading ? 'Carregando...' : 'Salvar'}

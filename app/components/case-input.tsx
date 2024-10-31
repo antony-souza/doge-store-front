@@ -8,10 +8,12 @@ interface IInputProps {
     label?: string;
     value?: string;
     name?: string;
+    minLength?: number;
+    required?: boolean;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const InputsCase: React.FC<IInputProps> = ({ type, name, value, label, placeholder, onChange }) => {
+const InputsCase: React.FC<IInputProps> = ({ type, name, value, label, placeholder, minLength, required, onChange }) => {
     return (
         <>
             <div>
@@ -23,7 +25,9 @@ const InputsCase: React.FC<IInputProps> = ({ type, name, value, label, placehold
                     type={type}
                     name={name}
                     value={value}
+                    minLength={minLength}
                     placeholder={placeholder}
+                    required={required}
                     onChange={onChange}
                 />
             </div>
