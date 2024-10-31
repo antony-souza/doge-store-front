@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 import LayoutForm from "@/app/components/layout-form";
 import validateMessages from "@/app/util/errorMessages";
 import Image from "next/image";
+import withAuth from "@/app/util/withToken";
 
 function FormEditPerfil() {
     const [loading, setLoading] = useState(false);
@@ -146,4 +147,4 @@ function FormEditPerfil() {
     );
 }
 
-export default FormEditPerfil;
+export default withAuth(FormEditPerfil);
