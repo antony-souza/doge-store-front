@@ -108,7 +108,7 @@ export default class UserService extends CallAPIService {
         const endpoint = `/store/store-client/${id}`;
 
         const callAPIService = new CallAPIService();
-        const response = await callAPIService.genericRequest(endpoint, "GET", true) as IStore[];
+        const response = await callAPIService.genericRequest(endpoint, "GET", true);
 
         return response;
     }

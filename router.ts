@@ -12,4 +12,5 @@ export const routes = {
     ADMIN_CATEGORY: "/doge_client/category_admin",
     ADMIN_FEATURED: "/doge_client/featured_admin",
     CART:"/cart",
+    TEST:"/doge_client/test"
 };

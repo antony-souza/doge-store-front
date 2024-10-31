@@ -10,12 +10,12 @@ interface HeaderList {
     name?: string;
 }
 
-interface IPropsHeaderPublic {
+export interface IPropsHeaderPublic {
     name: string;
 }
 
 export default function HeaderPublicPage({ name }: IPropsHeaderPublic) {
-    const store = name;
+    const store = encodeURIComponent(name);
     const router = useRouter();
     const pathname = usePathname(); // Para obter a rota atual
     const [headerMenu, setHeaderMenu] = useState<HeaderList[]>([
@@ -68,7 +68,7 @@ export default function HeaderPublicPage({ name }: IPropsHeaderPublic) {
                     </div>
                 ) : (
                     <Link
-                        href={`/${encodeURIComponent(store)}/cart`}
+                        href={`/${store}/cart`}
                         className="text-gray-700 hover:text-gray-900 flex items-center"
                     >
                         <span className="material-symbols-outlined text-xl">{headerMenu[1].icon}</span>

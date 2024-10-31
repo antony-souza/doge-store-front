@@ -16,7 +16,7 @@ import { routes } from "@/router";
 const HeaderClient: React.FC = () => {
     const [user, setUser] = useState<IUserLocalStorage>();
     const [store, setStore] = useState<IStore>();
-    const { push, replace } = useRouter();
+    const { replace } = useRouter();
 
     useEffect(() => {
         const userService = new UserService();
@@ -34,6 +34,7 @@ const HeaderClient: React.FC = () => {
                 const store = await userService.getStore(id);
                 setStore(store);
             } catch (error) {
+                console.error("Erro ao buscar loja:", error);
             }
         };
 
@@ -41,10 +42,7 @@ const HeaderClient: React.FC = () => {
     }, []);
 
     const setProfileUrl = (imageUrl?: string) => {
-        if (!imageUrl) {
-            return "https://i.imgur.com/LGT9cVS.png";
-        }
-        return imageUrl;
+        return imageUrl || "https://i.imgur.com/LGT9cVS.png";
     };
 
     const exitSystem = () => {
@@ -54,12 +52,12 @@ const HeaderClient: React.FC = () => {
     };
 
     const handleEditClick = () => {
-       replace(routes.PROFILE)
+        replace(routes.PROFILE);
     };
 
     return (
         <div className="flex justify-center text-slate-950">
-            <header className="w-full h-16 bg-white flex items-center justify-between p-4 rounded-b border border-gray-300 shadow-md fixed">
+            <header className="w-full h-16 bg-white flex items-center justify-between p-4 rounded-b border border-gray-300 shadow-md fixed z-10">
                 <div className="flex items-center">
                     {/* Nome da loja com fallback */}
                     <h1 className="text-xl font-bold text-gray-700">
@@ -82,11 +80,13 @@ const HeaderClient: React.FC = () => {
                         </div>
                     </DropdownMenuTrigger>
 
-                    <DropdownMenuContent className="w-56">
-                        <DropdownMenuItem className="cursor-pointer" onClick={handleEditClick}>
+                    <DropdownMenuContent className="w-auto text-slate-600 z-20">
+                        <DropdownMenuItem className="cursor-pointer flex gap-2" onClick={handleEditClick}>
+                            <span className="material-symbols-outlined">edit</span>
                             <span>Editar Perfil</span>
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="cursor-pointer" onClick={exitSystem}>
+                        <DropdownMenuItem className="cursor-pointer flex gap-2" onClick={exitSystem}>
+                            <span className="material-symbols-outlined">logout</span>
                             <span>Sair</span>
                         </DropdownMenuItem>
                     </DropdownMenuContent>

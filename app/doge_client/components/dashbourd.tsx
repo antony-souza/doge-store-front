@@ -76,7 +76,12 @@ const Dashboard: React.FC<IDashboardProps> = ({ isSidebarOpenProps }) => {
                     path: routes.QR_CODE,
                     name: "QrCode",
                     icon: "qr_code_scanner"
-                },
+                }/* ,
+                {
+                    path: routes.TEST,
+                    name: "Teste",
+                    icon: "bug_report"
+                } */,
 
             ]);
         }

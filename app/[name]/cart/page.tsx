@@ -1,18 +1,18 @@
 'use client';
 
 import { Toaster } from "@/components/ui/toaster";
-import HeaderPublicPage from "../headerPublicPage";
+import HeaderPublicPage, { IPropsHeaderPublic } from "../headerPublicPage";
 import { IProduct } from "@/app/doge_client/services/user.service";
 import { useEffect, useState } from "react";
 import { formatPrice } from "@/app/util/formt-price";
 import { Button } from "@/components/ui/button";
 
-export default function CartPage() {
+export default function CartPage({name}:IPropsHeaderPublic) {
     const [products, setProducts] = useState<IProduct[]>([]);
     const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
     const [total, setTotal] = useState<number>(0);
     const [installments, setInstallments] = useState<number>(0);
-
+    const store = name;
     useEffect(() => {
         const cart = sessionStorage.getItem("cart");
         if (cart) {
@@ -48,7 +48,7 @@ export default function CartPage() {
     return (
         <>
             <Toaster />
-            <HeaderPublicPage name="" />
+            <HeaderPublicPage name={store} />
             <div className="flex flex-col gap-12 max-w-lg mx-auto px-4 pb-10">
                 <div>
                     <div className="flex flex-col items-center mt-28 text-xl bg-white p-3 rounded shadow">

@@ -36,3 +36,4 @@ next-env.d.ts
 other
 package-lock.json
 .env
+/app/doge_client/test

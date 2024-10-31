@@ -1,161 +1,148 @@
-import { useRef, useState } from "react";
-import { Toaster } from "@/components/ui/toaster";
-import { toast } from "@/hooks/use-toast";
-import UserService, { IUpdateProduct } from "../services/user.service";
+'use client';
+import InputsCase from "@/app/components/case-input";
 import { Button } from "@/components/ui/button";
+import React, { useState } from "react";
+import UserService from "../services/user.service";
+import { toast } from "@/hooks/use-toast";
+import { Toaster } from "@/components/ui/toaster";
+import LayoutForm from "@/app/components/layout-form";
 
-export const FormUpdateProfile = () => {
-    const formRef = useRef<HTMLFormElement | null>(null);
-    const [selectedField, setSelectedField] = useState<string | null>(null);
-    const [password, setPassword] = useState<string | null>(null);
-    const [confirmPassword, setConfirmPassword] = useState<string | null>(null);
+function FormEditPerfil() {
+    const [loading, setLoading] = useState(false);
+    const [formData, setFormData] = useState({
+        image_url: "",
+        name: "",
+        email: "",
+        password: ""
+    });
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    const [isFormValid, setIsFormValid] = useState(false);
 
-        if (selectedField === "password" && password !== confirmPassword) {
-            toast({
-                title: "Erro",
-                description: "As senhas não coincidem. Por favor, verifique e tente novamente.",
-                variant: "destructive",
-            });
-            return;
-        }
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
 
-        const userService = new UserService();
-        const form = event.currentTarget;
-        const formData = new FormData(form);
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+
+        setIsFormValid(Object.values({ ...formData, [name]: value }).some(field => field.trim() !== ""));
+    };
+
+    const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
         const filteredFormData = new FormData();
-        let dataExists = false;
 
-        formData.delete("confirm_password");
-        // Adiciona os campos ao FormData, excluindo os vazios
-        formData.forEach((value, key) => {
+        Object.entries(formData).forEach(([key, value]) => {
             if (value) {
                 filteredFormData.append(key, value);
-                dataExists = true;
             }
         });
 
-
-        if (!dataExists) {
+        const { email, password } = formData;
+        if (email && !/\S+@\S+\.\S+/.test(email)) {
             toast({
-                title: "Erro - Campos Vazios",
-                description: "Nenhum campo foi preenchido. Por favor, preencha pelo menos um campo.",
-                variant: "destructive",
+                title: 'Falha ao atualizar',
+                description: 'Por favor, insira um email válido.',
+                variant: 'destructive',
             });
             return;
         }
 
+        if (password && password.length < 6) {
+            toast({
+                title: 'Falha ao atualizar',
+                description: 'A senha deve ter pelo menos 6 caracteres.',
+                variant: 'destructive',
+            });
+            return;
+        }
+
+        if (!isFormValid) {
+            toast({
+                title: 'Falha ao atualizar',
+                description: 'Preencha ao menos um campo para atualizar',
+                variant: 'destructive',
+            });
+            return;
+        }
+
+        setLoading(true);
+
         try {
-            await userService.updateProfile(filteredFormData);
+            const service = new UserService();
+            const response = await service.updateProfile(filteredFormData);
 
-            toast({
-                title: "Sucesso",
-                description: "O perfil foi atualizado com sucesso!",
-                variant: "default",
-            });
-
-            if (formRef.current) {
-                formRef.current.reset();
+            if (!response) {
+                toast({
+                    title: 'Erro',
+                    description: 'Erro ao atualizar perfil, não teve resposta do servidor',
+                    variant: 'destructive',
+                });
             }
-            setSelectedField(null);
-            setPassword(null);
-            setConfirmPassword(null);
-        } catch (error) {
-            (error);
             toast({
-                title: "Erro",
-                description: "Houve um problema ao atualizar o perfil. Tente novamente.",
-                variant: "destructive",
+                title: 'Sucesso',
+                description: 'Perfil atualizado com sucesso',
             });
+        } catch (error) {
+            toast({
+                title: 'Erro',
+                description: 'Erro ao atualizar perfil, falha de comunicação com o servidor',
+                variant: 'destructive',
+            });
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
         <>
             <Toaster />
-            <form onSubmit={handleSubmit} ref={formRef} className="space-y-4 mt-5">
-                <div>
-                    <label className="block text-sm font-medium">Escolha o campo para editar</label>
-                    <select
-                        className="mt-1 block w-full p-2 border rounded-md"
-                        value={selectedField || ""}
-                        onChange={(e) => setSelectedField(e.target.value)}
-                    >
-                        <option value="" disabled>Selecione um campo</option>
-                        <option value="image_url">Foto</option>
-                        <option value="name">Nome</option>
-                        <option value="email">Email</option>
-                        <option value="password">Senha</option>
-                    </select>
-                </div>
-
-                {selectedField === "image_url" && (
-                    <div>
-                        <label className="block text-sm font-medium">Foto do Perfil</label>
-                        <input
+            <div className="flex justify-start mt-5">
+                <LayoutForm onSubmit={handleFormSubmit}>
+                    <div className="flex flex-col gap-5">
+                        <InputsCase
+                            label="Foto (Clicar para selecionar)"
                             type="file"
                             name="image_url"
-                            className="mt-1 block w-full p-2 border rounded-md"
-                            accept="image/*"
+                            placeholder="Alterar foto"
+                            onChange={handleChange}
                         />
-                    </div>
-                )}
-
-                {selectedField === "name" && (
-                    <div>
-                        <label className="block text-sm font-medium">Nome de Usuário</label>
-                        <input
+                        <InputsCase
+                            label="Nome"
                             type="text"
                             name="name"
-                            className="mt-1 block w-full p-2 border rounded-md"
-                            placeholder="Nome do perfil"
+                            placeholder="Digite seu novo nome"
+                            onChange={handleChange}
                         />
-                    </div>
-                )}
-
-                {selectedField === "email" && (
-                    <div>
-                        <label className="block text-sm font-medium">Email de Usuário</label>
-                        <input
-                            type="email"
+                        <InputsCase
+                            label="Email"
+                            type="text"
                             name="email"
-                            className="mt-1 block w-full p-2 border rounded-md"
-                            placeholder="Email do perfil"
+                            placeholder="Digite seu novo email"
+                            onChange={handleChange}
                         />
+                        <InputsCase
+                            label="Senha"
+                            type="password"
+                            name="password"
+                            placeholder="Digite a nova senha"
+                            onChange={handleChange}
+                        />
+                        <div className="flex justify-end w-60">
+                            <Button
+                                disabled={loading || !isFormValid}
+                                className={loading ? 'bg-gray-300 cursor-not-allowed' : ''}
+                            >
+                                {loading ? 'Carregando...' : 'Salvar'}
+                            </Button>
+                        </div>
                     </div>
-                )}
-
-                {selectedField === "password" && (
-                    <>
-                        <div>
-                            <label className="block text-sm font-medium">Senha</label>
-                            <input
-                                type="password"
-                                name="password"
-                                className="mt-1 block w-full p-2 border rounded-md"
-                                placeholder="Digite sua nova senha"
-                                value={password || ""}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium">Confirmar Senha</label>
-                            <input
-                                type="password"
-                                name="confirm_password"
-                                className="mt-1 block w-full p-2 border rounded-md"
-                                placeholder="Confirme sua nova senha"
-                                value={confirmPassword || ""}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                            />
-                        </div>
-                    </>
-                )}
-
-                <Button type="submit" className="w-20">Salvar</Button>
-            </form>
+                </LayoutForm>
+            </div>
         </>
     );
-};
+}
+
+export default FormEditPerfil;
