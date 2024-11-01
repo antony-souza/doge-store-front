@@ -58,7 +58,8 @@ function FormEditPerfil() {
 
         try {
             const service = new UserService();
-            const response = await service.updateProfile(filteredFormData);
+            const id = localStorage.getItem('id') as string;
+            const response = await service.updateUser(filteredFormData, id);
 
             if (!response) {
                 toast({

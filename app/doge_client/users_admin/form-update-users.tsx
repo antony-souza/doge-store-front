@@ -1,24 +1,64 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
 import UserService from "../services/user.service";
 import { Button } from "@/components/ui/button";
 import AdminService, { IUsers } from "../services/admin.service";
 import { IStore, IUpdateStore } from "@/app/util/interfaces-global.service";
+import InputsCase from "@/app/components/case-input";
+import LayoutForm from "@/app/components/layout-form";
+import validateMessages from "@/app/util/errorMessages";
+import withAuth from "@/app/util/withToken";
+import { Form } from "react-hook-form";
 
-export const FormUpdateUsers = () => {
-    const formRef = useRef<HTMLFormElement | null>(null);
+const adminService = new AdminService();
+const userService = new UserService();
+
+export interface IUpdateUsersProps {
+    id: string;
+}
+
+function FormUpdateUsers({ id }: IUpdateUsersProps) {
     const [selectedField, setSelectedField] = useState<string | null>(null);
-    const [password, setPassword] = useState<string | null>(null);
-    const [confirmPassword, setConfirmPassword] = useState<string | null>(null);
     const [users, setUsers] = useState<IUsers[]>([]);
     const [companies, setCompanies] = useState<IStore[]>([]);
-    const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [btnActive, setBtnActive] = useState(false);
+    const [errorEmail, setErrorEmail] = useState(false);
+    const [errorPassword, setErrorPassword] = useState(false);
+    const [formData, setFormData] = useState({
+        image_url: "",
+        name: "",
+        email: "",
+        password: "",
+        role: "",
+        store_id: "",
+    });
+
+    const handleChange = (e:React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+
+        setBtnActive(Object.values({ ...formData, [name]: value })
+            .some((inputValue) => inputValue.trim() !== ""));
+
+        if (name === "email") {
+            const isValidEmail = /\S+@\S+\.\S+/.test(value);
+            setErrorEmail(!isValidEmail);
+        }
+
+        if (name === "password") {
+            setErrorPassword(value.length < 6);
+        }
+    };
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const adminService = new AdminService();
                 const usersResponse = await adminService.getAllUsers();
                 const companiesResponse = await adminService.getAllStore();
                 setUsers(usersResponse);
@@ -34,216 +74,126 @@ export const FormUpdateUsers = () => {
         fetchData();
     }, []);
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
 
-        if (!selectedUserId) {
-            toast({
-                title: "Erro",
-                description: "Selecione um usuário antes de salvar.",
-                variant: "destructive",
-            });
-            return;
-        }
+        setLoading(true);
 
-        if (selectedField === "password" && password !== confirmPassword) {
-            toast({
-                title: "Erro de Senha",
-                description: "As senhas inseridas não coincidem. Verifique e tente novamente.",
-                variant: "destructive",
-            });
-            return;
-        }
-
-        const adminService = new AdminService();
-        const form = event.currentTarget;
-        const formData = new FormData(form);
         const filteredFormData = new FormData();
-        
-        formData.delete('confirm_password');
-        
-        formData.forEach((value, key) => {
+
+        Object.entries(formData).forEach(([key, value]) => {
             if (value) {
                 filteredFormData.append(key, value);
             }
         });
 
-
-        if (!form.checkValidity()) {
-            toast({
-                title: "Campos Vazios",
-                description: "Por favor, preencha pelo menos um campo antes de salvar.",
-                variant: "destructive",
-            });
-            return;
-        }
-
         try {
-            await adminService.updateUserAdmin(filteredFormData, selectedUserId);
+            const response = await userService.updateUser(filteredFormData, id);
 
-            toast({
-                title: "Sucesso na Atualização",
-                description: "As informações do perfil foram atualizadas com sucesso!",
-                variant: "default",
-            });
-
-            if (formRef.current) {
-                formRef.current.reset();
+            if (!response) {
+                toast({
+                    title: 'Erro',
+                    description: 'Erro ao atualizar perfil, não teve resposta do servidor',
+                    variant: 'destructive',
+                });
             }
-            setSelectedField(null);
-            setPassword(null);
-            setConfirmPassword(null);
-        } catch (error) {
-            (error);
             toast({
-                title: "Erro ao Atualizar Perfil",
-                description: "Houve um problema ao tentar atualizar o perfil. Por favor, tente novamente.",
-                variant: "destructive",
+                title: 'Sucesso',
+                description: 'Perfil atualizado com sucesso',
             });
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
         <>
             <Toaster />
-            <form onSubmit={handleSubmit} ref={formRef} className="space-y-4 mt-5">
-                <div>
-                    <label className="block text-sm font-medium">Escolha o usuário para editar</label>
-                    <select
-                        className="mt-1 block w-full p-2 border rounded-md"
-                        value={selectedUserId || ""}
-                        onChange={(e) => setSelectedUserId(e.target.value)}
-                    >
-                        <option value="" disabled>Selecione um usuário</option>
-                        {users.length > 0 ? (
-                            users.map((user, index) => (
-                                <option key={index} value={user.id}>
-                                    {user.name}
-                                </option>
-                            ))
-                        ) : (
-                            <option value="">Nenhum usuário disponível</option>
-                        )}
-                    </select>
-                </div>
+            <LayoutForm onSubmit={handleFormSubmit}>
+                <div className="flex flex-col gap-5">
+                    <InputsCase
+                        label="Foto (Clicar para selecionar)"
+                        type="file"
+                        name="image_url"
+                        placeholder="Alterar foto"
+                        onChange={handleChange}
+                    />
+                    <InputsCase
+                        label="Nome"
+                        type="text"
+                        name="name"
+                        placeholder="Digite seu novo nome"
+                        onChange={handleChange}
+                    />
+                    <InputsCase
+                        label="Email"
+                        type="email"
+                        name="email"
+                        placeholder="Digite seu novo email"
+                        onChange={handleChange}
+                    />
+                    {errorEmail ? (
+                        <span className="text-red-500">{validateMessages.emailError}</span>
+                    ) : (
+                        <span className="text-slate-700">{validateMessages.emailValid}</span>
+                    )}
+                    <InputsCase
+                        label="Senha"
+                        type="password"
+                        name="password"
+                        minLength={6}
+                        placeholder="Digite a nova senha"
+                        onChange={handleChange}
+                    />
+                    {errorPassword ? (
+                        <span className="text-red-500">{validateMessages.passwordError}</span>
+                    ) : (
+                        <span className="text-slate-700">{validateMessages.passwordValid}</span>
+                    )}
 
-                <div>
-                    <label className="block text-sm font-medium">Escolha o campo para editar</label>
-                    <select
-                        className="mt-1 block w-full p-2 border rounded-md"
-                        value={selectedField || ""}
-                        onChange={(e) => setSelectedField(e.target.value)}
-                    >
-                        <option value="" disabled>Selecione um campo</option>
-                        <option value="image_url">Foto</option>
-                        <option value="name">Nome</option>
-                        <option value="email">Email</option>
-                        <option value="password">Senha</option>
-                        <option value="role">Role</option>
-                        <option value="store_id">Loja</option>
-                    </select>
-                </div>
-
-                {selectedField === "image_url" && (
-                    <div>
-                        <label className="block text-sm font-medium">Foto do Perfil</label>
-                        <input
-                            type="file"
-                            name="image_url"
-                            className="mt-1 block w-full p-2 border rounded-md"
-                            accept="image/*"
-                        />
-                    </div>
-                )}
-
-                {selectedField === "name" && (
-                    <div>
-                        <label className="block text-sm font-medium">Nome de Usuário</label>
-                        <input
-                            type="text"
-                            name="name"
-                            className="mt-1 block w-full p-2 border rounded-md"
-                            placeholder="Nome do perfil"
-                        />
-                    </div>
-                )}
-
-                {selectedField === "email" && (
-                    <div>
-                        <label className="block text-sm font-medium">Email de Usuário</label>
-                        <input
-                            type="email"
-                            name="email"
-                            className="mt-1 block w-full p-2 border rounded-md"
-                            placeholder="Email do perfil"
-                        />
-                    </div>
-                )}
-
-                {selectedField === "password" && (
-                    <>
-                        <div>
-                            <label className="block text-sm font-medium">Senha</label>
-                            <input
-                                type="password"
-                                name="password"
-                                className="mt-1 block w-full p-2 border rounded-md"
-                                placeholder="Digite sua nova senha"
-                                value={password || ""}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium">Confirmar Senha</label>
-                            <input
-                                type="password"
-                                name="confirm_password"
-                                className="mt-1 block w-full p-2 border rounded-md"
-                                placeholder="Confirme sua nova senha"
-                                value={confirmPassword || ""}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                            />
-                        </div>
-                    </>
-                )}
-
-                {selectedField === "role" && (
-                    <div>
-                        <label className="block text-sm font-medium">Role</label>
+                    <div className="flex flex-col font-semibold gap-3 w-60">
+                        <label htmlFor="store">{`Nível de Permissão ⚠️`}</label>
                         <select
                             name="role"
-                            className="mt-1 block w-full p-2 border rounded-md"
+                            id="role"
+                            className="p-2 border border-gray-300 rounded-md"
+                            value={formData.role}
+                            onChange={handleChange}
                         >
-                            <option value="" disabled>Selecione a role</option>
-                            <option value="admin">Admin</option>
+                            <option disabled>Selecione a Permissão</option>
                             <option value="user">Usuário</option>
+                            <option value="admin">Administrador</option>
                         </select>
                     </div>
-                )}
-
-                {selectedField === "store_id" && (
-                    <div>
-                        <label className="block text-sm font-medium">Loja (Empresa)</label>
+                    <div className="flex flex-col font-semibold gap-3 w-60">
+                        <label htmlFor="store">{`Loja(Opcional)`}</label>
                         <select
                             name="store_id"
-                            className="mt-1 block w-full p-2 border rounded-md"
+                            id="store"
+                            className="p-2 border border-gray-300 rounded-md"
+                            value={formData.store_id}
+                            onChange={handleChange}
                         >
-                            <option value="" disabled>Selecione a loja</option>
-                            {companies.length > 0 ? (
-                                companies.map((company, index) => (
-                                    <option key={index} value={company.id}>
-                                        {company.name}
-                                    </option>
-                                ))
-                            ) : (
-                                <option value="">Nenhuma loja disponível</option>
-                            )}
+                            <option value={''}>Selecione uma loja</option>
+                            {companies.map((store) => (
+                                <option key={store.id} value={store.id}>
+                                    {store.name}
+                                </option>
+                            ))}
                         </select>
                     </div>
-                )}
-
-                <Button type="submit" className="w-20">Salvar</Button>
-            </form>
+                    <div className="flex justify-end w-60">
+                        <Button
+                            disabled={loading || !btnActive}
+                            className={loading ? 'bg-gray-300 cursor-not-allowed' : ''}
+                        >
+                            {loading ? 'Carregando...' : 'Salvar'}
+                        </Button>
+                    </div>
+                </div>
+            </LayoutForm>
         </>
     );
 };
+
+export default FormUpdateUsers;

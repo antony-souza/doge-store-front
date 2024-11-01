@@ -27,7 +27,7 @@ export default class AdminService extends CallAPIService {
         return response;
     }
 
-    async createUser(body: FormData){
+    async createUser(body: FormData): Promise<IUsers>{
         const token = localStorage.getItem("token");
 
         if(!token){
@@ -38,21 +38,6 @@ export default class AdminService extends CallAPIService {
         const endpoint = "/user/create";
 
         const response = await callAPIService.genericRequest(endpoint, "POST", true, body);
-
-        return response;
-    }
-
-    async updateUserAdmin(body: FormData, id: string){
-        const token = localStorage.getItem("token");
-
-        if(!token){
-            throw new Error("Token não encontrado");
-        }
-
-        const callAPIService = new CallAPIService();
-        const endpoint = `/user/update/${id}`;
-
-        const response = await callAPIService.genericRequest(endpoint, "PUT", true, body);
 
         return response;
     }

@@ -127,29 +127,18 @@ export default class UserService extends CallAPIService {
         localStorage.clear();
     }
 
-    async updateProfile(body: FormData) {
+    async updateUser(body: FormData, id: string) {
         const token = localStorage.getItem('token');
 
         if (!token) {
             throw new Error('Token não encontrado');
         }
 
-        const getUser = localStorage.getItem('user')
-
-        if (!getUser) {
-            throw new Error('Usuário não encontrado')
-        }
-
-        const user = JSON.parse(getUser);
-        const userId = user.id;
-
-        const endpoint = `/user/update/${userId}`;
+        const endpoint = `/user/update/${id}`;
 
         const callAPIService = new CallAPIService();
 
-        const response = await callAPIService.genericRequest(endpoint, "PUT", true, body) as IUserLocalStorage;
-
-        localStorage.setItem(this.USER_LOCAL_STORAGE_KEY, JSON.stringify(response));
+        const response = await callAPIService.genericRequest(endpoint, "PUT", true, body)
 
         return response;
     }
