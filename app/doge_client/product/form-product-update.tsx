@@ -1,23 +1,47 @@
 import { useEffect, useRef, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
-import UserService, { ICategory, IUpdateProduct } from "../services/user.service";
+import UserService, { ICategory, IProduct } from "../services/user.service";
 import { Button } from "@/components/ui/button";
+import LayoutForm from "@/app/components/layout-form";
+import InputsCase from "@/app/components/case-input";
+import SelectCase from "@/app/components/case-select";
+import { formatPrice } from "@/app/util/formt-price";
 
-export const FormUpdateProduct = () => {
-    const formRef = useRef<HTMLFormElement | null>(null);
-    const [selectedProduct, setSelectedProductId] = useState<string | null>(null);
-    const [selectedField, setSelectedField] = useState<string | null>(null);
-    const [products, setProducts] = useState<IUpdateProduct[]>([]);
+interface IFormUpdateProductProps {
+    id: string;
+}
+
+export const FormUpdateProduct = ({ id }: IFormUpdateProductProps) => {
     const [categories, setCategories] = useState<ICategory[]>([]);
-    const [price, setPrice] = useState<number | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [btnActive, setBtnActive] = useState(false);
+    const [formData, setFormData] = useState({
+        name:"",
+        image_url: "",
+        banner_url: "",
+        price: '',
+        description: "",
+        category_id: "",
+    })
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+        setBtnActive(Object.values({ ...formData, [name]: value })
+            .some((inputValue) => inputValue.trim() !== ""));
+    };
 
     useEffect(() => {
         const fetchCategory = async () => {
             try {
                 const categoryService = new UserService();
-                const id = localStorage.getItem('store_id');
-                const response = await categoryService.getAllCategories(id as string);
+                const idStore = localStorage.getItem("store_id") as string;
+                const response = await categoryService.getAllCategories(idStore);
                 setCategories(response);
             } catch (error) {
                 toast({
@@ -30,203 +54,101 @@ export const FormUpdateProduct = () => {
         fetchCategory();
     }, []);
 
-
-    useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const productService = new UserService();
-                const id = localStorage.getItem('store_id');
-                const response = await productService.getAllProducts(id as string);
-                setProducts(response);
-            } catch (error) {
-            }
-        };
-        fetchProducts();
-    }, []);
-
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
+        setLoading(true);
+
         const productService = new UserService();
-        const form = event.currentTarget;
-        const formData = new FormData(form);
         const filteredFormData = new FormData();
 
-        // Adiciona os campos ao FormData, excluindo os vazios
-        formData.forEach((value, key) => {
+        Object.entries(formData).forEach(([key, value]) => {
             if (value) {
                 filteredFormData.append(key, value);
             }
         });
-    
-        if (!form) {
-            toast({
-                title: "Erro - Campos Vazios",
-                description: "Nenhum campo foi preenchido. Por favor, preencha pelo menos um campo.",
-                variant: "destructive",
-            });
-            return;
-        }
-
-        if (!selectedProduct) {
-            toast({
-                title: "Erro",
-                description: "Selecione um produto para atualizar.",
-                variant: "destructive",
-            });
-            return;
-        }
 
         try {
-            await productService.updateProduct(selectedProduct, filteredFormData);
-
+            await productService.updateProduct(id, filteredFormData);
             toast({
                 title: "Sucesso",
                 description: "O produto foi atualizado com sucesso!",
             });
-
-            if (formRef.current) {
-                formRef.current.reset();
-            }
-        } catch (error) {
-            (error);
+        }
+        catch (error) {
             toast({
                 title: "Erro",
                 description: "Houve um problema ao atualizar o produto. Tente novamente.",
                 variant: "destructive",
             });
         }
+        finally{
+            setLoading(false);
+        }
     };
 
     return (
         <>
             <Toaster />
-            <form onSubmit={handleSubmit} ref={formRef} className="space-y-4 mt-5">
-                <div>
-                    <label className="block text-sm font-medium">Escolha o produto para editar</label>
-                    <select
-                        className="mt-1 block w-full p-2 border rounded-md"
-                        value={selectedProduct || ""}
-                        onChange={(e) => setSelectedProductId(e.target.value)}
-                    >
-                        <option value="" disabled>Selecione um produto</option>
-                        {products.length > 0 ? (
-                            products.map((product, index) => (
-                                <option key={index} value={product.id}>
-                                    {product.name}
-                                </option>
-                            ))
-                        ) : (
-                            <option value="">Nenhum produto disponível</option>
-                        )}
-                    </select>
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium">Escolha o campo para editar</label>
-                    <select
-                        className="mt-1 block w-full p-2 border rounded-md"
-                        value={selectedField || ""}
-                        onChange={(e) => setSelectedField(e.target.value)}
-                    >
-                        <option value="" disabled>Selecione um campo</option>
-                        <option value="image_url">Foto do Produto</option>
-                        <option value="name">Nome do Produto</option>
-                        <option value="price">Preço</option>
-                        <option value="description">Descrição</option>
-                        <option value="category">Categoria</option>
-                        <option value="featured_products">Destaque</option>
-                    </select>
-                </div>
-
-                {selectedField === "image_url" && (
-                    <div>
-                        <label className="block text-sm font-medium">Foto do Produto</label>
-                        <input
-                            type="file"
-                            name="image_url"
-                            className="mt-1 block w-full p-2 border rounded-md"
-                            accept="image/*"
-                        />
-                    </div>
-                )}
-
-                {selectedField === "name" && (
-                    <div>
-                        <label className="block text-sm font-medium">Nome do Produto</label>
-                        <input
-                            type="text"
+            <div className="mt-5">
+                <LayoutForm onSubmit={handleSubmit}>
+                    <div className="flex flex-col gap-5">
+                        <InputsCase
+                            label="Nome do Produto"
                             name="name"
-                            className="mt-1 block w-full p-2 border rounded-md"
+                            type="text"
+                            value={formData.name}
                             placeholder="Nome do produto"
+                            onChange={handleChange}
                         />
-                    </div>
-                )}
-
-                {selectedField === "price" && (
-                    <div>
-                        <label className="block text-sm font-medium">Preço</label>
-                        <input
-                            type="number"
-                            step="any"
-                            value={price || ""}
+                        <InputsCase
+                            label="Foto do Produto"
+                            name="image_url"
+                            type="file"
+                            placeholder="Foto do produto"
+                            onChange={handleChange}
+                        />
+                        <InputsCase
+                            label="Preço do Produto"
                             name="price"
-                            className="mt-1 block w-full p-2 border rounded-md"
-                            placeholder="R$ 0,00"
-                            onChange={(e) => setPrice(Number(e.target.value))}
+                            type="number"
+                            placeholder="Preço do produto"
+                            value={formData.price}
+                            onChange={handleChange}
                         />
-                    </div>
-                )}
-
-                {selectedField === "description" && (
-                    <div>
-                        <label className="block text-sm font-medium">Descrição</label>
-                        <textarea
+                        <InputsCase
+                            label="Descrição do Produto"
                             name="description"
-                            className="mt-1 block w-full p-2 border rounded-md"
-                            placeholder="Descrição do produto"
+                            type="textara"
+                            value={formData.description}
+                            placeholder="Nome do produto"
+                            onChange={handleChange}
+                        />
+                        <SelectCase
+                            name="category_id"
+                            label="Escolha uma categoria"
+                            value={formData.category_id}
+                            options={[
+                                { value: "", label: "Selecione uma categoria" },
+                                ...categories.map((category) => ({
+                                    value: category.id,
+                                    label: category.name,
+                                })),
+                            ]}
+                            onChange={handleChange}
                         />
                     </div>
-                )}
-
-                {selectedField === "category" && (
-                    <div className="pt-3">
-                    <label className="block text-sm font-medium">Escolha a categoria</label>
-                    <select
-                        name="category_id"
-                        className="mt-1 block w-full p-2 border rounded-md"
-                    >
-                        <option value="" disabled>Selecione uma categoria</option>
-                        {categories.length > 0 ? (
-                            categories.map((category, index) => (
-                                <option key={index} value={category.id}>
-                                    {category.name}
-                                </option>
-                            ))
-                        ) : (
-                            <option value="">Nenhuma categoria disponível</option>
-                        )}
-                    </select>
-                </div>
-                )}
-
-                {selectedField === "featured_products" && (
-                    <div>
-                        <label className="block text-sm font-medium">O produto está em destaque?</label>
-                        <select
-                            name="featured_products"
-                            className="mt-1 block w-full p-2 border rounded-md"
-                            defaultValue=''
+                    <div className="flex justify-end w-60 mt-5">
+                        <Button
+                            disabled={loading || !btnActive}
+                            className={loading ? 'bg-gray-300 cursor-not-allowed' : ''}
                         >
-                            <option value="" disabled>Selecione uma opção</option>
-                            <option value="true">Sim</option>
-                            <option value="false">Não</option>
-                        </select>
+                            {loading ? 'Carregando...' : 'Salvar'}
+                        </Button>
                     </div>
-                )}
+                </LayoutForm>
+            </div>
 
-                <Button type="submit" className="w-20">Salvar</Button>
-            </form>
         </>
     );
 };

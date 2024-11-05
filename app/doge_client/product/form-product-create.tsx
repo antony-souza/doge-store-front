@@ -29,18 +29,6 @@ export const FormCreateProduct = () => {
         const formData = new FormData(form);
 
         // Validação de campos obrigatórios
-        const name = formData.get("name")?.toString().trim();
-        const category = formData.get("category_id");
-        const priceValue = formData.get("price");
-
-        if (!name || !category || !priceValue) {
-            toast({
-                title: "Erro ao criar produto",
-                description: "Todos os campos obrigatórios devem ser preenchidos.",
-                variant: "destructive",
-            });
-            return;
-        }
 
         const storeId = localStorage.getItem('store_id');
         

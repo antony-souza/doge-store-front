@@ -1,11 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
 import UserService from "../services/user.service";
 import { Button } from "@/components/ui/button";
-import AdminService from "../services/admin.service";
-import { IStore } from "@/app/util/interfaces-global.service";
-import SelectCase from "@/app/components/case-select";
 import LayoutForm from "@/app/components/layout-form";
 import InputsCase from "@/app/components/case-input";
 

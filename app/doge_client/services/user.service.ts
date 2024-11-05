@@ -222,7 +222,7 @@ export default class UserService extends CallAPIService {
 
         const callAPIService = new CallAPIService();
 
-        const response = await callAPIService.genericRequest(endpoint, "DELETE", true) as IUpdateProduct[];
+        const response = await callAPIService.genericRequest(endpoint, "DELETE", true)
 
         return response;
     }

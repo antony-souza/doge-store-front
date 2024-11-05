@@ -19,7 +19,6 @@ function RenderStoreUserPage() {
     const [isDelete, setIsDelete] = useState(false);
     const [selectStoreId, setSelectStoreId] = useState<string>('');
 
-
     useEffect(() => {
         const fetchStore = async () => {
             try {

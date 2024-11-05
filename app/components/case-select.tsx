@@ -15,8 +15,8 @@ interface ISelectProps {
 
 const SelectCase: React.FC<ISelectProps> = ({ label, name, value, options, onChange }) => {
     return (
-        <div className="mb-4 w-60 font-bold">
-            <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+        <div className="mb-4 w-60">
+            <label htmlFor={name} className="block text-sm font-bold text-gray-700">
                 {label}
             </label>
             <select
