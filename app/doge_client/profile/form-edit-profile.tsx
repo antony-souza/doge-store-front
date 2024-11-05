@@ -58,7 +58,8 @@ function FormEditPerfil() {
 
         try {
             const service = new UserService();
-            const id = localStorage.getItem('id') as string;
+            const getUser = localStorage.getItem('user')
+            const id = JSON.parse(String(getUser)).id as string;
             const response = await service.updateUser(filteredFormData, id);
 
             if (!response) {

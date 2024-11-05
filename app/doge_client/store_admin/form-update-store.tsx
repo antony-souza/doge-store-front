@@ -5,12 +5,28 @@ import UserService from "../services/user.service";
 import { Button } from "@/components/ui/button";
 import AdminService from "../services/admin.service";
 import { IStore } from "@/app/util/interfaces-global.service";
+import SelectCase from "@/app/components/case-select";
+import LayoutForm from "@/app/components/layout-form";
+import InputsCase from "@/app/components/case-input";
 
-export const FormUpdateStoreAdmin = () => {
-    const formRef = useRef<HTMLFormElement | null>(null);
-    const [selectedField, setSelectedField] = useState<string | null>(null);
+const userService = new UserService();
+
+interface IFormUpdateStoreAdminProps {
+    id: string;
+}
+
+export const FormUpdateStoreAdmin = ({ id }: IFormUpdateStoreAdminProps) => {
+    const [loading, setLoading] = useState(false);
     const [stores, setStores] = useState<IStore[]>([]);
-    const [selectedStoreId, setSelectedStoreId] = useState<string>('');
+    const [btnActive, setBtnActive] = useState(false);
+    const [formData, setFormData] = useState({
+        name: "",
+        image_url: "",
+        banner_url: "",
+        description: "",
+        address: "",
+        phone: "",
+    });
 
     useEffect(() => {
         const fetchStore = async () => {
@@ -28,52 +44,41 @@ export const FormUpdateStoreAdmin = () => {
             }
         };
         fetchStore();
-    }, []);
+    }, [stores]);
+
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+
+        setBtnActive(Object.values({ ...formData, [name]: value })
+            .some((inputValue) => inputValue.trim() !== ""));
+    };
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        const form = event.currentTarget;
-        const formData = new FormData(form);
-
-        if (!selectedStoreId) {
-            toast({
-                title: "Erro",
-                description: "Por favor, selecione uma loja para atualizar.",
-                variant: "destructive",
-            });
-            return;
-        }
+        setLoading(true);
 
         const filteredFormData = new FormData();
-        formData.forEach((value, key) => {
+
+        Object.entries(formData).forEach(([key, value]) => {
             if (value) {
                 filteredFormData.append(key, value);
             }
         });
 
-        if (!form.checkValidity()) {
-            toast({
-                title: "Erro",
-                description: "Nenhum campo foi preenchido. Por favor, preencha pelo menos um campo.",
-                variant: "destructive",
-            });
-            return;
-        }
-
         try {
-            const userService = new UserService();
-            await userService.updateStore(selectedStoreId, filteredFormData);
+            await userService.updateStore(id, filteredFormData);
             toast({
                 title: "Sucesso",
                 description: "A loja foi atualizada com sucesso!",
             });
 
-            if (formRef.current) {
-                formRef.current.reset();
-                setSelectedField(null);
-                setSelectedStoreId('');
-            }
         } catch (error) {
             (error);
             toast({
@@ -81,136 +86,72 @@ export const FormUpdateStoreAdmin = () => {
                 description: "Houve um problema ao atualizar a loja. Tente novamente.",
                 variant: "destructive",
             });
-        }
+        } finally {
+            setLoading(false);
+        };
     };
 
     return (
         <>
-            <Toaster />
-            <form onSubmit={handleSubmit} ref={formRef} className="space-y-4 mt-5">
-                <div>
-                    <label className="block text-sm font-medium">Escolha a loja</label>
-                    <select
-                        value={selectedStoreId}
-                        onChange={(e) => setSelectedStoreId(e.target.value)}
-                        className="mt-1 block w-full p-2 border rounded-md"
-                    >
-                        <option value="" disabled>Selecione a loja</option>
-                        {stores.length > 0 ? (
-                            stores.map((store) => (
-                                <option key={store.id} value={store.id}>
-                                    {store.name}
-                                </option>
-                            ))
-                        ) : (
-                            <option value="" disabled>Nenhuma Loja Disponível!</option>
-                        )}
-                    </select>
-                </div>
-                <div>
-                    <label className="block text-sm font-medium">Escolha o campo para editar</label>
-                    <select
-                        className="mt-1 block w-full p-2 border rounded-md"
-                        value={selectedField || ""}
-                        onChange={(e) => setSelectedField(e.target.value)}
-                    >
-                        <option value="" disabled>Selecione um campo</option>
-                        <option value="is_open">Status da Loja</option>
-                        <option value="image_url">Foto da Loja</option>
-                        <option value="banner_url">Banner da Loja</option>
-                        <option value="name">Nome da Loja</option>
-                        <option value="phone">Telefone da Loja</option>
-                        <option value="description">Descrição da Loja</option>
-                        <option value="background_color">Cor da Loja</option>
-                        <option value="background_image">Foto de Fundo</option>
-                    </select>
-                </div>
-
-                {selectedField === "is_open" && (
-                    <div>
-                        <label className="block text-sm font-medium">Loja Aberta?</label>
-                        <select
-                            name="is_open"
-                            className="mt-1 block w-full p-2 border rounded-md"
-                        >
-                            <option value="" disabled>Selecione uma opção</option>
-                            <option value="true">Sim</option>
-                            <option value="false">Não</option>
-                        </select>
-                    </div>
-                )}
-                {selectedField === "image_url" && (
-                    <div>
-                        <label className="block text-sm font-medium">Foto da Loja</label>
-                        <input
-                            type="file"
-                            name="image_url"
-                            className="mt-1 block w-full p-2 border rounded-md"
-                            accept="image/*"
-                        />
-                    </div>
-                )}
-
-                {selectedField === "background_image" && (
-                    <div>
-                        <label className="block text-sm font-medium">Foto da Loja</label>
-                        <input
-                            type="file"
-                            name="background_image"
-                            className="mt-1 block w-full p-2 border rounded-md"
-                            accept="image/*"
-                        />
-                    </div>
-                )}
-
-                {selectedField === "name" && (
-                    <div>
-                        <label className="block text-sm font-medium">Nome da Loja</label>
-                        <input
-                            type="text"
+            <div className="mt-5">
+                <LayoutForm onSubmit={handleSubmit}>
+                    <div className="flex flex-col gap-5">
+                        <InputsCase
+                            label="Nome da Loja"
                             name="name"
-                            className="mt-1 block w-full p-2 border rounded-md"
-                            placeholder="Nome da loja"
-                        />
-                    </div>
-                )}
-
-                {selectedField === "phone" && (
-                    <div>
-                        <label className="block text-sm font-medium">Telefone</label>
-                        <input
                             type="text"
-                            name="phone"
-                            className="mt-1 block w-full p-2 border rounded-md"
-                            placeholder="Telefone"
+                            placeholder="Nome da loja"
+                            onChange={handleChange}
                         />
-                    </div>
-                )}
-
-                {selectedField === "description" && (
-                    <div>
-                        <label className="block text-sm font-medium">Descrição</label>
-                        <textarea
+                        <InputsCase
+                            label="Imagem da Loja"
+                            name="image_url"
+                            type="file"
+                            placeholder="Imagem da loja"
+                            onChange={handleChange}
+                        />
+                        <InputsCase
+                            label="Banner da loja"
+                            name="banner_url"
+                            type="file"
+                            placeholder="Banner da loja"
+                            onChange={handleChange}
+                        />
+                        <InputsCase
+                            label="Descrição"
                             name="description"
-                            className="mt-1 block w-full p-2 border rounded-md"
-                            placeholder="Descrição da loja"
+                            type="text"
+                            placeholder="Descrição"
+                            onChange={handleChange}
                         />
-                    </div>
-                )}
 
-                {selectedField === "background_color" && (
-                    <div>
-                        <label className="block text-sm font-medium">Cor da Loja</label>
-                        <input
-                            type="color"
-                            name="background_color"
-                            className="mt-1 block w-full p-2 border rounded-md h-10"
-                            style={{ width: "200px" }}
+                        <InputsCase
+                            label="Endereço"
+                            name="address"
+                            type="text"
+                            placeholder="Endereço"
+                            onChange={handleChange}
                         />
+                        <InputsCase
+                            label="Telefone"
+                            name="phone"
+                            type="text"
+                            placeholder="Telefone"
+                            onChange={handleChange}
+                        />
+                        <div className="flex justify-end w-60 mt-5">
+                            <Button
+                                disabled={loading || !btnActive}
+                                className={loading ? 'bg-gray-300 cursor-not-allowed' : ''}
+                            >
+                                {loading ? 'Carregando...' : 'Salvar'}
+                            </Button>
+                        </div>
                     </div>
-                )}
-                <Button type="submit" className="w-20">Salvar</Button>
-            </form>
+                </LayoutForm >
+            </div>
+            <Toaster />
         </>
+
     );
 };

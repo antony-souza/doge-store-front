@@ -6,28 +6,28 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { useEffect, useState } from "react";
-import { FormUpdateStore } from "../store/form-store-update";
 import { IStore } from "@/app/util/interfaces-global.service";
 import AdminService from "../services/admin.service";
 import { FormUpdateStoreAdmin } from "./form-update-store";
 import { FormCreateStore } from "./form-create-store";
-import { FormDeleteStores } from "./form-delete-store";
 import withAuth from "@/app/util/withToken";
+import UserService from "../services/user.service";
+import { toast } from "@/hooks/use-toast";
+
+const adminService = new AdminService();
+const userService = new UserService();
 
 function RenderPageStoreAdmin() {
     const [stores, setStore] = useState<IStore[]>([]);
     const [isEditing, setIsEditing] = useState(false);
     const [isCreate, setIsCreate] = useState(false);
     const [isDelete, setIsDelete] = useState(false);
+    const [selectStoreId, setSelectStoreId] = useState<string>('');
 
-    const handleEditClick = () => {
-        setIsEditing(!isEditing);
-    };
     const handleCreateClick = () => {
         setIsCreate(!isCreate);
-    };
-    const handleDeleteClick = () => {
-        setIsDelete(!isDelete);
+        setIsEditing(false);
+        setSelectStoreId('');
     };
 
     useEffect(() => {
@@ -42,7 +42,36 @@ function RenderPageStoreAdmin() {
         };
 
         fetchStore();
-    }, []);
+    }, [stores]);
+
+    const handleEditStore = (id: string) => {
+        setSelectStoreId(id);
+        setIsEditing(true);
+        setIsCreate(false);
+    }
+
+    const handleDeleteStore = async (id: string) => {
+        setSelectStoreId(id);
+
+        try {
+            const response = await adminService.deleteStore(id) as IStore;
+
+            toast({
+                title: "Loja Excluída!",
+                description: `A loja ${response.name} foi deletada com sucesso`,
+                variant: "default"
+            })
+        } catch (error) {
+
+        }
+    };
+
+    const handleBackToTable = () => {
+        setIsEditing(false);
+        setIsCreate(false);
+        setIsDelete(false);
+        setSelectStoreId('');
+    };
 
     return (
         <>
@@ -61,25 +90,12 @@ function RenderPageStoreAdmin() {
                             }
                         />
                         <div className="flex gap-2">
-                            <Button
-                                variant={"destructive"}
-                                className="flex gap-3"
-                                onClick={handleDeleteClick}
-                            >
-                                <span className="material-symbols-outlined">
-                                    {isDelete ? 'arrow_back' : 'delete'}
-                                </span>
-                                {isDelete ? 'Voltar' : 'Excluir Loja'}
-                            </Button>
-                            <Button
-                                className="flex gap-3"
-                                onClick={handleEditClick}
-                            >
-                                <span className="material-symbols-outlined">
-                                    {isEditing ? 'arrow_back' : 'edit'}
-                                </span>
-                                {isEditing ? 'Voltar' : 'Editar Loja'}
-                            </Button>
+                            {isEditing && (
+                                <Button className="flex gap-2" onClick={handleBackToTable}>
+                                    <span className="material-symbols-outlined">arrow_back</span>
+                                    Voltar
+                                </Button>
+                            )}
                             <Button
                                 className="flex gap-3"
                                 onClick={handleCreateClick}
@@ -93,22 +109,21 @@ function RenderPageStoreAdmin() {
                     </div>
 
                     {isEditing ? (
-                        <FormUpdateStoreAdmin />
+                        <FormUpdateStoreAdmin id={selectStoreId} />
                     ) : isCreate ? (
                         <FormCreateStore />
-                    ) : isDelete ? (
-                        <FormDeleteStores />
                     ) : (
                         <Table className="min-w-full mt-4">
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead className="w-[auto]">Imagem</TableHead>
-                                    <TableHead className="w-[auto]">Nome</TableHead>
-                                    <TableHead className="w-[auto]">Status</TableHead>
-                                    <TableHead className="w-[auto]">Cor de Fundo</TableHead>
-                                    <TableHead className="w-[auto]">Telefone</TableHead>
+                                    <TableHead className="w-[100px]">Imagem</TableHead>
+                                    <TableHead className="w-[100px]">Nome</TableHead>
+                                    <TableHead className="w-[100px]">Status</TableHead>
+                                    <TableHead className="w-[100px]">Cor de Fundo</TableHead>
+                                    <TableHead className="w-[100px]">Telefone</TableHead>
                                     <TableHead className="w-[auto]">Endereço</TableHead>
                                     <TableHead className="w-[auto]">Descrição</TableHead>
+                                    <TableHead className="w-[100px]">Ações</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -157,6 +172,22 @@ function RenderPageStoreAdmin() {
                                             <TableCell>{store.phone}</TableCell>
                                             <TableCell>{store.address}</TableCell>
                                             <TableCell>{store.description}</TableCell>
+                                            <TableCell>
+                                                <div className="flex gap-2">
+                                                    <Button
+                                                        variant="outline"
+                                                        onClick={() => handleEditStore(store.id)}
+                                                    >
+                                                        <span className="material-symbols-outlined">edit</span>
+                                                    </Button>
+                                                    <Button
+                                                        variant="destructive"
+                                                        onClick={() => handleDeleteStore(store.id)}
+                                                    >
+                                                        <span className="material-symbols-outlined">delete</span>
+                                                    </Button>
+                                                </div>
+                                            </TableCell>
                                         </TableRow>
                                     ))
                                 ) : (

@@ -4,6 +4,7 @@ import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import AdminService, { IUsers } from "../services/admin.service";
 import { IStore } from "@/app/util/interfaces-global.service";
+import SelectCase from "@/app/components/case-select";
 
 export const FormCreateStore = () => {
     const formRef = useRef<HTMLFormElement | null>(null);
@@ -28,7 +29,7 @@ export const FormCreateStore = () => {
         const adminService = new AdminService();
         const form = event.currentTarget;
         const formData = new FormData(form);
-        
+
         formData.append("user_id", selectedUser);
 
         if (!form.checkValidity()) {
@@ -137,25 +138,17 @@ export const FormCreateStore = () => {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium">Escolha o usuário responsável</label>
-                    <select
-                        className="mt-1 block w-full p-2 border rounded-md"
-                        value={selectedUser}
-                        onChange={(e) => setSelectedUser(e.target.value)}
-                    >
-                        <option value="" disabled>Selecione um usuário</option>
-                        {users.length > 0 ? (
-                            users.map((user) => (
-                                <option key={user.id} value={user.id}>
-                                    {user.name}
-                                </option>
-                            ))
-                        ) : (
-                            <option value="">Nenhum usuário disponível</option>
-                        )}
-                    </select>
+                   <SelectCase 
+                    name="user_id"
+                    label="Escolha o usuário responsável"
+                    value={selectedUser}
+                    options={users.map((user) => ({ value: user.id, label: user.name }))}
+                    onChange={(e) => setSelectedUser(e.target.value)}
+                   />
                 </div>
-                <Button type="submit" className="w-20">Criar</Button>
+                <div className="flex justify-end">
+                    <Button type="submit" className="w-20">Salvar</Button>
+                </div>
             </form>
         </>
     );

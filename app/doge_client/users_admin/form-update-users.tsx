@@ -19,7 +19,6 @@ export interface IUpdateUsersProps {
 }
 
 function FormUpdateUsers({ id }: IUpdateUsersProps) {
-    const [selectedField, setSelectedField] = useState<string | null>(null);
     const [users, setUsers] = useState<IUsers[]>([]);
     const [companies, setCompanies] = useState<IStore[]>([]);
     const [loading, setLoading] = useState(false);
@@ -72,7 +71,7 @@ function FormUpdateUsers({ id }: IUpdateUsersProps) {
             }
         };
         fetchData();
-    }, []);
+    }, [users, companies]);
 
     const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();

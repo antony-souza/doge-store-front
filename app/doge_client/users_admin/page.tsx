@@ -108,12 +108,12 @@ function RenderUserPage() {
                             <Table className="min-w-full mt-4">
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead className="w-[auto]">Foto</TableHead>
-                                        <TableHead className="w-[auto]">Nome</TableHead>
-                                        <TableHead className="w-[auto]">Email</TableHead>
-                                        <TableHead className="w-[auto]">Loja</TableHead>
-                                        <TableHead className="w-[150px]">Acesso</TableHead>
-                                        <TableHead className="w-[150px]">Ações</TableHead>
+                                        <TableHead className="w-[100px]">Foto</TableHead>
+                                        <TableHead className="w-[100px]">Nome</TableHead>
+                                        <TableHead className="w-[100px]">Email</TableHead>
+                                        <TableHead className="w-[100px]">Loja</TableHead>
+                                        <TableHead className="w-[100px]">Acesso</TableHead>
+                                        <TableHead className="w-[100px]">Ações</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
