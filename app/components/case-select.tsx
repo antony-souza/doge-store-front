@@ -8,9 +8,10 @@ interface IOptions {
 interface ISelectProps {
     label: string;
     name: string;
-    value: string;
+    value?: string;
     options: IOptions[];
     onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+    required?: boolean;
 }
 
 const SelectCase: React.FC<ISelectProps> = ({ label, name, value, options, onChange }) => {

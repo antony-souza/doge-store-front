@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import LayoutForm from "@/app/components/layout-form";
 import InputsCase from "@/app/components/case-input";
 import SelectCase from "@/app/components/case-select";
-import { formatPrice } from "@/app/util/formt-price";
 
 interface IFormUpdateProductProps {
     id: string;
@@ -19,7 +18,6 @@ export const FormUpdateProduct = ({ id }: IFormUpdateProductProps) => {
     const [formData, setFormData] = useState({
         name:"",
         image_url: "",
-        banner_url: "",
         price: '',
         description: "",
         category_id: "",
@@ -119,7 +117,7 @@ export const FormUpdateProduct = ({ id }: IFormUpdateProductProps) => {
                         <InputsCase
                             label="Descrição do Produto"
                             name="description"
-                            type="textara"
+                            type="text"
                             value={formData.description}
                             placeholder="Nome do produto"
                             onChange={handleChange}

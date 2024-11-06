@@ -6,7 +6,7 @@ interface IInputProps {
     type?: string;
     placeholder?: string;
     label?: string;
-    value?: string;
+    value?: number | string;
     name?: string;
     minLength?: number;
     required?: boolean;

@@ -20,6 +20,7 @@ function RenderProductPage() {
     const [products, setProducts] = useState<IProduct[]>([]);
     const [isEditing, setIsEditing] = useState(false);
     const [isCreate, setIsCreate] = useState(false);
+    const [isDelete, setIsDelete] = useState(false);
     const [selectProductId, setSelectProductId] = useState<string>("");
 
     useEffect(() => {
@@ -38,7 +39,7 @@ function RenderProductPage() {
         };
 
         fetchProducts();
-    }, [selectProductId]);
+    }, [isEditing, isCreate, isDelete]);
 
     const handleCreateProduct = () => {
         setIsCreate(true);
@@ -58,6 +59,7 @@ function RenderProductPage() {
 
         try {
             await userService.deleteProduct(selectProductId);
+            setIsDelete(true);
             toast({
                 title: "Sucesso",
                 description: "Produto deletado com sucesso!",

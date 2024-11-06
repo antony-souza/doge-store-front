@@ -61,10 +61,11 @@ export interface IFeaturedProducts {
 export interface IUpdateProduct {
     id?: string,
     name?: string,
-    price?: number,
+    price?: string,
     description?: string,
     category?: ICategory,
-    image_url?: string,
+    image_url?: File,
+    category_id?: string,
     featured_products?: boolean,
 }
 
@@ -98,7 +99,7 @@ export default class UserService extends CallAPIService {
         return response;
     }
 
-    async getStore(id:string): Promise<IStore> {
+    async getStore(id: string): Promise<IStore> {
 
         const token = localStorage.getItem('token');
         if (!token) {
@@ -180,7 +181,7 @@ export default class UserService extends CallAPIService {
         return response;
     }
 
-    async createProduct(body: FormData, id: string) {
+    async createProduct(id: string, body: FormData) {
         const token = localStorage.getItem('token');
 
         if (!token) {
@@ -191,7 +192,7 @@ export default class UserService extends CallAPIService {
 
         const callAPIService = new CallAPIService();
 
-        const response = await callAPIService.genericRequest(endpoint, "POST", true, body) as IProduct[];
+        const response = await callAPIService.genericRequest(endpoint, "POST", true, body);
 
         return response;
     }
@@ -244,7 +245,7 @@ export default class UserService extends CallAPIService {
 
     async getAllCategories(id: string) {
         const token = localStorage.getItem('token');
-  
+
         if (!token) {
             throw new Error('Token não encontrado');
         }
