@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
-import UserService, { ICategory, IProduct } from "../services/user.service";
+import UserService, { ICategory, IProduct, IUpdateProduct } from "../services/user.service";
 import { Button } from "@/components/ui/button";
 import LayoutForm from "@/app/components/layout-form";
 import InputsCase from "@/app/components/case-input";
@@ -15,23 +15,18 @@ export const FormUpdateProduct = ({ id }: IFormUpdateProductProps) => {
     const [categories, setCategories] = useState<ICategory[]>([]);
     const [loading, setLoading] = useState(false);
     const [btnActive, setBtnActive] = useState(false);
-    const [formData, setFormData] = useState({
-        name:"",
-        image_url: "",
-        price: '',
-        description: "",
-        category_id: "",
-    })
+    const [name, setName] = useState('');
+    const [imageFile, setImageFile] = useState<File>();
+    const [price, setPrice] = useState('');
+    const [description, setDescription] = useState('');
+    const [category_id, setCategoryId] = useState('');
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-        setBtnActive(Object.values({ ...formData, [name]: value })
-            .some((inputValue) => inputValue.trim() !== ""));
+    const formObject: IUpdateProduct = {
+        name: name,
+        image_url: imageFile,
+        price: price,
+        description: description,
+        category_id: category_id,
     };
 
     useEffect(() => {
@@ -52,15 +47,15 @@ export const FormUpdateProduct = ({ id }: IFormUpdateProductProps) => {
         fetchCategory();
     }, []);
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
 
         setLoading(true);
 
         const productService = new UserService();
         const filteredFormData = new FormData();
 
-        Object.entries(formData).forEach(([key, value]) => {
+        Object.entries(formObject).forEach(([key, value]) => {
             if (value) {
                 filteredFormData.append(key, value);
             }
@@ -80,7 +75,7 @@ export const FormUpdateProduct = ({ id }: IFormUpdateProductProps) => {
                 variant: "destructive",
             });
         }
-        finally{
+        finally {
             setLoading(false);
         }
     };
@@ -95,37 +90,37 @@ export const FormUpdateProduct = ({ id }: IFormUpdateProductProps) => {
                             label="Nome do Produto"
                             name="name"
                             type="text"
-                            value={formData.name}
+                            value={name}
                             placeholder="Nome do produto"
-                            onChange={handleChange}
+                            onChange={(e) => setName(e.target.value)}
                         />
                         <InputsCase
                             label="Foto do Produto"
                             name="image_url"
                             type="file"
                             placeholder="Foto do produto"
-                            onChange={handleChange}
+                            onChange={(e) => setImageFile(e.target.files?.[0] as File)}
                         />
                         <InputsCase
                             label="Preço do Produto"
                             name="price"
                             type="number"
                             placeholder="Preço do produto"
-                            value={formData.price}
-                            onChange={handleChange}
+                            value={price}
+                            onChange={(e) => setPrice(e.target.value)}
                         />
                         <InputsCase
                             label="Descrição do Produto"
                             name="description"
                             type="text"
-                            value={formData.description}
+                            value={description}
                             placeholder="Nome do produto"
-                            onChange={handleChange}
+                            onChange={(e) => setDescription(e.target.value)}
                         />
                         <SelectCase
                             name="category_id"
                             label="Escolha uma categoria"
-                            value={formData.category_id}
+                            value={category_id}
                             options={[
                                 { value: "", label: "Selecione uma categoria" },
                                 ...categories.map((category) => ({
@@ -133,7 +128,7 @@ export const FormUpdateProduct = ({ id }: IFormUpdateProductProps) => {
                                     label: category.name,
                                 })),
                             ]}
-                            onChange={handleChange}
+                            onChange={(e) => setCategoryId(e.target.value)}
                         />
                     </div>
                     <div className="flex justify-end w-60 mt-5">

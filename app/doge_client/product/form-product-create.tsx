@@ -90,7 +90,7 @@ export const FormCreateProduct = () => {
                             label="Imagem do Produto"
                             name="image_url"
                             type="file"
-                            onChange={(e) => setImageFile(e.target.files?.[0] as File)} 
+                            onChange={(e) => setImageFile(e.target.files?.[0] as File)}
                             required
                         />
                         <InputsCase

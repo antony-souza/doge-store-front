@@ -1,145 +1,97 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
-import UserService, { IUpdateProduct } from "../services/user.service";
+import UserService from "../services/user.service";
 import { Button } from "@/components/ui/button";
+import LayoutForm from "@/app/components/layout-form";
+import InputsCase from "@/app/components/case-input";
 
-export const FormUpdateCategory = () => {
-    const formRef = useRef<HTMLFormElement | null>(null);
-    const [selectedCategoryID, setSelectedCategoryId] = useState<string | null>(null);
-    const [selectedField, setSelectedField] = useState<string | null>(null);
-    const [category, setCategory] = useState<IUpdateProduct[]>([]);
+interface IFormUpdateCategoryProps {
+    id: string;
+}
 
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const productService = new UserService();
-                const id = localStorage.getItem("store_id");
-                const response = await productService.getAllCategories(id as string);
-                setCategory(response);
-            } catch (error) {
-            }
-        };
-        fetchCategories();
-    }, []);
+export const FormUpdateCategory = ({ id }: IFormUpdateCategoryProps) => {
+    const [loading, setLoading] = useState(false);
+    const [btnActive, setBtnActive] = useState(false);
+    const [imageUrl, setImageUrl] = useState<File | null>(null);
+    const [name, setName] = useState("");
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    const formObject = {
+        name: name,
+        image_url: imageUrl,
+    };
 
-        const productService = new UserService();
-        const form = event.currentTarget;
-        const formData = new FormData(form);
-        const filteredFormData = new FormData();
-
-        // Adiciona os campos ao FormData, excluindo os vazios
-        formData.forEach((value, key) => {
-            if (value) {
-                filteredFormData.append(key, value);
-            }
-        });
-      
-        if(!form){
-            toast({
-                title: "Erro",
-                description: "Formulário vazio.",
-                variant: "destructive",
-            });
-            return;
-        }
-
-        if (!selectedCategoryID) {
-            toast({
-                title: "Erro",
-                description: "Selecione uma categoria para atualizar.",
-                variant: "destructive",
-            });
-            return;
-        }
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setLoading(true);
 
         try {
-            await productService.updateCategory(filteredFormData, selectedCategoryID);
+            const userService = new UserService();
+            const formData = new FormData();
+
+            Object.entries(formObject).forEach(([key, value]) => {
+                if (value) {
+                    formData.append(key, value);
+                }
+            });
+
+            await userService.updateCategory(formData, id);
 
             toast({
                 title: "Sucesso",
-                description: "A categoria foi atualizado com sucesso!",
+                description: "Categoria atualizada com sucesso!",
+                variant: "default",
             });
-
-            if (formRef.current) {
-                formRef.current.reset();
-            }
-            setSelectedCategoryId(null);
-            setSelectedField(null);
         } catch (error) {
+            console.log(error);
             toast({
                 title: "Erro",
-                description: "Houve um problema ao atualizar a categoria. Tente novamente.",
+                description: "Houve um problema ao atualizar a categoria.",
                 variant: "destructive",
             });
+        } finally {
+            setLoading(false);
         }
     };
 
+    useEffect(() => {
+        if (name || imageUrl) {
+            setBtnActive(true);
+        }
+        setBtnActive(false);
+
+    }, [name, imageUrl]);
+
     return (
         <>
-            <Toaster />
-            <form onSubmit={handleSubmit} ref={formRef} className="space-y-4 mt-5">
-                <div>
-                    <label className="block text-sm font-medium">Escolha a categoria para editar</label>
-                    <select
-                        className="mt-1 block w-full p-2 border rounded-md"
-                        value={selectedCategoryID || ""}
-                        onChange={(e) => setSelectedCategoryId(e.target.value)}
-                    >
-                        <option value="" disabled>Selecione uma categoria</option>
-                        {category.length > 0 ? (
-                            category.map((category, index) => (
-                                <option key={index} value={category.id}>
-                                    {category.name}
-                                </option>
-                            ))
-                        ) : (
-                            <option value="">Nenhuma categoria disponível</option>
-                        )}
-                    </select>
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium">Escolha o campo para editar</label>
-                    <select
-                        className="mt-1 block w-full p-2 border rounded-md"
-                        value={selectedField || ""}
-                        onChange={(e) => setSelectedField(e.target.value)}
-                    >
-                        <option value="" disabled>Selecione um campo</option>
-                        <option value="image_url">Foto da Categoria</option>
-                        <option value="name">Nome da Categoria</option>
-                    </select>
-                </div>
-
-                {selectedField === "image_url" && (
-                    <div>
-                        <label className="block text-sm font-medium">Foto da Categoria</label>
-                        <input
-                            type="file"
-                            name="image_url"
-                            className="mt-1 block w-full p-2 border rounded-md"
-                            accept="image/*"
-                        />
-                    </div>
-                )}
-
-                {selectedField === "name" && (
-                    <div>
-                        <label className="block text-sm font-medium">Nome da Categoria</label>
-                        <input
-                            type="text"
+            <div className="mt-5">
+                <LayoutForm onSubmit={handleSubmit}>
+                    <div className="flex flex-col gap-5">
+                        <InputsCase
+                            label="Nome"
                             name="name"
-                            className="mt-1 block w-full p-2 border rounded-md"
-                            placeholder="Nome do produto"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
                         />
+                        <InputsCase
+                            label="Imagem"
+                            name="image_url"
+                            type="file"
+                            onChange={(e) => setImageUrl(e.target.files?.[0] || null)}
+                        />
+                        <div className="flex justify-end w-60 mt-5">
+                            <Button
+                                type="submit"
+                                disabled={loading || !btnActive}
+                                className={loading ? "bg-gray-300 cursor-not-allowed" : ""}
+                            >
+                                {loading ? "Carregando..." : "Salvar"}
+                            </Button>
+                        </div>
                     </div>
-                )}
-                <Button type="submit" className="w-20">Salvar</Button>
-            </form>
+                </LayoutForm>
+                <Toaster />
+            </div>
         </>
     );
 };

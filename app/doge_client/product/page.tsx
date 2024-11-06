@@ -87,11 +87,7 @@ function RenderProductPage() {
                     <div className="flex justify-between align-middle">
                         <TitlePage
                             name={
-                                isEditing
-                                    ? "Editar Produto"
-                                    : isCreate
-                                        ? "Criar Produto"
-                                        : "Produtos"
+                                isEditing ? "Editar Produto" : isCreate ? "Criar Produto" : "Produtos"
                             }
                         />
                         <div className="flex gap-2">
@@ -108,13 +104,9 @@ function RenderProductPage() {
                             )}
                         </div>
                     </div>
-                    {isEditing && (
-                        <FormUpdateProduct id={selectProductId} />
-                    )}
 
-                    {isCreate && (
-                        <FormCreateProduct />
-                    )}
+                    {isEditing && (<FormUpdateProduct id={selectProductId} />)}
+                    {isCreate && (<FormCreateProduct />)}
 
                     {!isEditing && !isCreate && (
                         <Table className="mt-4">
