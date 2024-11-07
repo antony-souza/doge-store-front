@@ -11,9 +11,11 @@ export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    setLoading(true);
 
     const userService = new UserService();
 
@@ -26,15 +28,19 @@ export default function Auth() {
           description: "Não foi possível autenticar o usuário. Se o problema persistir, entre em contato com o suporte.",
           variant: "destructive",
         });
+
+        setLoading(false);
       }
 
       router.replace('/doge_client/home');
+      setLoading(false);
     } catch (error) {
       toast({
         title: "Falha na autenticação",
         description: "Não foi possível autenticar o usuário, email ou senha incorreto. Se o problema persistir, entre em contato com o suporte.",
         variant: "destructive",
       });
+      setLoading(false);
       (error);
     }
   };
@@ -96,7 +102,11 @@ export default function Auth() {
                 />
               </div>
             </div>
-            <Button type="submit" className="w-full">Entrar</Button>
+            <Button disabled={loading} type="submit" className="w-full">
+              {
+                loading ? "Carregando": "Entrar"
+              }
+            </Button>
             <span
               className="block mt-4 text-center text-sm text-slate-950 hover:text-indigo-400 cursor-pointer">
               Esqueci email / senha
