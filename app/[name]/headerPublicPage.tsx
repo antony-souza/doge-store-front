@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter, usePathname } from "next/navigation"; // usePathname é importante aqui
+import { usePathname, useRouter } from "next/navigation"; // usePathname é importante aqui
 import Link from "next/link";
 import Image from "next/image";
 
@@ -16,8 +16,9 @@ export interface IPropsHeaderPublic {
 
 export default function HeaderPublicPage({ name }: IPropsHeaderPublic) {
     const store = encodeURIComponent(name);
-    const router = useRouter();
+    const router = useRouter()
     const pathname = usePathname(); // Para obter a rota atual
+    const [allowedGoBack, setAllowedGoBack] = useState<boolean>(false);
     const [headerMenu, setHeaderMenu] = useState<HeaderList[]>([
         {
             icon: "arrow_back",
@@ -29,9 +30,19 @@ export default function HeaderPublicPage({ name }: IPropsHeaderPublic) {
 
     const imageUrl = "https://i.imgur.com/fUfBPtY.png";
 
+    useEffect(() => {
+        const split = pathname.split("/");
+
+        if(split.length >= 3){
+            setAllowedGoBack(true)
+        } else {
+            setAllowedGoBack(false)
+        };
+
+    }, [])
+
     const handleRouterBack = () => {
-        const previousUrl = document.referrer;
-        if (previousUrl.includes(store)) {
+        if(allowedGoBack){
             router.back();
         }
     };
@@ -41,15 +52,19 @@ export default function HeaderPublicPage({ name }: IPropsHeaderPublic) {
 
     return (
         <div className="flex fixed w-full justify-between h-14 items-center bg-white p-6 rounded-lg shadow-lg z-10 overflow-hidden">
-            <div className="flex items-center">
-                <Link
-                    href={''}
-                    onClick={handleRouterBack}
-                    className="text-gray-700 hover:text-gray-900 flex items-center"
-                >
-                    <span className="material-symbols-outlined text-xl">{headerMenu[0].icon}</span>
-                </Link>
-            </div>
+            {
+                allowedGoBack ?  
+                    <div className="flex items-center">
+                        <Link
+                            href={''}
+                            onClick={handleRouterBack}
+                            className="text-gray-700 hover:text-gray-900 flex items-center"
+                        >
+                            <span className="material-symbols-outlined text-xl">{headerMenu[0].icon}</span>
+                        </Link>
+                    </div> : undefined
+            }
+           
             <div className="flex items-center justify-center flex-1">
                 <Image
                     src={imageUrl}
@@ -64,7 +79,7 @@ export default function HeaderPublicPage({ name }: IPropsHeaderPublic) {
                 {isOnCartPage ? (
                     <div className="text-gray-700 flex items-center cursor-default">
                         <span className="material-symbols-outlined text-xl">{headerMenu[1].icon}</span>
-                        <span className="ml-2">{headerMenu[1].name}</span>
+                        <span>{headerMenu[1].name}</span>
                     </div>
                 ) : (
                     <Link
@@ -72,7 +87,7 @@ export default function HeaderPublicPage({ name }: IPropsHeaderPublic) {
                         className="text-gray-700 hover:text-gray-900 flex items-center"
                     >
                         <span className="material-symbols-outlined text-xl">{headerMenu[1].icon}</span>
-                        <span className="ml-2">{headerMenu[1].name}</span>
+                        <span>{headerMenu[1].name}</span>
                     </Link>
                 )}
             </div>
