@@ -36,7 +36,7 @@ function RenderStoreUserPage() {
         };
 
         fetchStore();
-    }, [stores]);
+    }, []);
 
     const handleEditStore = (id: string) => {
         setSelectStoreId(id);

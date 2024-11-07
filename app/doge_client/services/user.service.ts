@@ -28,6 +28,7 @@ export interface ICategory {
     id: string,
     name: string,
     image_url: string,
+    imageFile: File | null,
     store: IStore
     product: IProduct[]
 }
@@ -255,9 +256,6 @@ export default class UserService extends CallAPIService {
 
         const callAPIService = new CallAPIService();
         const response = await callAPIService.genericRequest(endpoint, "GET", true) as ICategory[];
-
-        /*         localStorage.setItem('category', JSON.stringify(response));
-                localStorage.setItem('categoryTimestamp', currentTime.toString()); */
 
         return response;
     }

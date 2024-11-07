@@ -56,11 +56,6 @@ function CategoryPage() {
             const userService = new UserService();
             await userService.deleteCategory(id);
             setIsDelete(false);
-            toast({
-                title: "Sucesso",
-                description: "Categoria excluída com sucesso!",
-                variant: "default",
-            });
         } catch (error) {
             setIsDelete(false);
             toast({
@@ -141,9 +136,10 @@ function CategoryPage() {
                                                 </Button>
                                                 <Button
                                                     variant="destructive"
+                                                    disabled={isDelete === true}
                                                     onClick={() => handleDeleteCategory(categoryItem.id)}
                                                 >
-                                                    <span className="material-symbols-outlined">delete</span>
+                                                    <span className="material-symbols-outlined">{isDelete ? 'auto_delete' : 'delete'}</span>
                                                 </Button>
                                             </div>
                                         </TableCell>

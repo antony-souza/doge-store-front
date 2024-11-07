@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import { useEffect, useState } from "react";
-import { IStore } from "@/app/util/interfaces-global.service";
 import withAuth from "@/app/util/withToken";
 import UserService, { IProduct } from "../services/user.service";
 import { toast } from "@/hooks/use-toast";

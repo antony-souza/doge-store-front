@@ -13,7 +13,7 @@ interface IFormUpdateCategoryProps {
 export const FormUpdateCategory = ({ id }: IFormUpdateCategoryProps) => {
     const [loading, setLoading] = useState(false);
     const [btnActive, setBtnActive] = useState(false);
-    const [imageUrl, setImageUrl] = useState<File | null>(null);
+    const [imageUrl, setImageUrl] = useState<File>();
     const [name, setName] = useState("");
 
     const formObject = {
@@ -58,7 +58,9 @@ export const FormUpdateCategory = ({ id }: IFormUpdateCategoryProps) => {
         if (name || imageUrl) {
             setBtnActive(true);
         }
-        setBtnActive(false);
+        else {
+            setBtnActive(false);
+        }
 
     }, [name, imageUrl]);
 
@@ -77,7 +79,7 @@ export const FormUpdateCategory = ({ id }: IFormUpdateCategoryProps) => {
                             label="Imagem"
                             name="image_url"
                             type="file"
-                            onChange={(e) => setImageUrl(e.target.files?.[0] || null)}
+                            onChange={(e) => setImageUrl(e.target.files?.[0])}
                         />
                         <div className="flex justify-end w-60 mt-5">
                             <Button

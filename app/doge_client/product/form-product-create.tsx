@@ -10,11 +10,12 @@ import SelectCase from "@/app/components/case-select";
 export const FormCreateProduct = () => {
     const [categories, setCategories] = useState<ICategory[]>([]);
     const [name, setName] = useState('');
-    const [imageFile, setImageFile] = useState<File>();
+    const [imageFile, setImageFile] = useState<File | null>(null);
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
     const [categoryId, setCategoryId] = useState('');
     const [loading, setLoading] = useState(false);
+    const [btnActive, setBtnActive] = useState(false);
 
     useEffect(() => {
         const fetchCategory = async () => {
@@ -70,6 +71,15 @@ export const FormCreateProduct = () => {
             setLoading(false);
         }
     };
+    useEffect(() => {
+        if (name || imageFile || price || description || categoryId) {
+            setBtnActive(true);
+        }
+        else {
+            setBtnActive(false);
+        }
+
+    }, [name, imageFile, price, description, categoryId]);
 
     return (
         <>
@@ -128,7 +138,7 @@ export const FormCreateProduct = () => {
                     </div>
                     <div className="flex justify-end w-60 mt-5">
                         <Button
-                            disabled={loading}
+                            disabled={loading || !btnActive}
                             className={loading ? 'bg-gray-300 cursor-not-allowed' : ''}
                         >
                             {loading ? 'Carregando...' : 'Salvar'}
