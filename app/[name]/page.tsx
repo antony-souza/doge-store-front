@@ -106,7 +106,10 @@ export default function PublicPage({ params }: IPublicPageProps) {
     <>
       <div className="flex flex-col gap-12">
         <Toaster />
-        <HeaderPublicPage name={stores.length > 0 ? stores[0].name : 'notfound'}/>
+        <HeaderPublicPage
+          name={stores.length > 0 ? stores[0].name : 'notfound'}
+          cartItemCount={arrayCartSessionStorange.length}
+        />
         {stores.length > 0 ? (
           stores.map((store) => (
             <div key={store.id} className="relative mb-12">

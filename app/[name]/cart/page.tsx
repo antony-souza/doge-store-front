@@ -42,7 +42,7 @@ export default function CartPage({ name }: IPropsHeaderPublic) {
     }, []);
 
     const handleQuantityChange = (productId: string, value: number) => {
-        const cardList = products.map((item) => {
+        const cartList = products.map((item) => {
             if (item.id === productId) {
                 item.quantity = value;
                 item.total = item.price * value;
@@ -53,8 +53,8 @@ export default function CartPage({ name }: IPropsHeaderPublic) {
             }
         });
 
-        setProducts(cardList);
-        calculateTotalCart(cardList);
+        setProducts(cartList);
+        calculateTotalCart(cartList);
     };
 
     const calculateTotalCart = (productList: IProductStore[]) => {
@@ -70,7 +70,7 @@ export default function CartPage({ name }: IPropsHeaderPublic) {
     return (
         <>
             <Toaster />
-            <HeaderPublicPage name={"DuckEnterprise"} />
+            <HeaderPublicPage name={"DuckEnterprise"} cartItemCount={products.length} />
             <div className="flex flex-col gap-12 max-w-lg mx-auto px-4 pb-10">
                 <div>
                     <div className="flex flex-col mt-28 text-xl bg-white p-3 rounded shadow">
