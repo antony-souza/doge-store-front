@@ -76,7 +76,6 @@ export default function CartPage({ name }: IPropsHeaderPublic) {
                     <div className="flex flex-col mt-28 text-xl bg-white p-3 rounded shadow">
                         <h1>Simulação de Pagamentos</h1>
                     </div>
-
                     {
                         loading ?
                             <div className="text-center mt-4">
