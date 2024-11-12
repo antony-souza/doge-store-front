@@ -33,7 +33,7 @@ function RenderFeaturedProducts() {
                 <div className="flex justify-between align-middle">
                     <TitlePage name={'Produtos em Destaque'} />
                 </div>
-                <Table className="min-w-full mt-4">
+                <Table className="mt-4">
                     <TableHeader>
                         <TableRow>
                             <TableHead className="w-[auto]">Foto</TableHead>
@@ -50,7 +50,7 @@ function RenderFeaturedProducts() {
                                     <TableCell className="font-medium">
                                         <Avatar>
                                             <AvatarImage
-                                                className="rounded-full w-auto h-12 border-2"
+                                                className="rounded-full w-12 h-12 border-2"
                                                 src={product.image_url || ""}
                                                 alt={product.name || "Imagem do produto"}
                                             />

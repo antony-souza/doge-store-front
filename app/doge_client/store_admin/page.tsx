@@ -9,13 +9,10 @@ import { useEffect, useState } from "react";
 import { IStore } from "@/app/util/interfaces-global.service";
 import AdminService from "../services/admin.service";
 import { FormUpdateStoreAdmin } from "./form-update-store";
-import { FormCreateStore } from "./form-create-store";
 import withAuth from "@/app/util/withToken";
 import UserService from "../services/user.service";
 import { toast } from "@/hooks/use-toast";
-
-const adminService = new AdminService();
-const userService = new UserService();
+import FormCreateStoreAdmin from "./form-create-store";
 
 function RenderPageStoreAdmin() {
     const [stores, setStore] = useState<IStore[]>([]);
@@ -42,7 +39,7 @@ function RenderPageStoreAdmin() {
         };
 
         fetchStore();
-    }, [stores]);
+    }, [isEditing, isCreate, isDelete]);
 
     const handleEditStore = (id: string) => {
         setSelectStoreId(id);
@@ -54,6 +51,7 @@ function RenderPageStoreAdmin() {
         setSelectStoreId(id);
 
         try {
+            const adminService = new AdminService();
             const response = await adminService.deleteStore(id) as IStore;
 
             toast({
@@ -77,7 +75,7 @@ function RenderPageStoreAdmin() {
         <>
             <LayoutDashboard dashboardConfig={{ isSidebarOpenProps: false }}>
                 <LayoutPage>
-                    <div className="flex justify-between align-middle">
+                    <div className="flex justify-between">
                         <TitlePage
                             name={
                                 isEditing
@@ -107,13 +105,10 @@ function RenderPageStoreAdmin() {
                             </Button>
                         </div>
                     </div>
-
-                    {isEditing ? (
-                        <FormUpdateStoreAdmin id={selectStoreId} />
-                    ) : isCreate ? (
-                        <FormCreateStore />
-                    ) : (
-                        <Table className="min-w-full mt-4">
+                    {isEditing && <FormUpdateStoreAdmin id={selectStoreId} />}
+                    {isCreate && <FormCreateStoreAdmin />}
+                    {!isEditing && !isCreate && (
+                        <Table className="mt-4">
                             <TableHeader>
                                 <TableRow>
                                     <TableHead className="w-[100px]">Imagem</TableHead>
@@ -142,32 +137,6 @@ function RenderPageStoreAdmin() {
                                             <TableCell>{store.name}</TableCell>
                                             <TableCell>{store.open_time}</TableCell>
                                             <TableCell>{store.close_time}</TableCell>
-                                            {/* <TableCell>
-                                                <div style={{ position: 'relative', width: '100px', height: '30px' }}>
-                                                    <div
-                                                        style={{
-                                                            backgroundColor: store.background_color,
-                                                            width: '100%',
-                                                            height: '100%',
-                                                            borderRadius: '4px',
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center',
-                                                        }}
-                                                    >
-                                                        <span
-                                                            style={{
-                                                                color: '#fff',
-                                                                fontWeight: 'bold',
-                                                                fontSize: '12px',
-                                                                textAlign: 'center',
-                                                            }}
-                                                        >
-                                                            {store.background_color}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </TableCell> */}
                                             <TableCell>{store.phone}</TableCell>
                                             <TableCell>{store.address}</TableCell>
                                             <TableCell>{store.description}</TableCell>

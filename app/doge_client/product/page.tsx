@@ -103,10 +103,8 @@ function RenderProductPage() {
                             )}
                         </div>
                     </div>
-
                     {isEditing && (<FormUpdateProduct id={selectProductId} />)}
                     {isCreate && (<FormCreateProduct />)}
-
                     {!isEditing && !isCreate && (
                         <Table className="mt-4">
                             <TableHeader>

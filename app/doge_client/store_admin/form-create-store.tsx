@@ -1,15 +1,39 @@
-import { useEffect, useRef, useState } from "react";
-import { Toaster } from "@/components/ui/toaster";
+'use client';
+import { IStore, IUpdateStore } from "@/app/util/interfaces-global.service";
+import { useEffect, useState } from "react";
+import UserService from "../services/user.service";
 import { toast } from "@/hooks/use-toast";
-import { Button } from "@/components/ui/button";
+import LayoutForm from "@/app/components/layout-form";
+import InputsCase from "@/app/components/case-input";
 import AdminService, { IUsers } from "../services/admin.service";
-import { IStore } from "@/app/util/interfaces-global.service";
+import { Button } from "@/components/ui/button";
 import SelectCase from "@/app/components/case-select";
 
-export const FormCreateStore = () => {
-    const formRef = useRef<HTMLFormElement | null>(null);
+const FormCreateStoreAdmin = () => {
+    const [loading, setLoading] = useState(false);
+    const [btnActive, setBtnActive] = useState(false);
+    const [name, setName] = useState("");
+    const [phone, setPhone] = useState("");
+    const [open_time, setOpenTime] = useState("");
+    const [close_time, setCloseTime] = useState("");
+    const [address, setAddress] = useState("");
+    const [image_url, setImageUrl] = useState<File | null>(null);
+    const [banner_url, setBannerUrl] = useState<File | null>(null);
+    const [description, setDescription] = useState("");
+    const [userId, setUserId] = useState("");
     const [users, setUsers] = useState<IUsers[]>([]);
-    const [selectedUser, setSelectedUser] = useState<string>("");
+
+    const formObejct = {
+        name: name,
+        phone: phone,
+        open_time: open_time,
+        close_time: close_time,
+        address: address,
+        image_url: image_url,
+        banner_url: banner_url,
+        description: description,
+        user_id: userId,
+    }
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -18,138 +42,152 @@ export const FormCreateStore = () => {
                 const response = await adminService.getAllUsers();
                 setUsers(response);
             } catch (error) {
+                toast({
+                    title: "Erro",
+                    description: "Houve um problema ao buscar os usuários.",
+                    variant: "destructive",
+                });
             }
         };
         fetchUsers();
     }, []);
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        setLoading(true);
 
-        const adminService = new AdminService();
-        const form = event.currentTarget;
-        const formData = new FormData(form);
+        const formData = new FormData();
 
-        formData.append("user_id", selectedUser);
-
-        if (!form.checkValidity()) {
-            toast({
-                title: "Erro - Campos obrigatórios",
-                description: "Por favor, preencha todos os campos obrigatórios.",
-                variant: "destructive",
-            });
-            return;
-        }
+        Object.entries(formObejct).forEach(([key, value]) => {
+            if(value){
+                formData.append(key, value);
+            }
+        })
 
         try {
+            const adminService = new AdminService();
             await adminService.createStore(formData);
 
             toast({
-                title: "Sucesso",
-                description: "A loja foi criada com sucesso!",
-                variant: "default",
-            });
+                title: "Sucesso!",
+                description: "Loja criada com sucesso.",
+                variant: "default"
+            })
 
-            if (formRef.current) {
-                formRef.current.reset();
-            }
-            setSelectedUser(""); // Resetar o usuário selecionado após o envio
         } catch (error) {
-            (error);
+            console.log(error);
             toast({
                 title: "Erro",
-                description: "Houve um problema ao criar a loja. Tente novamente.",
+                description: "Houve um problema ao criar a loja.",
                 variant: "destructive",
             });
+        } finally {
+            setLoading(false);
         }
+
     };
+    useEffect(() => {
+        if (name || phone || open_time || close_time || address || image_url || description || banner_url) {
+            setBtnActive(true);
+        } else {
+            setBtnActive(false);
+        }
+    }, [name, phone, open_time, close_time, address, image_url, description, banner_url]);
 
     return (
         <>
-            <Toaster />
-            <form onSubmit={handleSubmit} ref={formRef} className="space-y-4 mt-5" noValidate>
-                <div>
-                    <label className="block text-sm font-medium">Foto da Loja</label>
-                    <input
-                        type="file"
-                        name="image_url"
-                        className="mt-1 block w-full p-2 border rounded-md"
-                        accept="image/*"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium">Banner de Fundo</label>
-                    <input
-                        type="file"
-                        name="banner_url"
-                        className="mt-1 block w-full p-2 border rounded-md"
-                        accept="image/*"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium">Nome da Loja</label>
-                    <input
-                        type="text"
-                        name="name"
-                        className="mt-1 block w-full p-2 border rounded-md"
-                        placeholder="Nome da loja"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium">Telefone</label>
-                    <input
-                        type="text"
-                        name="phone"
-                        className="mt-1 block w-full p-2 border rounded-md"
-                        placeholder="Telefone da loja"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium">Endereço</label>
-                    <input
-                        type="text"
-                        name="address"
-                        className="mt-1 block w-full p-2 border rounded-md"
-                        placeholder="Endereço da loja"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium">Descrição</label>
-                    <textarea
-                        name="description"
-                        className="mt-1 block w-full p-2 border rounded-md"
-                        placeholder="Descrição da loja"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium">Cor da Loja</label>
-                    <input
-                        type="color"
-                        name="background_color"
-                        className="mt-1 block w-full p-2 border rounded-md h-10"
-                        style={{ width: "200px" }}
-                    />
-                </div>
-
-                <div>
-                   <SelectCase 
-                    name="user_id"
-                    label="Escolha o usuário responsável"
-                    value={selectedUser}
-                    options={users.map((user) => ({ value: user.id, label: user.name }))}
-                    onChange={(e) => setSelectedUser(e.target.value)}
-                   />
-                </div>
-                <div className="flex justify-end">
-                    <Button type="submit" className="w-20">Salvar</Button>
-                </div>
-            </form>
+            <div className="pt-5">
+                <LayoutForm onSubmit={handleSubmit}>
+                    <div className="flex flex-col gap-5">
+                        <InputsCase
+                            label="Nome"
+                            name="name"
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                        />
+                        <InputsCase
+                            label="Foto da Loja"
+                            name="image_url"
+                            type="file"
+                            onChange={(e) => setImageUrl(e.target.files?.[0] as File)}
+                            required
+                        />
+                        <InputsCase
+                            label="Banner da Loja"
+                            name="banner_url"
+                            type="file"
+                            onChange={(e) => setBannerUrl(e.target.files?.[0] as File)}
+                            required
+                        />
+                        <InputsCase
+                            label="Horário de Abertura"
+                            name="open_time"
+                            type="time"
+                            value={open_time}
+                            onChange={(e) => setOpenTime(e.target.value)}
+                            required
+                        />
+                        <InputsCase
+                            label="Horário de Fechamento"
+                            name="close_time"
+                            type="time"
+                            value={close_time}
+                            onChange={(e) => setCloseTime(e.target.value)}
+                            required
+                        />
+                        <InputsCase
+                            label="Endereço"
+                            name="address"
+                            type="text"
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)}
+                            required
+                        />
+                        <InputsCase
+                            label="Telefone"
+                            name="phone"
+                            type="text"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            required
+                        />
+                        <InputsCase
+                            label="Descrição"
+                            name="description"
+                            type="text"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            required
+                        />
+                        <SelectCase
+                            name="user_id"
+                            label="Escolha um usuário"
+                            value={userId}
+                            options={[
+                                { value: "", label: "Selecione um usuário" },
+                                ...users.map((user) => ({
+                                    value: user.id,
+                                    label: user.name,
+                                })),
+                            ]}
+                            onChange={(e) => setUserId(e.target.value)}
+                            required
+                        />
+                        <div className="flex justify-end w-60 mt-5">
+                            <Button
+                                disabled={loading || !btnActive}
+                                className={loading ? 'bg-gray-300 cursor-not-allowed' : ''}
+                            >
+                                {loading ? 'Carregando...' : 'Salvar'}
+                            </Button>
+                        </div>
+                    </div>
+                </LayoutForm>
+            </div>
         </>
-    );
+    )
 };
+
+export default FormCreateStoreAdmin;

@@ -72,7 +72,7 @@ export default class AdminService extends CallAPIService {
         return response;
     }
 
-    async createStore(body: FormData){
+    async createStore(body: FormData): Promise<IStore>{
         const token = localStorage.getItem("token");
 
         if(!token){
@@ -83,7 +83,7 @@ export default class AdminService extends CallAPIService {
         const endpoint = "/store/create";
 
         const response = await callAPIService.genericRequest(endpoint, "POST", true, body);
-
+        
         return response;
     }
     async deleteStore(id: string){

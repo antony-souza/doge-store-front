@@ -213,7 +213,6 @@ export default function PublicPage({ params }: IPublicPageProps) {
                               </div>
                               <div className="mt-4 flex justify-center flex-col gap-4">
                                 {renderAddToCartButton(product.id)}
-                                <Button variant="outline">Detalhes</Button>
                               </div>
                             </div>
                           ))

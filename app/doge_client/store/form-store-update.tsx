@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
 import UserService from "../services/user.service";
@@ -63,9 +63,17 @@ export const FormUpdateStore = ({ id }: IFormUpdateStoreProps) => {
                 description: "Não foi possível atualizar a loja.",
                 variant: "destructive"
             })
+        } finally {
+            setLoading(false);
         }
     };
-
+    useEffect(() => {
+        if (name || phone || open_time || close_time || address || image_url || description || banner_url) {
+            setBtnActive(true);
+        } else {
+            setBtnActive(false);
+        }
+    }, [name, phone, open_time, close_time, address, image_url, description, banner_url]);
     return (
         <>
             <div className="mt-5">

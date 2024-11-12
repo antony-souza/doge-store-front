@@ -17,6 +17,14 @@ export const FormCreateProduct = () => {
     const [loading, setLoading] = useState(false);
     const [btnActive, setBtnActive] = useState(false);
 
+    const formObejct = {
+        name: name,
+        image_url: imageFile,
+        price: price,
+        description: description,
+        category_id: categoryId,
+    };
+
     useEffect(() => {
         const fetchCategory = async () => {
             try {
@@ -42,11 +50,11 @@ export const FormCreateProduct = () => {
         const productService = new UserService();
         const formData = new FormData();
 
-        formData.append('name', name);
-        formData.append('image_url', imageFile as File);
-        formData.append('price', price);
-        formData.append('description', description);
-        formData.append('category_id', categoryId);
+        Object.entries(formObejct).forEach(([key, value]) => {
+            if (value) {
+                formData.append(key, value);
+            }
+        })
 
         const storeId = localStorage.getItem("store_id") as string;
         if (storeId) {

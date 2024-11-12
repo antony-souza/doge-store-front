@@ -36,7 +36,7 @@ function RenderStoreUserPage() {
         };
 
         fetchStore();
-    }, []);
+    }, [isEditing]);
 
     const handleEditStore = (id: string) => {
         setSelectStoreId(id);
@@ -83,14 +83,14 @@ function RenderStoreUserPage() {
                         <Table className="min-w-full mt-4">
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead className="w-[100px]">Imagem</TableHead>
-                                    <TableHead className="w-[100px]">Nome</TableHead>
-                                    <TableHead className="w-[100px]">Status</TableHead>
-                                    <TableHead className="w-[100px]">Cor de Fundo</TableHead>
-                                    <TableHead className="w-[100px]">Telefone</TableHead>
+                                    <TableHead className="w-[auto]">Imagem</TableHead>
+                                    <TableHead className="w-[auto]">Nome</TableHead>
+                                    <TableHead className="w-[auto]">Horário de Abertura</TableHead>
+                                    <TableHead className="w-[auto]">Horário de Fechamento</TableHead>
+                                    <TableHead className="w-[auto]">Telefone</TableHead>
                                     <TableHead className="w-[auto]">Endereço</TableHead>
                                     <TableHead className="w-[auto]">Descrição</TableHead>
-                                    <TableHead className="w-[100px]">Ações</TableHead>
+                                    <TableHead className="w-[auto]">Ações</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -106,35 +106,8 @@ function RenderStoreUserPage() {
                                             </Avatar>
                                         </TableCell>
                                         <TableCell>{stores.name}</TableCell>
-                                        <TableCell className={stores.is_open ? "text-green-500" : "text-red-500"}>
-                                            {stores.is_open ? "Aberto" : "Fechado"}
-                                        </TableCell>
-                                        <TableCell>
-                                            <div style={{ position: 'relative', width: '100px', height: '30px' }}>
-                                                <div
-                                                    style={{
-                                                        backgroundColor: stores.background_color,
-                                                        width: '100%',
-                                                        height: '100%',
-                                                        borderRadius: '4px',
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                    }}
-                                                >
-                                                    <span
-                                                        style={{
-                                                            color: '#fff',
-                                                            fontWeight: 'bold',
-                                                            fontSize: '12px',
-                                                            textAlign: 'center',
-                                                        }}
-                                                    >
-                                                        {stores.background_color}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </TableCell>
+                                        <TableCell>{stores.open_time}</TableCell>
+                                        <TableCell>{stores.close_time}</TableCell>
                                         <TableCell>{stores.phone}</TableCell>
                                         <TableCell>{stores.address}</TableCell>
                                         <TableCell>{stores.description}</TableCell>
