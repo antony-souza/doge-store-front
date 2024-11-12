@@ -12,6 +12,7 @@ import { toast } from "@/hooks/use-toast";
 import { ICategory, IProduct } from "../doge_client/services/user.service";
 import HeaderPublicPage from "./headerPublicPage";
 import checkHour from "../util/checkHour";
+import { Copyright } from "./cop";
 
 export default function PublicPage({ params }: IPublicPageProps) {
   const { name } = params;
@@ -162,48 +163,16 @@ export default function PublicPage({ params }: IPublicPageProps) {
                           <p className="font-bold text-gray-800">Contato:</p>
                           <p className="text-gray-600">{store.phone}</p>
                         </div>
+                        <div className="flex flex-row flex-wrap items-center gap-2 mt-2">
+                          <span className="material-symbols-outlined">schedule</span>
+                          <p className="font-bold text-gray-800">Horários:</p>
+                          <p className="text-gray-600">{store.open_time} ás {store.close_time}</p>
+                        </div>
                       </div>
                     )}
                   </div>
                 </div>
               </section>
-
-              <section>
-                {category.length > 0 ? (
-                  <section className="bg-gray-100 p-6">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                      <h1 className="text-2xl font-semibold mb-6">Categorias</h1>
-                      {/* Contêiner com overflow para deslizar as categorias */}
-                      <div className="overflow-x-auto">
-                        <div
-                          className="grid grid-flow-col gap-4"
-                          style={{
-                            gridAutoColumns: "minmax(125px, 1fr)",
-                          }}
-                        >
-                          {category.map((cat) => (
-                            <div key={cat.id} className="bg-white p-4 rounded-lg shadow-lg flex flex-col justify-center items-center">
-                              <Avatar>
-                                <AvatarImage
-                                  src={cat.image_url}
-                                  alt={cat.name}
-                                  className="rounded-lg w-20 h-20 object-cover"
-                                />
-                              </Avatar>
-                              <h2 className="font-semibold mt-2">{cat.name}</h2>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </section>
-                ) : (
-                  <div className="flex justify-center items-center h-20">
-                    <Skeleton className="h-3 w-20" />
-                  </div>
-                )}
-              </section>
-
               <section className="mt-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h1 className="text-2xl font-semibold mb-6">Produtos em destaque</h1>
 
@@ -255,6 +224,41 @@ export default function PublicPage({ params }: IPublicPageProps) {
                   </div>
                 </div>
               </section>
+              <section>
+                {category.length > 0 ? (
+                  <section className="bg-gray-100 p-6">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                      <h1 className="text-2xl font-semibold mb-6">Categorias</h1>
+                      {/* Contêiner com overflow para deslizar as categorias */}
+                      <div className="overflow-x-auto">
+                        <div
+                          className="grid grid-flow-col gap-4"
+                          style={{
+                            gridAutoColumns: "minmax(125px, 1fr)",
+                          }}
+                        >
+                          {category.map((cat) => (
+                            <div key={cat.id} className="bg-white p-4 rounded-lg shadow-lg flex flex-col justify-center items-center">
+                              <Avatar>
+                                <AvatarImage
+                                  src={cat.image_url}
+                                  alt={cat.name}
+                                  className="rounded-lg w-20 h-20 object-cover"
+                                />
+                              </Avatar>
+                              <h2 className="font-semibold mt-2">{cat.name}</h2>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                ) : (
+                  <div className="flex justify-center items-center h-20">
+                    <Skeleton className="h-3 w-20" />
+                  </div>
+                )}
+              </section>
 
               <section className="mt-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h1 className="text-2xl font-semibold mb-6">Produtos</h1>
@@ -287,7 +291,6 @@ export default function PublicPage({ params }: IPublicPageProps) {
                           </div>
                           <div className="mt-4 flex justify-center flex-col gap-4">
                             {renderAddToCartButton(product.id)}
-                            <Button variant="outline">Detalhes</Button>
                           </div>
                         </div>
                       ))
@@ -297,6 +300,7 @@ export default function PublicPage({ params }: IPublicPageProps) {
                   </div>
                 </div>
               </section>
+              <Copyright />
             </div>
           ))
         ) : (
