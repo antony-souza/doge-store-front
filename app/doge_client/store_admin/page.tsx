@@ -118,8 +118,8 @@ function RenderPageStoreAdmin() {
                                 <TableRow>
                                     <TableHead className="w-[100px]">Imagem</TableHead>
                                     <TableHead className="w-[100px]">Nome</TableHead>
-                                    <TableHead className="w-[100px]">Status</TableHead>
-                                    <TableHead className="w-[100px]">Cor de Fundo</TableHead>
+                                    <TableHead className="w-[100px]">Horário de Abertura</TableHead>
+                                    <TableHead className="w-[100px]">Horário de Fechamento</TableHead>
                                     <TableHead className="w-[100px]">Telefone</TableHead>
                                     <TableHead className="w-[auto]">Endereço</TableHead>
                                     <TableHead className="w-[auto]">Descrição</TableHead>
@@ -140,10 +140,9 @@ function RenderPageStoreAdmin() {
                                                 </Avatar>
                                             </TableCell>
                                             <TableCell>{store.name}</TableCell>
-                                            <TableCell className="text-green-500">
-                                                {store.is_open ? "Aberto" : "Fechado"}
-                                            </TableCell>
-                                            <TableCell>
+                                            <TableCell>{store.open_time}</TableCell>
+                                            <TableCell>{store.close_time}</TableCell>
+                                            {/* <TableCell>
                                                 <div style={{ position: 'relative', width: '100px', height: '30px' }}>
                                                     <div
                                                         style={{
@@ -168,7 +167,7 @@ function RenderPageStoreAdmin() {
                                                         </span>
                                                     </div>
                                                 </div>
-                                            </TableCell>
+                                            </TableCell> */}
                                             <TableCell>{store.phone}</TableCell>
                                             <TableCell>{store.address}</TableCell>
                                             <TableCell>{store.description}</TableCell>

@@ -6,7 +6,7 @@ interface IInputProps {
     type?: string;
     placeholder?: string;
     label?: string;
-    value?: number | string;
+    value?: string | number;
     name?: string;
     minLength?: number;
     required?: boolean;
@@ -29,6 +29,7 @@ const InputsCase: React.FC<IInputProps> = ({ type, name, value, label, placehold
                     placeholder={placeholder}
                     required={required}
                     onChange={onChange}
+                    
                 />
             </div>
         </>

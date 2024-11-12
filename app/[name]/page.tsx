@@ -10,8 +10,8 @@ import { formatPrice } from "../util/formt-price";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
 import { ICategory, IProduct } from "../doge_client/services/user.service";
-import { Copyright } from "./cop";
 import HeaderPublicPage from "./headerPublicPage";
+import checkHour from "../util/checkHour";
 
 export default function PublicPage({ params }: IPublicPageProps) {
   const { name } = params;
@@ -102,6 +102,7 @@ export default function PublicPage({ params }: IPublicPageProps) {
       {isInCart[id] ? " Adicionado" : " Adicionar ao Carrinho"}
     </Button>
   );
+
   return (
     <>
       <div className="flex flex-col gap-12">
@@ -135,11 +136,9 @@ export default function PublicPage({ params }: IPublicPageProps) {
                   <h1 className="text-3xl font-bold mt-4 text-gray-800">{store.name}</h1>
                   <div className="flex flex-col items-center">
                     <div className="flex items-center justify-center space-x-2 mt-2">
-                      <p className={`text-lg flex items-center ${store.is_open ? 'text-green-500' : 'text-red-500'}`}>
-                        {store.is_open ? 'Aberto agora' : 'Fechado no momento'}
-                        <span
-                          className={`ml-2 w-2 h-2 inline-block rounded-full ${store.is_open ? 'bg-green-500' : 'bg-red-500'}`}
-                        />
+                      <span className="material-symbols-outlined">schedule</span>
+                      <p className={checkHour({ open_time: store.open_time, close_time: store.close_time }) ? 'text-green-500' : 'text-red-500'}>
+                        {checkHour({ open_time: store.open_time, close_time: store.close_time }) ? 'Aberto' : 'Fechado'}
                       </p>
                     </div>
                     <Button variant="outline" className="mt-4" onClick={() => setMoreInfo(!moreInfo)}>

@@ -71,7 +71,7 @@ function RenderUserPage() {
         };
 
         fetchUsers();
-    }, [users]);
+    }, []);
 
     return (
         <>

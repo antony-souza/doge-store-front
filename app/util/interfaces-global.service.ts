@@ -7,7 +7,8 @@ export interface IStore {
     phone: string;
     address: string;
     image_url: string;
-    is_open: boolean;
+    open_time: string;
+    close_time: string;
     description: string;
     background_color: string;
     banner_url?: string;
@@ -19,10 +20,11 @@ export interface IUpdateStore {
     id?: number;
     name?: string;
     phone?: string;
-    is_open?: boolean;
     address?: string;
-    image_url?: File;
+    image_url?: File | null;
     description?: string;
-    banner_url?: File;
+    banner_url?: File | null;
+    open_time?: string;
+    close_time?: string;
     background_color?: string;
 }

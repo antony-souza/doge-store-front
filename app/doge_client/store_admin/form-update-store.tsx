@@ -1,15 +1,13 @@
+'use client';
 import { useEffect, useRef, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
 import UserService from "../services/user.service";
 import { Button } from "@/components/ui/button";
-import AdminService from "../services/admin.service";
-import { IStore } from "@/app/util/interfaces-global.service";
+import { IStore, IUpdateStore } from "@/app/util/interfaces-global.service";
 import SelectCase from "@/app/components/case-select";
 import LayoutForm from "@/app/components/layout-form";
 import InputsCase from "@/app/components/case-input";
-
-const userService = new UserService();
 
 interface IFormUpdateStoreAdminProps {
     id: string;
@@ -17,79 +15,70 @@ interface IFormUpdateStoreAdminProps {
 
 export const FormUpdateStoreAdmin = ({ id }: IFormUpdateStoreAdminProps) => {
     const [loading, setLoading] = useState(false);
-    const [stores, setStores] = useState<IStore[]>([]);
     const [btnActive, setBtnActive] = useState(false);
-    const [formData, setFormData] = useState({
-        name: "",
-        image_url: "",
-        banner_url: "",
-        description: "",
-        address: "",
-        phone: "",
-    });
+    const [name, setName] = useState("");
+    const [phone, setPhone] = useState("");
+    const [open_time, setOpenTime] = useState("");
+    const [close_time, setCloseTime] = useState("");
+    const [address, setAddress] = useState("");
+    const [image_url, setImageUrl] = useState<File | null>(null);
+    const [description, setDescription] = useState("");
+    const [banner_url, setBannerUrl] = useState<File | null>(null);
 
-    useEffect(() => {
-        const fetchStore = async () => {
-            try {
-                const adminService = new AdminService();
-                const store = await adminService.getAllStore();
-                setStores(store);
-            } catch (error) {
-
-                toast({
-                    title: "Erro ao buscar a loja",
-                    description: "Não foi possível buscar a loja. Tente novamente mais tarde.",
-                    variant: "destructive",
-                });
-            }
-        };
-        fetchStore();
-    }, [stores]);
-
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-
-        setBtnActive(Object.values({ ...formData, [name]: value })
-            .some((inputValue) => inputValue.trim() !== ""));
+    const dataForm: IUpdateStore = {
+        name: name,
+        phone: phone,
+        address: address,
+        image_url: image_url,
+        description: description,
+        banner_url: banner_url,
+        open_time: open_time,
+        close_time: close_time,
     };
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
 
         setLoading(true);
 
-        const filteredFormData = new FormData();
+        const formData = new FormData();
 
-        Object.entries(formData).forEach(([key, value]) => {
+        Object.entries(dataForm).forEach(([key, value]) => {
             if (value) {
-                filteredFormData.append(key, value);
+                formData.append(key, value);
             }
         });
 
+
         try {
-            await userService.updateStore(id, filteredFormData);
+            const userService = new UserService();
+            await userService.updateStore(id, formData);
+
             toast({
-                title: "Sucesso",
-                description: "A loja foi atualizada com sucesso!",
-            });
+                title: "Sucesso!",
+                description: "Loja atualizada com sucesso.",
+                variant: "default"
+            })
 
         } catch (error) {
-            (error);
             toast({
-                title: "Erro",
-                description: "Houve um problema ao atualizar a loja. Tente novamente.",
-                variant: "destructive",
-            });
+                title: "Erro!",
+                description: "Erro ao atualizar a loja.",
+                variant: "destructive"
+            })
+
         } finally {
-            setLoading(false);
-        };
-    };
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        if (name || image_url || banner_url || phone || address || description || open_time || close_time) {
+            setBtnActive(true);
+        } else {
+            setBtnActive(false);
+        }
+    }, [name, image_url, banner_url, phone, address, description, open_time, close_time]);
 
     return (
         <>
@@ -101,28 +90,46 @@ export const FormUpdateStoreAdmin = ({ id }: IFormUpdateStoreAdminProps) => {
                             name="name"
                             type="text"
                             placeholder="Nome da loja"
-                            onChange={handleChange}
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
                         />
                         <InputsCase
                             label="Imagem da Loja"
                             name="image_url"
                             type="file"
                             placeholder="Imagem da loja"
-                            onChange={handleChange}
+                            onChange={(e) => setImageUrl(e.target.files?.[0] as File)}
                         />
                         <InputsCase
                             label="Banner da loja"
                             name="banner_url"
                             type="file"
                             placeholder="Banner da loja"
-                            onChange={handleChange}
+                            onChange={(e) => setBannerUrl(e.target.files?.[0] as File)}
+                        />
+                        <InputsCase
+                            label="Horário de abertura"
+                            name="open_time"
+                            type="time"
+                            placeholder="Horário de abertura"
+                            value={open_time}
+                            onChange={(e) => setOpenTime(e.target.value)}
+                        />
+                        <InputsCase
+                            label="Horário de fechamento"
+                            name="close_time"
+                            type="time"
+                            placeholder="Horário de fechamento"
+                            value={close_time}
+                            onChange={(e) => setCloseTime(e.target.value)}
                         />
                         <InputsCase
                             label="Descrição"
                             name="description"
                             type="text"
                             placeholder="Descrição"
-                            onChange={handleChange}
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
                         />
 
                         <InputsCase
@@ -130,14 +137,16 @@ export const FormUpdateStoreAdmin = ({ id }: IFormUpdateStoreAdminProps) => {
                             name="address"
                             type="text"
                             placeholder="Endereço"
-                            onChange={handleChange}
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)}
                         />
                         <InputsCase
                             label="Telefone"
                             name="phone"
                             type="text"
                             placeholder="Telefone"
-                            onChange={handleChange}
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
                         />
                         <div className="flex justify-end w-60 mt-5">
                             <Button

@@ -6,7 +6,7 @@ export default class CallAPIService {
     private readonly baseURL: string;
 
     constructor() {
-        const apiUrlType: API_URL = "NGROK";
+        const apiUrlType: API_URL = "LOCALHOST";
 
         this.baseURL = this.getBaseUrl(apiUrlType);
 
