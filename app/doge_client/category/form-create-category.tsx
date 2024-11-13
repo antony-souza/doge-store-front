@@ -10,20 +10,30 @@ export const FormCreateCategory = () => {
     const [loading, setLoading] = useState(false);
     const [btnActive, setBtnActive] = useState(false);
     const [name, setName] = useState("");
-    const [imageFile, setImageFile] = useState<File>();
+    const [imageFile, setImageFile] = useState<File | null>();
+
+    const formObject = {
+        name: name,
+        image_url: imageFile,
+    }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         setLoading(true);
+        const formData = new FormData();
+
+        Object.entries(formObject).forEach(([key, value]) => {
+            if (value) {
+                formData.append(key, value);
+            }
+        })
+
+        const storeId = localStorage.getItem("store_id") as string;
+        formData.append("store_id", storeId)
 
         try {
             const userService = new UserService();
-            const formData = new FormData();
-
-            formData.append("name", name);
-            formData.append("image_url", imageFile as File);
-            formData.append("store_id", localStorage.getItem("store_id") as string);
 
             await userService.createCategory(formData);
 
@@ -54,7 +64,7 @@ export const FormCreateCategory = () => {
 
     return (
         <>
-            <div>
+            <div className="mt-5">
                 <LayoutForm onSubmit={handleSubmit}>
                     <div className="flex flex-col gap-5">
                         <InputsCase

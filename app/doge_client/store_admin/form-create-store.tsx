@@ -59,7 +59,7 @@ const FormCreateStoreAdmin = () => {
         const formData = new FormData();
 
         Object.entries(formObejct).forEach(([key, value]) => {
-            if(value){
+            if (value) {
                 formData.append(key, value);
             }
         })
@@ -72,10 +72,8 @@ const FormCreateStoreAdmin = () => {
                 title: "Sucesso!",
                 description: "Loja criada com sucesso.",
                 variant: "default"
-            })
-
+            });
         } catch (error) {
-            console.log(error);
             toast({
                 title: "Erro",
                 description: "Houve um problema ao criar a loja.",
@@ -84,7 +82,6 @@ const FormCreateStoreAdmin = () => {
         } finally {
             setLoading(false);
         }
-
     };
     useEffect(() => {
         if (name || phone || open_time || close_time || address || image_url || description || banner_url) {

@@ -19,7 +19,6 @@ function CategoryPage() {
     const [isDelete, setIsDelete] = useState(false);
     const [selectCategoryId, setSelectCategoryId] = useState<string>("");
 
-    // Função para buscar todas as categorias
     useEffect(() => {
         const fetchCategories = async () => {
             try {
@@ -82,7 +81,7 @@ function CategoryPage() {
     return (
         <LayoutDashboard dashboardConfig={{ isSidebarOpenProps: false }}>
             <LayoutPage>
-                <div className="flex justify-between align-middle">
+                <div className="flex justify-between">
                     <TitlePage name={isEditing ? 'Categorias - Editando' : isCreate ? 'Categorias - Criando' : isDelete ? 'Categorias - Excluindo' : 'Categorias'} />
                     <div className="flex gap-2">
                         {(isEditing || isCreate) && (
@@ -102,7 +101,6 @@ function CategoryPage() {
 
                 {isCreate && <FormCreateCategory />}
                 {isEditing && <FormUpdateCategory id={selectCategoryId} />}
-
                 {!isCreate && !isEditing && (
                     <Table className="min-w-full mt-4">
                         <TableHeader>
