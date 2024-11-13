@@ -49,24 +49,24 @@ function RenderProductsPageAdmin() {
         setIsCreate(false);
         setIsEditing(false);
 
-        if(confirm("Deseja realmente deletar este produto?")) {
-        try {
-            const userService = new UserService();
-            await userService.deleteProduct(id);
-            toast({
-                title: "Produto excluído",
-                description: "Produto excluído com sucesso.",
-                variant: "default",
-            });
-        } catch (error) {
-            setIsDelete(false);
-            toast({
-                title: "Erro ao excluir produto",
-                description: "Ocorreu um erro ao excluir o produto.",
-                variant: "destructive",
-            });
+        if (confirm("Deseja realmente deletar este produto?")) {
+            try {
+                const userService = new UserService();
+                await userService.deleteProduct(id);
+                toast({
+                    title: "Produto excluído",
+                    description: "Produto excluído com sucesso.",
+                    variant: "default",
+                });
+            } catch (error) {
+                setIsDelete(false);
+                toast({
+                    title: "Erro ao excluir produto",
+                    description: "Ocorreu um erro ao excluir o produto.",
+                    variant: "destructive",
+                });
+            }
         }
-    }
     };
 
     useEffect(() => {

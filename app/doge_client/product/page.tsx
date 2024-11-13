@@ -116,6 +116,7 @@ function RenderProductPage() {
                                     <TableHead className="w-[100px]">Preço</TableHead>
                                     <TableHead className="w-[100px]">Descrição</TableHead>
                                     <TableHead className="w-[100px]">Categoria</TableHead>
+                                    <TableHead className="w-[100px]">Destaque</TableHead>
                                     <TableHead className="w-[100px]">Ações</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -136,6 +137,7 @@ function RenderProductPage() {
                                             <TableCell>{formatPrice(product.price)}</TableCell>
                                             <TableCell>{product.description}</TableCell>
                                             <TableCell>{product.category.name || '-'}</TableCell>
+                                            <TableCell>{product.featured_product ? 'Sim' : 'Não'}</TableCell>
                                             <TableCell>
                                                 <div className="flex gap-2">
                                                     <Button

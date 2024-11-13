@@ -82,6 +82,7 @@ function QrCodePage() {
                     <TitlePage name={'QR Code'} />
                     <span className="material-symbols-outlined">qr_code_2_add</span>
                 </div>
+                {/* Alterações apenas no form e inputs - Deivid*/}
                 <form onSubmit={handleSubmit} className="pt-5">
                     <div className="flex flex-col mb-4 gap-2">
                         <label htmlFor="text">Link da sua loja</label>
@@ -105,11 +106,14 @@ function QrCodePage() {
                             required
                         />
                     </div>
+                    {/* mantém */}
                     <Button disabled={isLoading}>
                         {isLoading ? "Gerando..." : "Gerar QR Code"}
                         <span className="material-symbols-outlined">qr_code_scanner</span>
                     </Button>
+                    {/* mantém */}
                 </form>
+                {/* Alterações apenas no form e inputs - Deivid*/}
                 {qrCodeResponse && (
                     <div className="mt-4">
                         <h3>QR Code Gerado:</h3>

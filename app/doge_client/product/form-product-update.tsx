@@ -20,6 +20,7 @@ export const FormUpdateProduct = ({ id }: IFormUpdateProductProps) => {
     const [price, setPrice] = useState('');
     const [description, setDescription] = useState('');
     const [category_id, setCategoryId] = useState('');
+    const [featured_product, setFeaturedProduct] = useState('');
 
     const formObject: IUpdateProduct = {
         name: name,
@@ -27,6 +28,7 @@ export const FormUpdateProduct = ({ id }: IFormUpdateProductProps) => {
         price: price,
         description: description,
         category_id: category_id,
+        featured_product: featured_product,
     };
 
     useEffect(() => {
@@ -80,6 +82,14 @@ export const FormUpdateProduct = ({ id }: IFormUpdateProductProps) => {
         }
     };
 
+    useEffect(() => {
+        if (name || imageFile || price || description || category_id||featured_product) {
+            setBtnActive(true);
+        } else {
+            setBtnActive(false);
+        }
+    }, [name, imageFile, price, description, category_id,featured_product]);
+
     return (
         <>
             <Toaster />
@@ -129,6 +139,17 @@ export const FormUpdateProduct = ({ id }: IFormUpdateProductProps) => {
                                 })),
                             ]}
                             onChange={(e) => setCategoryId(e.target.value)}
+                        />
+                        <SelectCase
+                            name="featured_product"
+                            label="Produto em destaque"
+                            value={featured_product}
+                            options={[
+                                { value: "", label: "Selecione uma opção" },
+                                { value: "true", label: "Sim" },
+                                { value: "false", label: "Não" },
+                            ]}
+                            onChange={(e) => setFeaturedProduct(e.target.value)}
                         />
                     </div>
                     <div className="flex justify-end w-60 mt-5">

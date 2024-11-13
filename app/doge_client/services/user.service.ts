@@ -43,8 +43,9 @@ export interface IProduct {
     category_id: string,
     image_url: string,
     cart: boolean,
-    featured_products: boolean,
+    featured_product: boolean,
     store: IStore
+    enable?: true;
 }
 
 export interface IFeaturedProducts {
@@ -67,7 +68,7 @@ export interface IUpdateProduct {
     category?: ICategory,
     image_url?: File,
     category_id?: string,
-    featured_products?: boolean,
+    featured_product?: string,
 }
 
 export interface DecodedToken {

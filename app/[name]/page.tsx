@@ -20,7 +20,12 @@ export default function PublicPage({ params }: IPublicPageProps) {
   const [category, setCategory] = useState<ICategory[]>([]);
   const [moreInfo, setMoreInfo] = useState<boolean>(false);
   const [isInCart, setIsInCart] = useState<{ [key: string]: boolean }>({});
+  const [isSessionOpen, setIsSessionOpen] = useState(false);
   const [arrayCartSessionStorange, setArrayCartSessionStorange] = useState<IProduct[]>([]);
+
+  const toggleSession = () => {
+    setIsSessionOpen(!isSessionOpen);
+  }
 
   useEffect(() => {
     const productsSavedInCart = sessionStorage.getItem("cart");
@@ -173,7 +178,7 @@ export default function PublicPage({ params }: IPublicPageProps) {
                   </div>
                 </div>
               </section>
-              <section className="mt-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <section className="bg-white border-t-4 border-t-black mt-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-5 shadow-lg">
                 <h1 className="text-2xl font-semibold mb-6">Produtos em destaque</h1>
 
                 <div className="relative">
@@ -187,11 +192,11 @@ export default function PublicPage({ params }: IPublicPageProps) {
                     >
                       {store.product && store.product.length > 0 ? (
                         store.product
-                          .filter((product) => product.featured_products)
+                          .filter((product) => product.featured_product)
                           .map((product) => (
                             <div
                               key={product.id}
-                              className="bg-white p-6 rounded-lg shadow-lg flex flex-col justify-between w-full"
+                              className="p-6 rounded shadow-lg flex flex-col justify-between w-full"
                             >
                               <div className="flex flex-col items-center">
                                 <Avatar>
@@ -225,7 +230,7 @@ export default function PublicPage({ params }: IPublicPageProps) {
               </section>
               <section>
                 {category.length > 0 ? (
-                  <section className="bg-gray-100 p-6">
+                  <section className="bg-white border-t-4 border-t-black mt-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-5 shadow-lg">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                       <h1 className="text-2xl font-semibold mb-6">Categorias</h1>
                       {/* Contêiner com overflow para deslizar as categorias */}
@@ -259,7 +264,7 @@ export default function PublicPage({ params }: IPublicPageProps) {
                 )}
               </section>
 
-              <section className="mt-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <section className="bg-slate-50 border-t-4 border-t-black mt-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-5 shadow-lg">
                 <h1 className="text-2xl font-semibold mb-6">Produtos</h1>
                 <div className="overflow-x-auto">
                   <div

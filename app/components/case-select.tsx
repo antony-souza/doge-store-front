@@ -10,7 +10,7 @@ interface ISelectProps {
     name: string;
     value?: string;
     options: IOptions[];
-    onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+    onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     required?: boolean;
 }
 
