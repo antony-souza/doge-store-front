@@ -1,168 +1,163 @@
-"use client"
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
 import UserService, { ICategory } from "../services/user.service";
 import { Button } from "@/components/ui/button";
+import LayoutForm from "@/app/components/layout-form";
+import InputsCase from "@/app/components/case-input";
+import SelectCase from "@/app/components/case-select";
 import { IStore } from "@/app/util/interfaces-global.service";
-import AdminService from "../services/admin.service";
 
-export const FormCreateProductAdmin = () => {
-    const formRef = useRef<HTMLFormElement | null>(null);
-    const [price, setPrice] = useState<number | null>(null);
+interface IFormProps extends Partial<IStore> {
+    id: string;
+}
+
+export const FormCreateProductAdmin = ({ id }: IFormProps) => {
     const [categories, setCategories] = useState<ICategory[]>([]);
-    const [store, setStore] = useState<IStore[]>([]);
-    const [selectedStoreID, setSelectedStoreID] = useState<string>("");
+    const [name, setName] = useState('');
+    const [imageFile, setImageFile] = useState<File | null>(null);
+    const [price, setPrice] = useState('');
+    const [description, setDescription] = useState('');
+    const [categoryId, setCategoryId] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [btnActive, setBtnActive] = useState(false);
 
-    useEffect(() => {
-        const fetchStore = async () => {
-            try {
-                const adminService = new AdminService();
-                const response = await adminService.getAllStore();
-                setStore(response);
-            } catch (error) {
-            }
-        };
-        fetchStore();
-    }, []);
+    const formObejct = {
+        name: name,
+        image_url: imageFile,
+        price: price,
+        description: description,
+        category_id: categoryId,
+    };
 
     useEffect(() => {
         const fetchCategory = async () => {
             try {
-                const productService = new UserService();
-                const response = await productService.getAllCategories(selectedStoreID);
+                const categoryService = new UserService();
+                const response = await categoryService.getAllCategories(id);
                 setCategories(response);
-            } catch (error) { }
-        };
-        if (selectedStoreID) {
-            fetchCategory();
-        }
-    }, [selectedStoreID]);
-
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-
-        const form = event.currentTarget;
-        const formData = new FormData(form);
-
-        if (!form.checkValidity()) {
-            toast({
-                title: "Erro",
-                description: "Preencha todos os campos obrigatórios!"
-            });
-            return;
-        }
-
-        try {
-            const productService = new UserService();
-            const response = await productService.createProduct(formData, selectedStoreID);
-
-            if (response) {
+            } catch (error) {
                 toast({
-                    title: "Produto criado com sucesso!",
-                    description: "O produto foi adicionado à lista.",
-                    variant: "default",
-                });
-                formRef.current?.reset();
-                setPrice(null);
-            } else {
-                toast({
-                    title: "Erro ao criar produto",
-                    description: "Verifique os dados e tente novamente.",
+                    title: "Erro",
+                    description: "Houve um problema ao buscar as categorias.",
                     variant: "destructive",
                 });
             }
+        };
+        fetchCategory();
+    }, [id]);
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setLoading(true);
+
+        const productService = new UserService();
+        const formData = new FormData();
+
+        Object.entries(formObejct).forEach(([key, value]) => {
+            if (value) {
+                formData.append(key, value);
+            }
+        })
+
+        const storeId = id
+
+        if (storeId) {
+            formData.append('store_id', storeId);
+        }
+
+
+        try {
+            await productService.createProduct(storeId, formData);
+            toast({
+                title: "Sucesso",
+                description: "O produto foi criado com sucesso!",
+            });
         } catch (error) {
             toast({
-                title: "Erro no servidor",
-                description: "Ocorreu um erro ao enviar os dados."
+                title: "Erro",
+                description: "Houve um problema ao criar o produto. Tente novamente.",
+                variant: "destructive",
             });
+        } finally {
+            setLoading(false);
         }
     };
+    useEffect(() => {
+        if (name || imageFile || price || description || categoryId) {
+            setBtnActive(true);
+        }
+        else {
+            setBtnActive(false);
+        }
+
+    }, [name, imageFile, price, description, categoryId]);
 
     return (
         <>
             <Toaster />
-            <form onSubmit={handleSubmit} ref={formRef} className="space-y-4 mt-5">
-                <div className="pt-3 mt-5">
-                    <label className="block text-sm font-medium">Escolha a loja</label>
-                    <select
-                        name="store_id"
-                        className="mt-1 block w-200 p-2 border rounded-md"
-                        value={selectedStoreID}
-                        onChange={(e) => setSelectedStoreID(e.target.value)}
-                    >
-                        <option value="" disabled>Selecione uma loja</option>
-                        {store.length > 0 ? (
-                            store.map((store) => (
-                                <option key={store.id} value={store.id}>
-                                    {store.name}
-                                </option>
-                            ))
-                        ) : (
-                            <option value="" disabled>Nenhuma Loja Disponível!</option>
-                        )}
-                    </select>
-                </div>
-                <div>
-                    <label className="block text-sm font-medium">Foto do Produto</label>
-                    <input
-                        type="file"
-                        name="image_url"
-                        className="mt-1 block w-full p-2 border rounded-md"
-                        accept="image/*"
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium">Nome do Produto</label>
-                    <input
-                        type="text"
-                        name="name"
-                        className="mt-1 block w-full p-2 border rounded-md"
-                        placeholder="Nome do produto"
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium">Preço</label>
-                    <input
-                        type="number"
-                        step="any"
-                        value={price || ""}
-                        name="price"
-                        className="mt-1 block w-full p-2 border rounded-md"
-                        placeholder="R$ 0,00"
-                        onChange={(e) => setPrice(Number(e.target.value))}
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium">Descrição</label>
-                    <textarea
-                        name="description"
-                        className="mt-1 block w-full p-2 border rounded-md"
-                        placeholder="Descrição do produto"
-                    />
-                </div>
-                <div className="pt-3">
-                    <label className="block text-sm font-medium">Escolha a categoria</label>
-                    <select
-                        name="category_id"
-                        className="mt-1 block w-full p-2 border rounded-md"
-                    >
-                        <option value="" disabled>Selecione uma categoria</option>
-                        {categories.length > 0 ? (
-                            categories.map((category, index) => (
-                                <option key={index} value={category.id}>
-                                    {category.name}
-                                </option>
-                            ))
-                        ) : (
-                            <option value="" disabled>Nenhuma categoria disponível</option>
-                        )}
-                    </select>
-                </div>
-
-                <Button type="submit" className="w-20">Salvar</Button>
-            </form>
+            <div className="mt-5">
+                <LayoutForm onSubmit={handleSubmit}>
+                    <div className="flex flex-col gap-5">
+                        <InputsCase
+                            label="Nome do Produto"
+                            name="name"
+                            type="text"
+                            value={name}
+                            placeholder="Nome do produto"
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                        />
+                        <InputsCase
+                            label="Imagem do Produto"
+                            name="image_url"
+                            type="file"
+                            onChange={(e) => setImageFile(e.target.files?.[0] as File)}
+                            required
+                        />
+                        <InputsCase
+                            label="Preço do Produto"
+                            name="price"
+                            type="number"
+                            value={price}
+                            placeholder="Preço do produto"
+                            onChange={(e) => setPrice(e.target.value)}
+                            required
+                        />
+                        <InputsCase
+                            label="Descrição do Produto"
+                            name="description"
+                            type="text"
+                            value={description}
+                            placeholder="Descrição do produto"
+                            onChange={(e) => setDescription(e.target.value)}
+                            required
+                        />
+                        <SelectCase
+                            name="category_id"
+                            label="Escolha uma categoria"
+                            value={categoryId}
+                            options={[
+                                { value: "", label: "Selecione uma categoria" },
+                                ...categories.map((category) => ({
+                                    value: category.id,
+                                    label: category.name,
+                                })),
+                            ]}
+                            onChange={(e) => setCategoryId(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="flex justify-end w-60 mt-5">
+                        <Button
+                            disabled={loading || !btnActive}
+                            className={loading ? 'bg-gray-300 cursor-not-allowed' : ''}
+                        >
+                            {loading ? 'Carregando...' : 'Salvar'}
+                        </Button>
+                    </div>
+                </LayoutForm>
+            </div>
         </>
     );
 };

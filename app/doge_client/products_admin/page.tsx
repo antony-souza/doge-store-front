@@ -12,28 +12,59 @@ import { useEffect, useState } from "react";
 import UserService, { IProduct } from "../services/user.service";
 import { IStore } from "@/app/util/interfaces-global.service";
 import AdminService from "../services/admin.service";
-
 import { FormCreateProductAdmin } from "./form-add-products";
 import { FormUpdateProductAdmin } from "./form-edit-products";
-import { FormDeleteProductAdmin } from "./form-delete-products";
 import withAuth from "@/app/util/withToken";
+import SelectCase from "@/app/components/case-select";
 
 function RenderProductsPageAdmin() {
     const [products, setProducts] = useState<IProduct[]>([]);
     const [stores, setStores] = useState<IStore[]>([]);
     const [selectedStoreID, setSelectedStoreID] = useState<string>("");
+    const [selectProductId, setSelectProductId] = useState<string>("");
     const [isEditing, setIsEditing] = useState(false);
     const [isCreate, setIsCreate] = useState(false);
     const [isDelete, setIsDelete] = useState(false);
 
-    const handleEditClick = () => {
+    const handleCreateProduct = (id: string) => {
+        setSelectedStoreID(id);
+        setIsCreate(true);
+        setIsEditing(false);
+    };
+
+    const handleEditProduct = (id: string) => {
+        setSelectProductId(id);
         setIsEditing(!isEditing);
     };
-    const handleCreateClick = () => {
-        setIsCreate(!isCreate);
+
+    const handleBackToTable = () => {
+        setIsEditing(false);
+        setIsCreate(false);
+        setSelectProductId("");
     };
-    const handleDeleteClick = () => {
+
+    const handleDeleteProduct = async (id: string) => {
+        setSelectProductId(id)
         setIsDelete(!isDelete);
+        setIsCreate(false);
+        setIsEditing(false);
+
+        try {
+            const userService = new UserService();
+            await userService.deleteProduct(id);
+            toast({
+                title: "Produto excluído",
+                description: "Produto excluído com sucesso.",
+                variant: "default",
+            });
+        } catch (error) {
+            setIsDelete(false);
+            toast({
+                title: "Erro ao excluir produto",
+                description: "Ocorreu um erro ao excluir o produto.",
+                variant: "destructive",
+            });
+        }
     };
 
     useEffect(() => {
@@ -84,7 +115,7 @@ function RenderProductsPageAdmin() {
         };
 
         fetchProductsByStore();
-    }, [selectedStoreID]);
+    }, [isCreate, isEditing, isDelete, selectedStoreID, stores]);
 
     return (
         <LayoutDashboard dashboardConfig={{ isSidebarOpenProps: false }}>
@@ -95,89 +126,87 @@ function RenderProductsPageAdmin() {
                             : isCreate ? 'Produtos Gerais - Criando'
                                 : isDelete ? 'Produtos Gerais - Excluindo' : 'Produtos Gerais'} />
                     <div className="flex gap-2">
-                        <Button variant={"destructive"} className="flex gap-3" onClick={handleDeleteClick}>
-                            <span className="material-symbols-outlined">
-                                {isDelete ? 'arrow_back' : 'delete'}
-                            </span>
-                            {isDelete ? 'Voltar' : 'Excluir Produto'}
-                        </Button>
-                        <Button className="flex gap-3" onClick={handleEditClick}>
-                            <span className="material-symbols-outlined">
-                                {isEditing ? 'arrow_back' : 'edit'}
-                            </span>
-                            {isEditing ? 'Voltar' : 'Editar Produto'}
-                        </Button>
-                        <Button className="flex gap-3" onClick={handleCreateClick}>
-                            <span className="material-symbols-outlined">
-                                {isCreate ? 'arrow_back' : 'add'}
-                            </span>
-                            {isCreate ? 'Voltar' : 'Novo Produto'}
-                        </Button>
+                        {(isEditing || isCreate) && (
+                            <Button className="flex gap-2" onClick={handleBackToTable}>
+                                <span className="material-symbols-outlined">arrow_back</span>
+                                Voltar
+                            </Button>
+                        )}
+                        {!isCreate && (
+                            <Button
+                                onClick={() => handleCreateProduct(selectedStoreID)}
+                                disabled={!selectedStoreID}
+                            >
+                                Criar Produto
+                            </Button>
+                        )}
                     </div>
                 </div>
-                {isEditing ? (
-                    <FormUpdateProductAdmin />
-                ) : isCreate ? (
-                    <FormCreateProductAdmin />
-                ) : isDelete ? (
-                    <FormDeleteProductAdmin />
-                ) : (
+                {isEditing && (<FormUpdateProductAdmin id={selectProductId} storeId={selectedStoreID} />)}
+                {isCreate && (<FormCreateProductAdmin id={selectedStoreID} />)}
+                {!isEditing && !isCreate && (
                     <div className="pt-3 mt-5">
-                        <label className="block text-sm font-medium">Escolha a loja a ser mapeada</label>
-                        <select
+                        <SelectCase
+                            label="Selecione uma loja"
                             name="store_id"
-                            className="mt-1 block w-200 p-2 border rounded-md "
                             value={selectedStoreID}
                             onChange={(e) => setSelectedStoreID(e.target.value)}
-                        >
-                            <option value="" disabled>Selecione uma loja</option>
-                            {stores.length > 0 ? (
-                                stores.map((store) => (
-                                    <option key={store.id} value={store.id}>
-                                        {store.name}
-                                    </option>
-                                ))
-                            ) : (
-                                <option value="" disabled>Nenhuma Loja Disponível!</option>
-                            )}
-                        </select>
-
-                        <Table className="min-w-full mt-4">
+                            options={[
+                                { value: "", label: "Selecione uma loja" },
+                                ...stores.map(store => ({ value: store.id, label: store.name }))
+                            ]}
+                        />
+                        <Table className="mt-4">
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead className="w-20 h-20">Foto</TableHead>
-                                    <TableHead className="w-[auto]">Nome</TableHead>
-                                    <TableHead className="w-[auto]">Preço</TableHead>
-                                    <TableHead className="w-[auto]">Descrição</TableHead>
-                                    <TableHead className="w-[auto]">Categoria</TableHead>
-                                    <TableHead className="w-[auto]">Destaque</TableHead>
-                                    <TableHead className="w-[auto]">Carrinho</TableHead>
+                                    <TableHead className="w-[100px]">Imagem</TableHead>
+                                    <TableHead className="w-[100px]">Nome</TableHead>
+                                    <TableHead className="w-[100px]">Preço</TableHead>
+                                    <TableHead className="w-[100px]">Descrição</TableHead>
+                                    <TableHead className="w-[100px]">Categoria</TableHead>
+                                    <TableHead className="w-[100px]">Ações</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {products.length > 0 ? (
-                                    products.map(product => (
+                                    products.map((product) => (
                                         <TableRow key={product.id}>
                                             <TableCell className="font-medium">
                                                 <Avatar>
                                                     <AvatarImage
-                                                        className="rounded-full w-20 h-auto object-cover border-2"
-                                                        src={product.image_url || ""}
-                                                        alt={product.name || "Imagem do produto"}
+                                                        className="rounded-full w-12 h-12 border-2"
+                                                        src={product.image_url}
+                                                        alt={product.name}
                                                     />
                                                 </Avatar>
                                             </TableCell>
-                                            <TableCell>{product.name || "-"}</TableCell>
-                                            <TableCell>{formatPrice(product.price) || "-"}</TableCell>
-                                            <TableCell>{product.description || "-"}</TableCell>
-                                            <TableCell>{product.category?.name || "-"}</TableCell>
-                                            <TableCell>{product.featured_products ? "Sim" : "Não"}</TableCell>
-                                            <TableCell>{product.cart ? "Sim" : "Não"}</TableCell>
+                                            <TableCell>{product.name}</TableCell>
+                                            <TableCell>{formatPrice(product.price)}</TableCell>
+                                            <TableCell>{product.description}</TableCell>
+                                            <TableCell>{product.category.name || '-'}</TableCell>
+                                            <TableCell>
+                                                <div className="flex gap-2">
+                                                    <Button
+                                                        variant="outline"
+                                                        onClick={() => handleEditProduct(product.id)}
+                                                    >
+                                                        <span className="material-symbols-outlined">edit</span>
+                                                    </Button>
+                                                    <Button
+                                                        variant="destructive"
+                                                        onClick={() => handleDeleteProduct(product.id)}
+                                                    >
+                                                        <span className="material-symbols-outlined">delete</span>
+                                                    </Button>
+                                                </div>
+                                            </TableCell>
                                         </TableRow>
                                     ))
                                 ) : (
                                     <TableRow>
-                                        <TableCell colSpan={6} className="text-center">Nenhum produto encontrado</TableCell>
+                                        <TableCell colSpan={7} className="text-center">
+                                            Nenhuma loja encontrada
+                                        </TableCell>
                                     </TableRow>
                                 )}
                             </TableBody>
