@@ -50,17 +50,22 @@ function RenderPageStoreAdmin() {
     const handleDeleteStore = async (id: string) => {
         setSelectStoreId(id);
 
-        try {
-            const adminService = new AdminService();
-            const response = await adminService.deleteStore(id) as IStore;
-
-            toast({
-                title: "Loja Excluída!",
-                description: `A loja ${response.name} foi deletada com sucesso`,
-                variant: "default"
-            })
-        } catch (error) {
-
+        if (confirm("Deseja realmente excluir esta loja?")) {
+            try {
+                const adminService = new AdminService();
+                const response = await adminService.deleteStore(id) as IStore;
+                toast({
+                    title: "Loja Excluída!",
+                    description: `A loja ${response.name} foi deletada com sucesso`,
+                    variant: "default"
+                })
+            } catch (error) {
+                toast({
+                    title: "Erro ao excluir loja",
+                    description: "Não foi possível excluir a loja. Tente novamente mais tarde.",
+                    variant: "destructive",
+                });
+            }
         }
     };
 

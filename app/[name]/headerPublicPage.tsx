@@ -68,6 +68,7 @@ export default function HeaderPublicPage({ name, cartItemCount }: IPropsHeaderPu
                 <Image
                     src={imageUrl}
                     alt="Store Logo"
+                    priority
                     width={40}
                     height={40}
                     className="rounded-full border-4 border-white"

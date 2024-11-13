@@ -49,6 +49,7 @@ function RenderProductsPageAdmin() {
         setIsCreate(false);
         setIsEditing(false);
 
+        if(confirm("Deseja realmente deletar este produto?")) {
         try {
             const userService = new UserService();
             await userService.deleteProduct(id);
@@ -65,6 +66,7 @@ function RenderProductsPageAdmin() {
                 variant: "destructive",
             });
         }
+    }
     };
 
     useEffect(() => {

@@ -40,16 +40,22 @@ function RenderUserPage() {
     const handleDeleteUser = async (id: string) => {
         setSelectedUserId(id);
 
-        try {
-            const response = await adminService.deleteUser(id);
+        if (confirm("Deseja realmente excluir este usuário?")) {
+            try {
+                const response = await adminService.deleteUser(id);
 
-            toast({
-                title: "Usuário deletado com sucesso",
-                description: `O usuário ${response.user.name} foi deletado com sucesso`,
-                variant: "default"
-            })
-        } catch (error) {
-
+                toast({
+                    title: "Usuário deletado com sucesso",
+                    description: `O usuário ${response.user.name} foi deletado com sucesso`,
+                    variant: "default"
+                })
+            } catch (error) {
+                toast({
+                    title: "Erro ao deletar usuário",
+                    description: "Não foi possível deletar o usuário.",
+                    variant: "destructive"
+                })
+            }
         }
     };
 
@@ -66,7 +72,11 @@ function RenderUserPage() {
                 const response = await adminService.getAllUsers();
                 setUsers(response);
             } catch (error) {
-                console.error("Erro ao buscar usuários:", error);
+                toast({
+                    title: "Erro ao buscar usuários",
+                    description: "Não foi possível buscar os usuários. Tente novamente mais tarde.",
+                    variant: "destructive",
+                });
             }
         };
 

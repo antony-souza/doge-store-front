@@ -51,17 +51,19 @@ function CategoryPage() {
         setIsCreate(false);
         setIsDelete(true);
 
-        try {
-            const userService = new UserService();
-            await userService.deleteCategory(id);
-            setIsDelete(false);
-        } catch (error) {
-            setIsDelete(false);
-            toast({
-                title: "Erro ao excluir categoria",
-                description: "Não foi possível excluir a categoria. Tente novamente mais tarde.",
-                variant: "destructive",
-            });
+        if (confirm("Deseja realmente excluir esta categoria?")) {
+            try {
+                const userService = new UserService();
+                await userService.deleteCategory(id);
+                setIsDelete(false);
+            } catch (error) {
+                setIsDelete(false);
+                toast({
+                    title: "Erro ao excluir categoria",
+                    description: "Não foi possível excluir a categoria. Tente novamente mais tarde.",
+                    variant: "destructive",
+                });
+            }
         }
     };
 
@@ -117,7 +119,7 @@ function CategoryPage() {
                                         <TableCell className="font-medium">
                                             <Avatar>
                                                 <AvatarImage
-                                                    className="rounded-full w-auto h-12 border-2"
+                                                    className="rounded-full w-12 h-12 border-2"
                                                     src={categoryItem.image_url || ""}
                                                     alt={categoryItem.name || "Imagem da categoria"}
                                                 />

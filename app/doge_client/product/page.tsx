@@ -56,20 +56,22 @@ function RenderProductPage() {
         setIsEditing(false);
         setIsCreate(false);
 
-        try {
-            await userService.deleteProduct(selectProductId);
-            setIsDelete(true);
-            toast({
-                title: "Sucesso",
-                description: "Produto deletado com sucesso!",
-                variant: "default",
-            });
-        } catch (error) {
-            toast({
-                title: "Erro ao deletar o produto",
-                description: "Não foi possível deletar o produto. Tente novamente mais tarde.",
-                variant: "destructive",
-            });
+        if (confirm("Deseja realmente deletar este produto?")) {
+            try {
+                await userService.deleteProduct(selectProductId);
+                setIsDelete(true);
+                toast({
+                    title: "Sucesso",
+                    description: "Produto deletado com sucesso!",
+                    variant: "default",
+                });
+            } catch (error) {
+                toast({
+                    title: "Erro ao deletar o produto",
+                    description: "Não foi possível deletar o produto. Tente novamente mais tarde.",
+                    variant: "destructive",
+                });
+            }
         }
     };
 

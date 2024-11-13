@@ -11,27 +11,57 @@ import { useEffect, useState } from "react";
 import UserService, { ICategory } from "../services/user.service";
 import { IStore } from "@/app/util/interfaces-global.service";
 import AdminService from "../services/admin.service";
-import { FormUpdateCategoryAdmin } from "./form-edit-category";
 import { FormAddCatergoryAdmin } from "./form-add-category";
-import { FormDeleteCategoryAdmin } from "./form-delete-category";
 import withAuth from "@/app/util/withToken";
+import { FormUpdateCategoryAdmin } from "./form-edit-category";
+import SelectCase from "@/app/components/case-select";
 
 function RenderCategoriesPageAdmin() {
     const [category, setCategory] = useState<ICategory[]>([]);
     const [stores, setStores] = useState<IStore[]>([]);
     const [selectedStoreID, setSelectedStoreID] = useState<string>("");
+    const [selectCategoryId, setSelectCategoryId] = useState<string>("");
     const [isEditing, setIsEditing] = useState(false);
     const [isCreate, setIsCreate] = useState(false);
     const [isDelete, setIsDelete] = useState(false);
 
-    const handleEditClick = () => {
-        setIsEditing(!isEditing);
+    const handleEditCategory = (id: string) => {
+        setSelectCategoryId(id);
+        setIsEditing(true);
+        setIsCreate(false);
+        setIsDelete(false);
     };
-    const handleCreateClick = () => {
-        setIsCreate(!isCreate);
+    const handleCreateCategory = () => {
+        setIsCreate(true);
+        setIsEditing(false);
     };
-    const handleDeleteClick = () => {
-        setIsDelete(!isDelete);
+
+    const handleDeleteCategory = async (id: string) => {
+        if (confirm("Deseja realmente deletar esta categoria?")) {
+            try {
+                const userService = new UserService();
+                await userService.deleteCategory(id);
+                setCategory(category.filter(item => item.id !== id));
+                toast({
+                    title: "Categoria deletada",
+                    description: "A categoria foi removida com sucesso.",
+                    variant: "default",
+                });
+            } catch (error) {
+                toast({
+                    title: "Erro ao deletar categoria",
+                    description: "Não foi possível deletar a categoria.",
+                    variant: "destructive",
+                });
+            }
+        }
+    };
+
+
+    const handleBackToTable = () => {
+        setIsEditing(false);
+        setIsCreate(false);
+        setIsDelete(false);
     };
 
     useEffect(() => {
@@ -58,7 +88,6 @@ function RenderCategoriesPageAdmin() {
             if (!selectedStoreID) {
                 return;
             }
-
             try {
                 const userService = new UserService();
                 const category = await userService.getAllCategories(selectedStoreID);
@@ -82,92 +111,90 @@ function RenderCategoriesPageAdmin() {
         };
 
         fetchCategoriesByStore();
-    }, [selectedStoreID]);
+    }, [selectedStoreID, selectCategoryId, isEditing, isCreate, isDelete]);
 
     return (
         <LayoutDashboard dashboardConfig={{ isSidebarOpenProps: false }}>
             <LayoutPage>
-                <div className="flex justify-between align-middle">
-                    <TitlePage name={
-                        isEditing ? 'Categorias Gerais - Editando'
-                            : isCreate ? 'Categorias Gerais - Criando'
-                                : isDelete ? 'Categorias Gerais - Excluindo' : 'Categorias Gerais'} />
+                <div className="flex justify-between">
+                    <TitlePage name={isEditing ? 'Categorias - Editando' : isCreate ? 'Categorias - Criando' : isDelete ? 'Categorias - Excluindo' : 'Categorias'} />
                     <div className="flex gap-2">
-                        <Button variant={"destructive"} className="flex gap-3" onClick={handleDeleteClick}>
-                            <span className="material-symbols-outlined">
-                                {isDelete ? 'arrow_back' : 'delete'}
-                            </span>
-                            {isDelete ? 'Voltar' : 'Excluir Categoria'}
-                        </Button>
-                        <Button className="flex gap-3" onClick={handleEditClick}>
-                            <span className="material-symbols-outlined">
-                                {isEditing ? 'arrow_back' : 'edit'}
-                            </span>
-                            {isEditing ? 'Voltar' : 'Editar Categoria'}
-                        </Button>
-                        <Button className="flex gap-3" onClick={handleCreateClick}>
-                            <span className="material-symbols-outlined">
-                                {isCreate ? 'arrow_back' : 'add'}
-                            </span>
-                            {isCreate ? 'Voltar' : 'Nova Categoria'}
-                        </Button>
+                        {(isEditing || isCreate) && (
+                            <Button className="flex gap-2" onClick={handleBackToTable}>
+                                <span className="material-symbols-outlined">arrow_back</span>
+                                Voltar
+                            </Button>
+                        )}
+                        {!isCreate && (
+                            <Button onClick={handleCreateCategory} disabled={!selectedStoreID}>
+                                <span className="material-symbols-outlined">add</span>
+                                Criar Categoria
+                            </Button>
+                        )}
                     </div>
                 </div>
-                {isEditing ? (
-                    <FormUpdateCategoryAdmin />
-                ) : isCreate ? (
-                    <FormAddCatergoryAdmin />
-                ) : isDelete ? (
-                    <FormDeleteCategoryAdmin />
-                ) : (
+                {isCreate && <FormAddCatergoryAdmin
+                    storeId={selectedStoreID}
+                />}
+                {isEditing && <FormUpdateCategoryAdmin
+                    categoryId={selectCategoryId}
+                />}
+                {!isCreate && !isEditing && (
                     <div className="pt-3 mt-5">
-                        <label className="block text-sm font-medium">Escolha a loja a ser mapeada</label>
-                        <select
+                        <SelectCase
+                            label="Selecione uma loja"
                             name="store_id"
-                            className="mt-1 block w-200 p-2 border rounded-md "
                             value={selectedStoreID}
                             onChange={(e) => setSelectedStoreID(e.target.value)}
-                        >
-                            <option value="" disabled>Selecione uma loja</option>
-                            {stores.length > 0 ? (
-                                stores.map((store) => (
-                                    <option key={store.id} value={store.id}>
-                                        {store.name}
-                                    </option>
-                                ))
-                            ) : (
-                                <option value="" disabled>Nenhuma Loja Disponível!</option>
-                            )}
-                        </select>
-
-                        <Table className="min-w-full mt-4">
+                            options={[
+                                { value: "", label: "Selecione uma loja" },
+                                ...stores.map(store => ({ value: store.id, label: store.name }))
+                            ]}
+                        />
+                        <Table className="mt-4">
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead className="w-[auto]">Foto</TableHead>
-                                    <TableHead className="w-[auto]">Nome</TableHead>
-                                    <TableHead className="w-[auto]">Loja</TableHead>
+                                    <TableHead className="w-[100px]">Imagem</TableHead>
+                                    <TableHead className="w-[400px]">Nome</TableHead>
+                                    <TableHead className="w-[100px]">Ações</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {category.length > 0 ? (
-                                    category.map(category => (
-                                        <TableRow key={category.id}>
+                                    category.map((categoryItem) => (
+                                        <TableRow key={categoryItem.id}>
                                             <TableCell className="font-medium">
                                                 <Avatar>
                                                     <AvatarImage
-                                                        className="rounded-full w-12 h-12 object-cover border-2"
-                                                        src={category.image_url || ""}
-                                                        alt={category.name || "Imagem da categoria"}
+                                                        className="rounded-full w-12 h-12 border-2"
+                                                        src={categoryItem.image_url || ""}
+                                                        alt={categoryItem.name || "Imagem da categoria"}
                                                     />
                                                 </Avatar>
                                             </TableCell>
-                                            <TableCell>{category.name || "-"}</TableCell>
-                                            <TableCell>{category.store.name || "-"}</TableCell>
+                                            <TableCell>{categoryItem.name || "-"}</TableCell>
+                                            <TableCell>
+                                                <div className="flex gap-2">
+                                                    <Button
+                                                        variant="outline"
+                                                        onClick={() => handleEditCategory(categoryItem.id)}
+                                                    >
+                                                        <span className="material-symbols-outlined">edit</span>
+                                                    </Button>
+                                                    <Button
+                                                        variant="destructive"
+                                                        disabled={isDelete === true}
+                                                        onClick={() => handleDeleteCategory(categoryItem.id)}
+                                                    >
+                                                        <span className="material-symbols-outlined">{isDelete ? 'auto_delete' : 'delete'}</span>
+                                                    </Button>
+                                                </div>
+                                            </TableCell>
                                         </TableRow>
                                     ))
                                 ) : (
                                     <TableRow>
-                                        <TableCell colSpan={6} className="text-center">Nenhuma categoria encontrada</TableCell>
+                                        <TableCell colSpan={3} className="text-center">Nenhuma categoria encontrada</TableCell>
                                     </TableRow>
                                 )}
                             </TableBody>
