@@ -178,14 +178,13 @@ export default function PublicPage({ params }: IPublicPageProps) {
                   </div>
                 </div>
               </section>
-              <section className="bg-white border-t-4 border-t-black mt-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-5 shadow-lg">
+              <section className="bg-white border-t-4 border-t-black mt-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-5 shadow-lg rounded">
                 <h1 className="text-2xl font-semibold mb-6">Produtos em destaque</h1>
-
                 <div className="relative">
                   {/* Contêiner com overflow para deslizar */}
                   <div className="overflow-x-auto">
                     <div
-                      className="grid grid-flow-col gap-8"
+                      className="grid grid-flow-col gap-8 p-2 pt-2"
                       style={{
                         gridAutoColumns: "minmax(250px, 1fr)",
                       }}
@@ -196,7 +195,7 @@ export default function PublicPage({ params }: IPublicPageProps) {
                           .map((product) => (
                             <div
                               key={product.id}
-                              className="p-6 rounded shadow-lg flex flex-col justify-between w-full"
+                              className="p-6 rounded shadow flex flex-col justify-between w-full"
                             >
                               <div className="flex flex-col items-center">
                                 <Avatar>
@@ -230,7 +229,7 @@ export default function PublicPage({ params }: IPublicPageProps) {
               </section>
               <section>
                 {category.length > 0 ? (
-                  <section className="bg-white border-t-4 border-t-black mt-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-5 shadow-lg">
+                  <section className="bg-white border-t-4 border-t-black mt-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-5 shadow-lg rounded">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                       <h1 className="text-2xl font-semibold mb-6">Categorias</h1>
                       {/* Contêiner com overflow para deslizar as categorias */}
@@ -264,7 +263,7 @@ export default function PublicPage({ params }: IPublicPageProps) {
                 )}
               </section>
 
-              <section className="bg-slate-50 border-t-4 border-t-black mt-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-5 shadow-lg">
+              <section className="bg-slate-50 border-t-4 border-t-black mt-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 p-5 shadow-lg rounded">
                 <h1 className="text-2xl font-semibold mb-6">Produtos</h1>
                 <div className="overflow-x-auto">
                   <div

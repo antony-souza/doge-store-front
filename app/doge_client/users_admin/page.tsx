@@ -81,7 +81,7 @@ function RenderUserPage() {
         };
 
         fetchUsers();
-    }, []);
+    }, [isCreate, isEditing, isDelete, selectedUserId]);
 
     return (
         <>
