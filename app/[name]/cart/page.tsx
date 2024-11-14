@@ -128,13 +128,13 @@ export default function CartPage({ name }: IPropsHeaderPublic) {
 
                                 {
                                     products.length ? <div className="flex justify-between mt-4 p-4 bg-white shadow rounded">
-                                        <div className="flex flex-col items-end">
+                                        <div className="flex flex-col items-start">
                                             <span className="text-lg font-bold">Total Geral: {total > 0 ? formatPrice(total) : "R$ 0,00"}</span>
-                                            <span className="text-lg font-bold">Parcelado: {installments > 0 ? formatPrice((total / installments)) : "R$ 0,00"}</span>
+                                            <span className="text-lg font-bold">Dividido: {installments > 0 ? formatPrice((total / installments)) : "R$ 0,00"}</span>
                                         </div>
 
                                         <div className="flex flex-col">
-                                            <label className="font-bold">Parcelas:</label>
+                                            <label className="font-bold">Divivindo com quantos amigos?</label>
                                             <input
                                                 type="number"
                                                 value={installments}

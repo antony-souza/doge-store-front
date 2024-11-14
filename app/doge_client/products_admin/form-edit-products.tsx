@@ -82,13 +82,13 @@ export const FormUpdateProductAdmin = ({ id, storeId }: IFormUpdateProductProps)
         }
     };
     useEffect(() => {
-        if (name || imageFile || price || description || category_id) {
+        if (name || imageFile || price || description || category_id || featured_product) {
             setBtnActive(true);
         }
         else {
             setBtnActive(false);
         }
-    }, [name, imageFile, price, description, category_id]);
+    }, [name, imageFile, price, description, category_id, featured_product]);
 
     return (
         <>

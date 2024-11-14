@@ -43,7 +43,7 @@ export interface IProduct {
     category_id: string,
     image_url: string,
     cart: boolean,
-    featured_product: boolean,
+    promotion: boolean,
     store: IStore
     enable?: true;
 }

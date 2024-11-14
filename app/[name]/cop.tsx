@@ -6,7 +6,7 @@ export const Copyright = () => {
         <>
             <section className="mt-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <hr className="my-6 border-gray-300" />
-                
+
 
                 <div className="mt-4 flex justify-center space-x-6">
                     <a href="https://www.instagram.com/duckenterprisebr/" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-gray-700" aria-label="Instagram">
