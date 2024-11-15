@@ -137,7 +137,7 @@ function RenderProductPage() {
                                             <TableCell>{formatPrice(product.price)}</TableCell>
                                             <TableCell>{product.description}</TableCell>
                                             <TableCell>{product.category.name || '-'}</TableCell>
-                                            <TableCell>{product.featured_product ? 'Sim' : 'Não'}</TableCell>
+                                            <TableCell>{product.promotion ? 'Sim' : 'Não'}</TableCell>
                                             <TableCell>
                                                 <div className="flex gap-2">
                                                     <Button

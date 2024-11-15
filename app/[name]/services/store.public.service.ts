@@ -17,11 +17,21 @@ export default class PublicStoreService {
 
     const response = await callAPIService.genericRequest(endpoint, "GET", false) as IStore[];
 
-    if(response.length > 0) {
+    if (response.length > 0) {
       const storeID = response[0].id;
       sessionStorage.setItem('store_id', storeID);
     }
 
     return response;
   };
+
+  async getAllProductsByCategoryId(categoryId: string, storeId:string): Promise<IProduct[]> {
+
+    const endpoint = `/public/search/product/${categoryId}/${storeId}`;
+
+    const callAPIService = new CallAPIService();
+    const response = await callAPIService.genericRequest(endpoint, "GET", true) as IProduct[];
+
+    return response;
+  }
 }

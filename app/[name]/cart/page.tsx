@@ -134,7 +134,7 @@ export default function CartPage({ name }: IPropsHeaderPublic) {
                                         </div>
 
                                         <div className="flex flex-col">
-                                            <label className="font-bold">Divivindo com quantos amigos?</label>
+                                            <label className="font-bold">Dividindo com quantos?</label>
                                             <input
                                                 type="number"
                                                 value={installments}

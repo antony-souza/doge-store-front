@@ -14,18 +14,24 @@ import HeaderPublicPage from "./headerPublicPage";
 import checkHour from "../util/checkHour";
 import { Copyright } from "./cop";
 
-
 export default function PublicPage({ params }: IPublicPageProps) {
   const { name } = params;
   const [stores, setStores] = useState<IStore[]>([]);
   const [category, setCategory] = useState<ICategory[]>([]);
   const [moreInfo, setMoreInfo] = useState<boolean>(false);
   const [isInCart, setIsInCart] = useState<{ [key: string]: boolean }>({});
-  const [isSessionOpen, setIsSessionOpen] = useState(false);
+  const [isCategoryProduct, setIsCategoryProduct] = useState(false);
+  const [categoryProducts, setCategoryProducts] = useState<IProduct[]>([]);
   const [arrayCartSessionStorange, setArrayCartSessionStorange] = useState<IProduct[]>([]);
+  const [selectCategoryId, setSelectCategoryId] = useState<string>("");
 
-  const toggleSession = () => {
-    setIsSessionOpen(!isSessionOpen);
+  const handleCategoryProduct = (categoryId: string) => {
+    setSelectCategoryId(categoryId);
+    setIsCategoryProduct(true);
+  }
+
+  const handleCloseCategoryProduct = () => {
+    setIsCategoryProduct(false);
   }
 
   useEffect(() => {
@@ -62,6 +68,20 @@ export default function PublicPage({ params }: IPublicPageProps) {
       fetchPublicStore();
     }
   }, [name]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const service = new PublicStoreService();
+        const storeId = sessionStorage.getItem('store_id') as string;
+        const response = await service.getAllProductsByCategoryId(selectCategoryId, storeId);
+        setCategoryProducts(response);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchProducts();
+  }, [selectCategoryId, isCategoryProduct]);
 
   const handleClickAddToCart = (id: string) => {
     const store = stores[0];
@@ -156,26 +176,29 @@ export default function PublicPage({ params }: IPublicPageProps) {
                       Mais Informações
                     </Button>
                     {moreInfo && (
-                      <div className="flex flex-col justify-start mt-4 items-start">
-                        <div className="flex flex-row flex-wrap items-center gap-2">
-                          <span className="material-symbols-outlined">description</span>
-                          <p className="font-bold text-gray-800 text-center">Descrição:</p>
-                          <p className="text-gray-600">{store.description}</p>
-                        </div>
-                        <div className="flex flex-row flex-wrap items-center gap-2 mt-2">
-                          <span className="material-symbols-outlined">home</span>
-                          <p className="font-bold text-gray-800">Endereço:</p>
-                          <p className="text-gray-600">{store.address}</p>
-                        </div>
-                        <div className="flex flex-row flex-wrap items-center gap-2 mt-2">
-                          <span className="material-symbols-outlined">call</span>
-                          <p className="font-bold text-gray-800">Contato:</p>
-                          <p className="text-gray-600">{store.phone}</p>
-                        </div>
-                        <div className="flex flex-row flex-wrap items-center gap-2 mt-2">
-                          <span className="material-symbols-outlined">schedule</span>
-                          <p className="font-bold text-gray-800">Horários:</p>
-                          <p className="text-gray-600">{store.open_time} ás {store.close_time}</p>
+                      <div className={`overflow-hidden transition-all duration-500 ease-in-out 
+                        opacity-0 max-h-0 ${moreInfo ? 'opacity-100 max-h-[500px]' : ''}`} >
+                        <div className="flex flex-col justify-start mt-4 items-start">
+                          <div className="flex flex-row flex-wrap items-center gap-2">
+                            <span className="material-symbols-outlined">description</span>
+                            <p className="font-bold text-gray-800 text-center">Descrição:</p>
+                            <p className="text-gray-600">{store.description}</p>
+                          </div>
+                          <div className="flex flex-row flex-wrap items-center gap-2 mt-2">
+                            <span className="material-symbols-outlined">home</span>
+                            <p className="font-bold text-gray-800">Endereço:</p>
+                            <p className="text-gray-600">{store.address}</p>
+                          </div>
+                          <div className="flex flex-row flex-wrap items-center gap-2 mt-2">
+                            <span className="material-symbols-outlined">call</span>
+                            <p className="font-bold text-gray-800">Contato:</p>
+                            <p className="text-gray-600">{store.phone}</p>
+                          </div>
+                          <div className="flex flex-row flex-wrap items-center gap-2 mt-2">
+                            <span className="material-symbols-outlined">schedule</span>
+                            <p className="font-bold text-gray-800">Horários:</p>
+                            <p className="text-gray-600">{store.open_time} ás {store.close_time}</p>
+                          </div>
                         </div>
                       </div>
                     )}
@@ -227,7 +250,7 @@ export default function PublicPage({ params }: IPublicPageProps) {
                           </div>
                         ))
                     ) : (
-                      <p className="text-center">Nenhum produto em destaque disponível</p>
+                      <p className="text-center">Nenhum produto em promoção disponível</p>
                     )}
                   </div>
                 </div>
@@ -249,7 +272,9 @@ export default function PublicPage({ params }: IPublicPageProps) {
                         }}
                       >
                         {category.map((cat) => (
-                          <div key={cat.id} className="bg-white p-4 shadow shadow-slate-400 rounded flex flex-col justify-center items-center">
+                          <div onClick={() => { handleCategoryProduct(cat.id) }}
+                            key={cat.id}
+                            className="bg-white p-4 shadow shadow-slate-400 rounded flex flex-col justify-center items-center cursor-pointer">
                             <Avatar>
                               <AvatarImage
                                 src={cat.image_url}
@@ -269,6 +294,66 @@ export default function PublicPage({ params }: IPublicPageProps) {
                   </div>
                 )}
               </section>
+              {isCategoryProduct && (
+                <section className="bg-white border-t-8 border-t-black mt-10 max-w-7xl mx-auto sm:px-6 lg:px-8 p-5 shadow-lg rounded">
+                  {category.length > 0 ? (
+                    category
+                      .filter((cat) => cat.id === selectCategoryId)
+                      .map((cat) => (
+                        <div
+                          key={cat.id}
+                          className="flex items-center justify-between"
+                        >
+                          <h1 className="text-2xl font-semibold">{cat.name}</h1>
+                          <span
+                            className="material-symbols-outlined cursor-pointer"
+                            onClick={handleCloseCategoryProduct}
+                          >
+                            close
+                          </span>
+                        </div>
+                      ))
+                  ) : null}
+                  <hr className="my-6 border-gray-300" />
+                  <div className="overflow-x-auto">
+                    <div
+                      className="grid grid-flow-col gap-4 p-3 px-2"
+                      style={{
+                        gridAutoColumns: "minmax(250px, 1fr)",
+                      }}
+                    >
+                      {categoryProducts.length > 0 ? (
+                        categoryProducts.map((product) => (
+                          <div
+                            key={product.id}
+                            className="p-6 rounded shadow shadow-slate-400 flex flex-col justify-between w-full bg-white"
+                          >
+                            <div className="flex flex-col items-center">
+                              <Avatar>
+                                <AvatarImage
+                                  src={product.image_url}
+                                  alt={product.name}
+                                  className="rounded-lg w-40 h-40 object-cover"
+                                />
+                              </Avatar>
+                              <h2 className="text-xl font-bold text-center mt-4">{product.name}</h2>
+                              <p className="text-lg font-semibold text-center text-green-600 mt-2">
+                                {formatPrice(product.price)}
+                              </p>
+                              <p className="text-gray-600 text-center mt-2">{product.description}</p>
+                            </div>
+                            <div className="mt-4 flex justify-center flex-col gap-4">
+                              {renderAddToCartButton(product.id)}
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <p className="text-start">Nenhum produto disponível para essa categoria</p>
+                      )}
+                    </div>
+                  </div>
+                </section>
+              )}
               <section className="bg-white border-t-8 border-t-black mt-10 max-w-7xl mx-auto sm:px-6 lg:px-8 p-5 shadow-lg rounded">
                 <div className="flex items-center justify-between">
                   <h1 className="text-2xl font-semibold ">Produtos</h1>
@@ -282,34 +367,35 @@ export default function PublicPage({ params }: IPublicPageProps) {
                       gridAutoColumns: "minmax(250px, 1fr)",
                     }}
                   >
-                    {store.product && store.product.length > 0 ? (
-                      store.product.map((product) => (
-                        <div
-                          key={product.id}
-                          className="p-6 rounded shadow shadow-slate-400 flex flex-col justify-between w-full bg-white"
-                        >
-                          <div className="flex flex-col items-center">
-                            <Avatar>
-                              <AvatarImage
-                                src={product.image_url}
-                                alt={product.name}
-                                className="rounded-lg w-40 h-40 object-cover"
-                              />
-                            </Avatar>
-                            <h2 className="text-xl font-bold text-center mt-4">{product.name}</h2>
-                            <p className="text-lg font-semibold text-center text-green-600 mt-2">
-                              {formatPrice(product.price)}
-                            </p>
-                            <p className="text-gray-600 text-center mt-2">{product.description}</p>
+                    {store.product && store.product.length > 0 ?
+                      (
+                        store.product.map((product) => (
+                          <div
+                            key={product.id}
+                            className="p-6 rounded shadow shadow-slate-400 flex flex-col justify-between w-full bg-white"
+                          >
+                            <div className="flex flex-col items-center">
+                              <Avatar>
+                                <AvatarImage
+                                  src={product.image_url}
+                                  alt={product.name}
+                                  className="rounded-lg w-40 h-40 object-cover"
+                                />
+                              </Avatar>
+                              <h2 className="text-xl font-bold text-center mt-4">{product.name}</h2>
+                              <p className="text-lg font-semibold text-center text-green-600 mt-2">
+                                {formatPrice(product.price)}
+                              </p>
+                              <p className="text-gray-600 text-center mt-2">{product.description}</p>
+                            </div>
+                            <div className="mt-4 flex justify-center flex-col gap-4">
+                              {renderAddToCartButton(product.id)}
+                            </div>
                           </div>
-                          <div className="mt-4 flex justify-center flex-col gap-4">
-                            {renderAddToCartButton(product.id)}
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-center">Nenhum produto disponível</p>
-                    )}
+                        ))
+                      ) : (
+                        <p className="text-center">Nenhum produto disponível</p>
+                      )}
                   </div>
                 </div>
               </section>

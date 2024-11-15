@@ -245,7 +245,7 @@ export default class UserService extends CallAPIService {
         return response;
     }
 
-    async getAllCategories(id: string) {
+    async getAllCategories(storeId: string) {
         const token = localStorage.getItem('token');
 
         if (!token) {
@@ -253,10 +253,25 @@ export default class UserService extends CallAPIService {
         }
 
 
-        const endpoint = `/category/search/${id}`;
+        const endpoint = `/category/search/${storeId}`;
 
         const callAPIService = new CallAPIService();
         const response = await callAPIService.genericRequest(endpoint, "GET", true) as ICategory[];
+
+        return response;
+    }
+
+    async getAllProductsByCategoryId(categoryId: string, storeId: string): Promise<IProduct[]> {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            throw new Error('Token não encontrado');
+        }
+
+        const endpoint = `/category/product/${categoryId}/${storeId}`;
+
+        const callAPIService = new CallAPIService();
+        const response = await callAPIService.genericRequest(endpoint, "GET", true) as IProduct[];
 
         return response;
     }
