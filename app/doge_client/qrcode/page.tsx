@@ -96,7 +96,7 @@ function QrCodePage() {
                         />
                     </div>
                     <div className="flex flex-col mb-4 gap-2">
-                        <label htmlFor="size">Tamanho do QR Code (ex: 200x200)</label>
+                        <label htmlFor="size">Tamanho do QR Code (ex: 300x300)</label>
                         <input
                             type="text"
                             name="size"
