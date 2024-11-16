@@ -9,42 +9,34 @@ import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
 import withAuth from "@/app/util/withToken";
+import Image from "next/image";
 
-function QrCodePage() {
+const QrCodePage = () => {
     const [text, setText] = useState('');
-    const [size, setSize] = useState('200x200');
     const [qrCodeResponse, setQrCodeResponse] = useState<string>('');
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
 
         try {
-            const userService = new UserService();
-            const response = await userService.generateQrCode(text, size);
-
+            const service = new UserService();
+            const response = await service.generateQrCode(text);
             if (response) {
-                setQrCodeResponse(response);
+                setQrCodeResponse(response.qrCodeData);
                 toast({
                     title: "QR Code gerado com sucesso",
-                    description: "QR Code gerado com sucesso.",
+                    description: "QR Code foi gerado e está pronto para uso.",
                 });
             } else {
-                toast({
-                    title: "Erro ao gerar QR Code",
-                    description: "Ocorreu um erro ao gerar o QR Code.",
-                    variant: "destructive",
-                });
+                throw new Error("Resposta inválida da API.");
             }
-
-            setSize('200x200');
         } catch (error) {
-
-            setQrCodeResponse('');
+            console.error(error);
             toast({
-                title: "Erro",
-                description: "Ocorreu um erro ao gerar o QR Code.",
+                title: "Erro ao gerar QR Code",
+                description: "Não foi possível gerar o QR Code.",
                 variant: "destructive",
             });
         } finally {
@@ -82,10 +74,9 @@ function QrCodePage() {
                     <TitlePage name={'QR Code'} />
                     <span className="material-symbols-outlined">qr_code_2_add</span>
                 </div>
-                {/* Alterações apenas no form e inputs - Deivid*/}
                 <form onSubmit={handleSubmit} className="pt-5">
                     <div className="flex flex-col mb-4 gap-2">
-                        <label htmlFor="text">Link da sua loja</label>
+                        <label htmlFor="text">Texto ou URL</label>
                         <input
                             type="text"
                             name="text"
@@ -95,29 +86,21 @@ function QrCodePage() {
                             required
                         />
                     </div>
-                    <div className="flex flex-col mb-4 gap-2">
-                        <label htmlFor="size">Tamanho do QR Code (ex: 300x300)</label>
-                        <input
-                            type="text"
-                            name="size"
-                            value={size}
-                            onChange={(e) => setSize(e.target.value)}
-                            className="p-2 border border-gray-300 rounded"
-                            required
-                        />
-                    </div>
-                    {/* mantém */}
                     <Button disabled={isLoading}>
                         {isLoading ? "Gerando..." : "Gerar QR Code"}
                         <span className="material-symbols-outlined">qr_code_scanner</span>
                     </Button>
-                    {/* mantém */}
                 </form>
-                {/* Alterações apenas no form e inputs - Deivid*/}
                 {qrCodeResponse && (
                     <div className="mt-4">
                         <h3>QR Code Gerado:</h3>
-                        <img src={qrCodeResponse} alt="QR Code" className="mt-5" />
+                        <Image
+                            src={qrCodeResponse}
+                            alt="QR Code"
+                            width={300}
+                            height={300}
+                            className="mt-5"
+                        />
                         <Button onClick={handleDownload} className="mt-5">
                             Baixar QR Code
                             <span className="material-symbols-outlined">download</span>
@@ -128,6 +111,6 @@ function QrCodePage() {
             </LayoutPage>
         </LayoutDashboard>
     );
-}
+};
 
 export default withAuth(QrCodePage);

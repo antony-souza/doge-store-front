@@ -2,9 +2,8 @@ import CallAPIService from "@/app/util/call-api.service";
 import { IStore, IUpdateStore } from "@/app/util/interfaces-global.service";
 import { jwtDecode } from "jwt-decode";
 
-export interface IQrCode {
-    text: string,
-    size: string
+export interface IQrCodeProps {
+    qrCodeData: string
 }
 
 export interface IAuth {
@@ -68,7 +67,7 @@ export interface IUpdateProduct {
     category?: ICategory,
     image_url?: File,
     category_id?: string,
-    featured_product?: string,
+    promotion?: string,
 }
 
 export interface DecodedToken {
@@ -261,21 +260,6 @@ export default class UserService extends CallAPIService {
         return response;
     }
 
-    async getAllProductsByCategoryId(categoryId: string, storeId: string): Promise<IProduct[]> {
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            throw new Error('Token não encontrado');
-        }
-
-        const endpoint = `/category/product/${categoryId}/${storeId}`;
-
-        const callAPIService = new CallAPIService();
-        const response = await callAPIService.genericRequest(endpoint, "GET", true) as IProduct[];
-
-        return response;
-    }
-
     async createCategory(body: FormData) {
         const token = localStorage.getItem('token');
 
@@ -324,19 +308,20 @@ export default class UserService extends CallAPIService {
         return response;
     }
 
-    async generateQrCode(text: string, size: string) {
+    async generateQrCode(text:string):Promise<IQrCodeProps> {
         const token = localStorage.getItem('token');
 
         if (!token) {
             throw new Error('Token não encontrado');
         }
 
-        const encodedText = encodeURIComponent(text);
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_QR_CODE}?data=${encodedText}&size=${size}`, {
-            method: 'GET',
-        });
+        const endpoint = `/qrcode/create`;;
+        const body = {text:text};
+        const callAPIService = new CallAPIService();
 
-        return response.url;
+        const response = await callAPIService.genericRequest(endpoint, "POST", true, body) as IQrCodeProps;
+        
+        return response
     }
 
 }

@@ -5,6 +5,7 @@ import { IProduct } from "@/app/doge_client/services/user.service";
 import { useEffect, useState } from "react";
 import { formatPrice } from "@/app/util/formt-price";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 interface IProductStore extends IProduct {
     quantity: number,
@@ -89,7 +90,7 @@ export default function CartPage({ name }: IPropsHeaderPublic) {
                                             <div key={product.id} className="p-4 bg-white shadow rounded mb-4 flex gap-2">
                                                 <div className="flex gap-2 justify-between">
                                                     <div>
-                                                        <img src={product.image_url} alt={product.name} className="w-20 h-20 object-cover border-4 rounded shadow" />
+                                                        <Image src={product.image_url} alt={product.name} className="w-20 h-20 object-cover border-4 rounded shadow" />
                                                     </div>
 
                                                     <div className="flex flex-col">
