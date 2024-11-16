@@ -20,26 +20,14 @@ const QrCodePage = () => {
         e.preventDefault();
         setIsLoading(true);
 
-        try {
-            const service = new UserService();
-            const response = await service.generateQrCode(text);
-            if (response) {
-                setQrCodeResponse(response.qrCodeData);
-                toast({
-                    title: "QR Code gerado com sucesso",
-                    description: "QR Code foi gerado e está pronto para uso.",
-                });
-            } else {
-                throw new Error("Resposta inválida da API.");
-            }
-        } catch (error) {
-            console.error(error);
+        const service = new UserService();
+        const response = await service.generateQrCode(text);
+        if (response) {
+            setQrCodeResponse(response.qrCodeData);
             toast({
-                title: "Erro ao gerar QR Code",
-                description: "Não foi possível gerar o QR Code.",
-                variant: "destructive",
-            });
-        } finally {
+                title: "QR Code gerado com sucesso",
+                description: "QR Code foi gerado e está pronto para uso.",
+            })
             setIsLoading(false);
         }
     };
@@ -97,8 +85,8 @@ const QrCodePage = () => {
                         <Image
                             src={qrCodeResponse}
                             alt="QR Code"
-                            width={300}
-                            height={300}
+                            width={200}
+                            height={200}
                             className="mt-5"
                         />
                         <Button onClick={handleDownload} className="mt-5">
