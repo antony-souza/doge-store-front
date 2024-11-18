@@ -10,6 +10,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
 import withAuth from "@/app/util/withToken";
 import Image from "next/image";
+import InputsCase from "@/app/components/case-input";
+import LayoutForm from "@/app/components/layout-form";
 
 const QrCodePage = () => {
     const [text, setText] = useState('');
@@ -58,28 +60,28 @@ const QrCodePage = () => {
     return (
         <LayoutDashboard dashboardConfig={{ isSidebarOpenProps: false }}>
             <LayoutPage>
-                <div className="flex items-center justify-between">
-                    <TitlePage name={'QR Code'} />
-                    <span className="material-symbols-outlined">qr_code_2_add</span>
-                </div>
-                <form onSubmit={handleSubmit} className="pt-5">
-                    <div className="flex flex-col mb-4 gap-2">
-                        <label htmlFor="text">Texto ou URL</label>
-                        <input
-                            type="text"
-                            name="text"
+                <LayoutForm onSubmit={handleSubmit}>
+                    <div className="flex items-center justify-between">
+                        <TitlePage name={'QR Code'} />
+                        <span className="material-symbols-outlined">qr_code_2_add</span>
+                    </div>
+                    <div className="flex flex-col gap-9 mt-8">
+                        <InputsCase
+                            label="Link da sua Loja:"
+                            type="name"
                             value={text}
                             onChange={(e) => setText(e.target.value)}
-                            className="p-2 border border-gray-300 rounded"
-                            required
                         />
+
+                        <div className="flex ">
+                            <Button>
+                                Gerar QR Code
+                                <span className="material-symbols-outlined">qr_code</span>
+                            </Button>
+                        </div>
                     </div>
-                    <Button disabled={isLoading}>
-                        {isLoading ? "Gerando..." : "Gerar QR Code"}
-                        <span className="material-symbols-outlined">qr_code_scanner</span>
-                    </Button>
-                </form>
-                {qrCodeResponse && (
+                    <Toaster />
+                    {qrCodeResponse && (
                     <div className="mt-4">
                         <h3>QR Code Gerado:</h3>
                         <Image
@@ -95,7 +97,8 @@ const QrCodePage = () => {
                         </Button>
                     </div>
                 )}
-                <Toaster />
+                </LayoutForm>
+             
             </LayoutPage>
         </LayoutDashboard>
     );
