@@ -31,7 +31,7 @@ function RenderFeaturedProducts() {
         <LayoutDashboard dashboardConfig={{ isSidebarOpenProps: false }}>
             <LayoutPage>
                 <div className="flex justify-between align-middle">
-                    <TitlePage name={'Produtos em Destaque'} />
+                    <TitlePage name={'Produtos Promocionais'} />
                 </div>
                 <Table className="mt-4">
                     <TableHeader>

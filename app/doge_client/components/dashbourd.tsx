@@ -34,8 +34,8 @@ const Dashboard: React.FC<IDashboardProps> = ({ isSidebarOpenProps }) => {
         },
         {
             path: routes.FEATURED_PRODUCTS,
-            name: "Destaques",
-            icon: "hotel_class"
+            name: "Promoções",
+            icon: "sell"
         },
         {
             path: routes.QR_CODE,
@@ -45,7 +45,7 @@ const Dashboard: React.FC<IDashboardProps> = ({ isSidebarOpenProps }) => {
     ]);
 
     useEffect(() => {
-        const role = localStorage.getItem("role");
+        const role = localStorage.getItem("role") as string;
         if (role === "admin") {
             setMenuList(() => [
                 {
