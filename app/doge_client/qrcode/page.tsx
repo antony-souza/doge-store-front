@@ -74,8 +74,8 @@ const QrCodePage = () => {
                         />
 
                         <div className="flex ">
-                            <Button>
-                                Gerar QR Code
+                            <Button disabled={isLoading}>
+                                {isLoading ? 'Gerando...' : 'Gerar QR Code'}
                                 <span className="material-symbols-outlined">qr_code</span>
                             </Button>
                         </div>
@@ -98,7 +98,6 @@ const QrCodePage = () => {
                     </div>
                 )}
                 </LayoutForm>
-             
             </LayoutPage>
         </LayoutDashboard>
     );

@@ -177,8 +177,7 @@ export default class UserService extends CallAPIService {
 
         const callAPIService = new CallAPIService();
         const response = await callAPIService.genericRequest(endpoint, "GET", true) as IProduct[];
-
-
+        
         return response;
     }
 
@@ -194,7 +193,7 @@ export default class UserService extends CallAPIService {
         const callAPIService = new CallAPIService();
 
         const response = await callAPIService.genericRequest(endpoint, "POST", true, body);
-
+        
         return response;
     }
 

@@ -22,10 +22,11 @@ function RenderProductPage() {
     const [isDelete, setIsDelete] = useState(false);
     const [selectProductId, setSelectProductId] = useState<string>("");
 
+    const id = localStorage.getItem("store_id") as string;
+
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const id = localStorage.getItem("store_id") as string;
                 const response = await userService.getAllProducts(id);
                 setProducts(response);
             } catch (error) {
@@ -38,7 +39,7 @@ function RenderProductPage() {
         };
 
         fetchProducts();
-    }, [isEditing, isCreate, isDelete]);
+    }, [isEditing, isCreate, isDelete, id]);
 
     const handleCreateProduct = () => {
         setIsCreate(true);
@@ -58,13 +59,15 @@ function RenderProductPage() {
 
         if (confirm("Deseja realmente deletar este produto?")) {
             try {
-                await userService.deleteProduct(selectProductId);
+                const response = await userService.deleteProduct(selectProductId);
                 setIsDelete(true);
-                toast({
-                    title: "Sucesso",
-                    description: "Produto deletado com sucesso!",
-                    variant: "default",
-                });
+                if (response) {
+                    toast({
+                        title: "Sucesso",
+                        description: "Produto deletado com sucesso!",
+                        variant: "default",
+                    });
+                }
             } catch (error) {
                 toast({
                     title: "Erro ao deletar o produto",
