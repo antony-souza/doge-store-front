@@ -5,7 +5,6 @@ import { IProduct } from "@/app/doge_client/services/user.service";
 import { useEffect, useState } from "react";
 import { formatPrice } from "@/app/util/formt-price";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 
 interface IProductStore extends IProduct {
   quantity: number;
@@ -17,7 +16,6 @@ export default function CartPage({ name }: IPropsHeaderPublic) {
   const [total, setTotal] = useState<number>(0);
   const [installments, setInstallments] = useState<number>(0);
   const [loading, setLoading] = useState(true);
-  const store = name;
 
   useEffect(() => {
     const cart = sessionStorage.getItem("cart");
