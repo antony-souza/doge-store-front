@@ -10,7 +10,7 @@ import { formatPrice } from "../util/formt-price";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
 import { ICategory, IProduct } from "../doge_client/services/user.service";
-import HeaderPublicPage from "./headerPublicPage";
+import HeaderPublicPage from "./components/header-public";
 import checkHour from "../util/checkHour";
 import { Copyright } from "./cop";
 

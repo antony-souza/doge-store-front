@@ -1,6 +1,6 @@
 "use client";
 import { Toaster } from "@/components/ui/toaster";
-import HeaderPublicPage, { IPropsHeaderPublic } from "../headerPublicPage";
+import HeaderPublicPage from "../components/header-public";
 import { IProduct } from "@/app/doge_client/services/user.service";
 import { useEffect, useState } from "react";
 import { formatPrice } from "@/app/util/formt-price";
@@ -11,7 +11,12 @@ interface IProductStore extends IProduct {
   total: number;
 }
 
-export default function CartPage({ name }: IPropsHeaderPublic) {
+interface PageProps {
+  name: string;
+}
+
+const CartPage =  ({ params }:{ params: PageProps }) => {
+  const { name } = params;
   const [products, setProducts] = useState<IProductStore[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [installments, setInstallments] = useState<number>(0);
@@ -75,7 +80,7 @@ export default function CartPage({ name }: IPropsHeaderPublic) {
   return (
     <>
       <Toaster />
-      <HeaderPublicPage name={name} cartItemCount={products.length} />
+      <HeaderPublicPage name={name || ''} cartItemCount={products.length || 0} />
       <div className="flex flex-col gap-12 max-w-lg mx-auto px-4 pb-10">
         <div>
           <div className="flex flex-col mt-28 text-xl bg-white p-3 rounded shadow">
@@ -179,3 +184,5 @@ export default function CartPage({ name }: IPropsHeaderPublic) {
     </>
   );
 }
+
+export default CartPage;

@@ -29,7 +29,7 @@ export const FormUpdateProductAdmin = ({ id, storeId }: IFormUpdateProductProps)
         price: price,
         description: description,
         category_id: category_id,
-        featured_product: featured_product
+        promotion: featured_product
     };
 
     useEffect(() => {
